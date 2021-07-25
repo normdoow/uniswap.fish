@@ -21,7 +21,7 @@ const PriceRangeInput = styled.input`
   background: transparent;
   color: white;
   font-weight: 400;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   text-align: center;
 
   &:focus {
