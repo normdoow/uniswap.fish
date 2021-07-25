@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Heading from "../../common/Heading";
+import { Heading } from "../../common/atomic";
 
 const Tier = styled.div`
   border-radius: 12px;
@@ -38,8 +38,8 @@ const FeeTiers = () => {
         </Tier>
         <Tier
           style={{
-            border: "1px solid rgba(22, 137, 153, 0.35)",
-            background: "rgba(22, 137, 153, 0.15)",
+            border: "1px solid rgba(37, 175, 96, 0.35)",
+            background: "rgba(37, 175, 96, 0.15)",
           }}
         >
           <h4>0.3% fee</h4>

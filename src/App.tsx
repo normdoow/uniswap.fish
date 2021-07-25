@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import { Br } from "./common/atomic";
+import EstimatedFees from "./containers/EstimatedFees";
 import Header from "./containers/Header";
 import Navbar from "./containers/Navbar";
 import Setting from "./containers/setting/Setting";
@@ -13,8 +15,8 @@ const BodyContainer = styled.div`
 const ContentContainer = styled.div`
   display: grid;
   grid-template-columns: 5fr 7fr;
-  grid-gap: 30px;
-  margin-top: 20px;
+  grid-gap: 25px;
+  margin-top: 25px;
 `;
 
 function App() {
@@ -24,9 +26,21 @@ function App() {
       <BodyContainer>
         <Header />
         <ContentContainer>
-          <Setting />
+          <div>
+            <EstimatedFees />
+            <Br />
+            <Setting />
+          </div>
           <div>TODO</div>
         </ContentContainer>
+
+        <div>
+          <br />
+          <br />
+          CREDIT
+          <br />
+          <br />
+        </div>
       </BodyContainer>
     </>
   );

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Heading from "../../common/Heading";
+import { Heading } from "../../common/atomic";
 
 const InputGroup = styled.div`
   display: flex;
