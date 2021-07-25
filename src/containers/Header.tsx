@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import styled from "styled-components";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import { faHeart } from "@fortawesome/free-regular-svg-icons";
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -79,16 +78,21 @@ const Header = () => {
         <span>🦄</span> UniswapCalculator
       </Logo>
       <Menubar>
-        <a href="https://twitter.com/chunza2542" target="_blank">
+        <a
+          href="https://twitter.com/chunza2542"
+          target="_blank"
+          rel="noreferrer"
+        >
           <FontAwesomeIcon icon={faTwitter} />
         </a>
         <a
           href="https://github.com/chunza2542/uniswapcalculator"
           target="_blank"
+          rel="noreferrer"
         >
           <FontAwesomeIcon icon={faGithub} />
         </a>
-        <a href="mailto:hello@thechun.dev" target="_blank">
+        <a href="mailto:hello@thechun.dev">
           <FontAwesomeIcon icon={faEnvelope} />
         </a>
         {/* TODO: Implement Modal */}
