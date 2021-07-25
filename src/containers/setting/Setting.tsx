@@ -12,6 +12,7 @@ const SettingContainer = styled.div`
 const Br = styled.div`
   height: 20px;
 `;
+
 const Setting = () => {
   return (
     <SettingContainer>
