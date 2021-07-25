@@ -10,7 +10,15 @@ const HeaderContainer = styled.div`
   align-items: center;
   color: white;
 `;
-
+const FeePercentage = styled.span`
+  font-size: 1rem;
+  padding: 1px 5px;
+  border-radius: 5px;
+  font-weight: 400;
+  color: #999;
+  margin-left: 7px;
+  background: rgba(255, 255, 255, 0.15);
+`;
 const PairToken = styled.div`
   display: flex;
   align-items: center;
@@ -56,6 +64,7 @@ const Header = () => {
         </div>
         <h2>
           <span>UNI / ETH</span>
+          <FeePercentage>0.3%</FeePercentage>
           <a
             href="https://app.uniswap.org/"
             target="_blank"
