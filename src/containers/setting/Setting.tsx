@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import DepositAmounts from "./DepositAmounts";
+import PriceRange from "./PriceRange";
 
 const SettingContainer = styled.div`
   background: rgba(255, 255, 255, 0.1);
@@ -17,7 +18,7 @@ const Setting = () => {
       <Br />
       <DepositAmounts />
       <Br />
-      <DepositAmounts />
+      <PriceRange />
     </SettingContainer>
   );
 };
