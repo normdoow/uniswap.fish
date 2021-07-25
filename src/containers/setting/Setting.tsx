@@ -15,8 +15,8 @@ const Setting = () => {
   return (
     <SettingContainer>
       <DepositAmounts />
-      <Br />
-      <FeeTiers />
+      {/* <Br />
+      <FeeTiers /> */}
       <Br />
       <PriceRange />
     </SettingContainer>
