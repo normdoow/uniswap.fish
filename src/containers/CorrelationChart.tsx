@@ -20,27 +20,38 @@ const Stat = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 7px;
+`;
+const StatItem = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  color: #999;
+  padding: 3px;
 
   & > div {
+    padding: 3px 12px;
+    margin-right: 7px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+  }
+`;
+const WrappedHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  & > div {
+    transform: translateY(0);
     display: flex;
     align-items: center;
+    color: red;
     font-size: 0.8rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
     color: #999;
-    padding: 3px;
-
-    & > div {
-      padding: 3px 12px;
-      margin-right: 7px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.05);
-    }
-  }
-
-  & > div:nth-child(3) {
-    background: rgba(255, 255, 255, 0.05);
+    height: 25px;
+    padding: 12px;
     border-radius: 5rem;
+    background: rgba(255, 255, 255, 0.05);
   }
 `;
 
@@ -60,7 +71,7 @@ const CorrelationChart = () => {
 
   const fetchData = async () => {
     const tokenPrice1 = await getPriceChart(
-      "0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce"
+      "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
     );
 
     vis = new D3PriceChart(refElement.current, {
@@ -103,24 +114,28 @@ const CorrelationChart = () => {
   return (
     <Container>
       <Padding>
-        <Heading>
-          UNI / ETH Correlation Chart <Tag>(1 month)</Tag>
-        </Heading>
+        <WrappedHeader>
+          <Heading>
+            UNI / ETH Correlation Chart <Tag>(1mth)</Tag>
+          </Heading>
+
+          <div>Current Price: 123.21</div>
+        </WrappedHeader>
       </Padding>
 
       <div ref={refElement} />
 
       <Padding>
         <Stat>
-          <div>
-            <div>MIN</div> <span>12312.23 UNI/ETH</span>
-          </div>
-          <div>
-            <div>MAX</div> <span>512312.23 UNI/ETH</span>
-          </div>
-          <div>
-            <div>AVG</div> <span>15322.23 UNI/ETH</span>
-          </div>
+          <StatItem>
+            <div>MIN</div> <span>12312.23</span>
+          </StatItem>
+          <StatItem>
+            <div>MAX</div> <span>512312.23</span>
+          </StatItem>
+          <StatItem>
+            <div>AVG</div> <span>15322.23</span>
+          </StatItem>
         </Stat>
       </Padding>
     </Container>
