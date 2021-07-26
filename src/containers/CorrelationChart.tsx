@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Heading } from "../common/atomic";
-import Table from "../common/Table";
 import { getPriceChart, Price, PriceChart } from "../repos/coingecko";
 import D3PriceChart, { Point } from "../common/D3PriceChart";
 
@@ -15,6 +14,34 @@ const Padding = styled.div`
 const Tag = styled.div`
   display: inline-block;
   color: rgba(255, 255, 255, 0.3);
+`;
+const Stat = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 7px;
+
+  & > div {
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    color: #999;
+    padding: 3px;
+
+    & > div {
+      padding: 3px 12px;
+      margin-right: 7px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
+
+  & > div:nth-child(3) {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 5rem;
+  }
 `;
 
 let vis: D3PriceChart | null = null;
@@ -84,21 +111,17 @@ const CorrelationChart = () => {
       <div ref={refElement} />
 
       <Padding>
-        <Table>
-          <div>Minimum Value</div>
-          <div>90.00012310</div>
-          <div>UNI/ETH</div>
-        </Table>
-        <Table>
-          <div>Maximum Value</div>
-          <div>110.123213123</div>
-          <div>UNI/ETH</div>
-        </Table>
-        <Table>
-          <div>Average Value</div>
-          <div>100.123213123</div>
-          <div>UNI/ETH</div>
-        </Table>
+        <Stat>
+          <div>
+            <div>MIN</div> <span>12312.23 UNI/ETH</span>
+          </div>
+          <div>
+            <div>MAX</div> <span>512312.23 UNI/ETH</span>
+          </div>
+          <div>
+            <div>AVG</div> <span>15322.23 UNI/ETH</span>
+          </div>
+        </Stat>
       </Padding>
     </Container>
   );
