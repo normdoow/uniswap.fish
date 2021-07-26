@@ -1,7 +1,6 @@
 import React from "react";
 import * as d3 from "d3";
 import { findMax, findMin } from "../utils/math";
-import { appendFile } from "fs";
 
 export interface Point {
   x: number;
@@ -28,7 +27,7 @@ class D3PriceChart {
   y;
   xAxis;
   yAxis;
-  brush;
+  // brush;
 
   constructor(containerEl: any, props: D3PriceChartProps) {
     this.containerEl = containerEl;
@@ -106,18 +105,18 @@ class D3PriceChart {
 
     this.handleMouseMove();
     this.renderMostActivePriceAssumption(props.mostActivePrice);
-    this.brush = this.initBrush(props.minRange, props.maxRange);
-    let offsetY: number = 0;
-    this.brush.call(
-      d3
-        .drag<SVGRectElement, unknown>()
-        .on("start", (e: any) => {
-          offsetY = this.y(props.maxRange) - e.y;
-        })
-        .on("drag", (e: any) => {
-          this.brush.attr("y", e.y + offsetY);
-        })
-    );
+    // this.brush = this.initBrush(props.minRange, props.maxRange);
+    // let offsetY: number = 0;
+    // this.brush.call(
+    //   d3
+    //     .drag<SVGRectElement, unknown>()
+    //     .on("start", (e: any) => {
+    //       offsetY = this.y(props.maxRange) - e.y;
+    //     })
+    //     .on("drag", (e: any) => {
+    //       this.brush.attr("y", e.y + offsetY);
+    //     })
+    // );
   }
 
   initBrush(minRange: number, maxRange: number) {
