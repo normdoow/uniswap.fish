@@ -24,8 +24,9 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "generate-contract-address-mapping": "node ./scripts/generateTokenAddressMaping.js",
+    "start": "yarn generate-contract-address-mapping && react-scripts start",
+    "build": "yarn generate-contract-address-mapping && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
