@@ -20,6 +20,8 @@ class D3PriceChart {
   containerEl;
   props;
   svg;
+  x;
+  y;
 
   constructor(containerEl: any, props: D3PriceChartProps) {
     this.containerEl = containerEl;
@@ -27,6 +29,7 @@ class D3PriceChart {
 
     const xData = props.data.map((d) => d.x);
     const yData = props.data.map((d) => d.y);
+    const data = props.data as any;
 
     this.svg = d3
       .select(containerEl)
@@ -37,7 +40,7 @@ class D3PriceChart {
     this.createLinearGradient("blue-gradient", { r: 38, g: 108, b: 221 });
 
     // add x axis
-    var x = d3
+    const x = d3
       .scaleTime()
       .domain([findMin(xData), findMax(xData)])
       .range([0, props.width]);
@@ -46,34 +49,15 @@ class D3PriceChart {
       .attr("transform", "translate(0," + (props.height - 20) + ")")
       .attr("color", "#666")
       .call(d3.axisBottom(x));
+    this.x = x;
 
     // add y axis
-    var y = d3
+    const y = d3
       .scaleLinear()
       .domain([0, findMax(yData) * 1.25])
       .range([props.height, 0]);
     this.svg.append("g").attr("color", "transparent").call(d3.axisLeft(y));
-
-    var bisect = d3.bisector(function (d: Point) {
-      return d.x;
-    }).left;
-
-    var focus = this.svg
-      .append("g")
-      .append("circle")
-      .style("fill", "none")
-      .attr("stroke", "black")
-      .attr("r", 8.5)
-      .style("opacity", 0);
-
-    var focusText = this.svg
-      .append("g")
-      .append("text")
-      .style("opacity", 0)
-      .attr("text-anchor", "left")
-      .attr("alignment-baseline", "middle");
-
-    const data = props.data as any;
+    this.y = y;
 
     this.svg
       .append("path")
@@ -96,8 +80,6 @@ class D3PriceChart {
       .append("path")
       .datum(data)
       .attr("fill", "url(#blue-gradient)")
-      // .attr("stroke", "rgb(38, 108, 221)")
-      // .attr("stroke-width", 1.5)
       .attr(
         "d",
         d3
@@ -110,10 +92,76 @@ class D3PriceChart {
             return y(d.y);
           })
       );
+
+    this.handleMouseMove();
+  }
+
+  handleMouseMove() {
+    const bisect = d3.bisector(function (d: Point) {
+      return d.x;
+    }).left;
+    const focus = this.svg
+      .append("g")
+      .append("circle")
+      .style("fill", "rgba(255,255,255,0.15)")
+      .attr("stroke", "white")
+      .attr("r", 5)
+      .style("opacity", 0);
+    const focusText = this.svg
+      .append("g")
+      .append("text")
+      .style("opacity", 0)
+      .attr("fill", "white")
+      .attr("font-size", "0.8rem")
+      .attr("background", "red")
+      .attr("text-anchor", "left")
+      .attr("alignment-baseline", "middle");
+    const verticalLine = this.svg
+      .append("g")
+      .append("line")
+      .style("stroke-width", 1)
+      .style("stroke", "rgba(255,255,255,0.15)");
+
+    const onMouseMove = (e: any) => {
+      let coords = d3.pointer(e);
+      const x0 = this.x.invert(coords[0]);
+      const i = bisect(this.props.data, x0, 1);
+      const selectedData = this.props.data[i];
+      verticalLine
+        .attr("x1", this.x(selectedData.x))
+        .attr("y1", 0)
+        .attr("x2", this.x(selectedData.x))
+        .attr("y2", this.props.height - 20);
+      focus
+        .attr("cx", this.x(selectedData.x))
+        .attr("cy", this.y(selectedData.y));
+      focusText
+        .html(`Price: ${selectedData.x}`)
+        .attr("x", this.x(selectedData.x) + 15)
+        .attr("y", this.y(selectedData.y));
+    };
+
+    this.svg
+      .append("rect")
+      .style("fill", "none")
+      .style("pointer-events", "all")
+      .attr("width", this.props.width)
+      .attr("height", this.props.height)
+      .on("mouseover", () => {
+        focus.style("opacity", 1);
+        focusText.style("opacity", 1);
+        verticalLine.style("opacity", 1);
+      })
+      .on("mouseout", () => {
+        focus.style("opacity", 0);
+        focusText.style("opacity", 0);
+        verticalLine.style("opacity", 0);
+      })
+      .on("mousemove", onMouseMove);
   }
 
   createLinearGradient(id: string, { r, g, b }: RGB) {
-    var lg = this.svg
+    const lg = this.svg
       .append("defs")
       .append("linearGradient")
       .attr("id", id)

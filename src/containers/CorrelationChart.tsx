@@ -94,12 +94,6 @@ const CorrelationChart = () => {
     });
   }, [data, refElement]);
 
-  // useEffect(() => {
-  //   if (data && data.length) {
-  //     vis = new D3PriceChart(refElement.current, { data, width, height });
-  //   }
-  // }, [data]);
-
   return (
     <Container>
       <Padding>
