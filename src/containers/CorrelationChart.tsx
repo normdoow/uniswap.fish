@@ -55,9 +55,10 @@ const WrappedHeader = styled.div`
   }
 `;
 
-let vis: D3PriceChart | null = null;
+let d3Chart: D3PriceChart | null = null;
 const CorrelationChart = () => {
   const [data, setData] = useState<PriceChart | null>(null);
+  const [mostActivePrice, setMostActivePrice] = useState<number>(2000);
 
   const refElement = useRef<HTMLDivElement>(null);
 
@@ -87,12 +88,20 @@ const CorrelationChart = () => {
       width = refElement.current.offsetWidth;
     }
 
-    vis = new D3PriceChart(refElement.current, {
+    d3Chart = new D3PriceChart(refElement.current, {
       data: processData(data),
       width,
       height,
+      mostActivePrice,
     });
   }, [data, refElement]);
+
+  useEffect(() => {
+    if (!mostActivePrice) return;
+    if (!d3Chart) return;
+
+    d3Chart.renderMostActivePriceAssumption(mostActivePrice);
+  }, [mostActivePrice]);
 
   return (
     <Container>

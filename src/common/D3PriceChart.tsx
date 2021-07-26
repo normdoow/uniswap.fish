@@ -15,6 +15,7 @@ interface D3PriceChartProps {
   width: number;
   height: number;
   data: Point[];
+  mostActivePrice: number;
 }
 class D3PriceChart {
   containerEl;
@@ -94,6 +95,7 @@ class D3PriceChart {
       );
 
     this.handleMouseMove();
+    this.renderMostActivePriceAssumption(props.mostActivePrice);
   }
 
   handleMouseMove() {
@@ -112,9 +114,7 @@ class D3PriceChart {
       .append("text")
       .style("opacity", 0)
       .attr("fill", "white")
-      .attr("font-size", "0.8rem")
-      .attr("background", "red")
-      .attr("text-anchor", "left")
+      .attr("font-size", "0.6rem")
       .attr("alignment-baseline", "middle");
     const verticalLine = this.svg
       .append("g")
@@ -135,10 +135,23 @@ class D3PriceChart {
       focus
         .attr("cx", this.x(selectedData.x))
         .attr("cy", this.y(selectedData.y));
-      focusText
-        .html(`Price: ${selectedData.x}`)
-        .attr("x", this.x(selectedData.x) + 15)
-        .attr("y", this.y(selectedData.y));
+
+      const self = this;
+      if (this.x(selectedData.x) > this.props.width * 0.8) {
+        focusText
+          .html(`Price: ${selectedData.y.toFixed(4)}`)
+          .attr("x", function (d: any) {
+            return self.x(selectedData.x) - (this.getComputedTextLength() + 5);
+          })
+          .attr("text-anchor", "right")
+          .attr("y", 5);
+      } else {
+        focusText
+          .html(`Price: ${selectedData.y.toFixed(4)}`)
+          .attr("x", this.x(selectedData.x) + 5)
+          .attr("text-anchor", "left")
+          .attr("y", 5);
+      }
     };
 
     this.svg
@@ -158,6 +171,30 @@ class D3PriceChart {
         verticalLine.style("opacity", 0);
       })
       .on("mousemove", onMouseMove);
+  }
+
+  renderMostActivePriceAssumption(price: number) {
+    this.svg
+      .append("g")
+      .append("line")
+      .style("stroke-width", 1)
+      .style("stroke-dasharray", "3, 3")
+      .style("stroke", "white")
+      .attr("x1", 0)
+      .attr("y1", this.y(price))
+      .attr("x2", this.props.width)
+      .attr("y2", this.y(price));
+    this.svg
+      .append("g")
+      .append("text")
+      .attr("fill", "white")
+      .attr("font-size", "0.6rem")
+      .attr("font-weight", "bold")
+      .attr("text-anchor", "left")
+      .attr("alignment-baseline", "middle")
+      .html(`Price Assumption: ${price.toFixed(2)}`)
+      .attr("x", 17)
+      .attr("y", this.y(price) - 7);
   }
 
   createLinearGradient(id: string, { r, g, b }: RGB) {
