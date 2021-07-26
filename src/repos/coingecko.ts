@@ -10,7 +10,7 @@ export enum QueryPeriodEnum {
   MAX = "max",
 }
 
-interface Token {
+export interface Token {
   id: string;
   name: string;
 }
@@ -19,11 +19,11 @@ const getToken = (contractAddress: string): Token => {
   return mapping[contractAddress];
 };
 
-interface Price {
+export interface Price {
   timestamp: number;
   value: number;
 }
-interface PriceChart {
+export interface PriceChart {
   tokenId: string;
   tokenName: string;
   currentPriceUSD: number;
