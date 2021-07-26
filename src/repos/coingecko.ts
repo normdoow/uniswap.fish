@@ -31,16 +31,22 @@ interface PriceChart {
 }
 export const getPriceChart = async (
   contractAddress: string,
-  queryPeriod: QueryPeriodEnum
+  queryPeriod: QueryPeriodEnum = QueryPeriodEnum.ONE_MONTH
 ): Promise<PriceChart> => {
   const token = getToken(contractAddress);
-  const marketChart = (await axios.get(
+
+  if (!token)
+    throw new Error(
+      `Unable to find token from contract address "${contractAddress}"`
+    );
+
+  const marketChartRes = (await axios.get(
     `https://api.coingecko.com/api/v3/coins/${token.id}/market_chart?vs_currency=usd&days=${queryPeriod}`
   )) as any;
-  const currentPrice = (await axios.get(
+  const currentPriceRes = (await axios.get(
     `https://api.coingecko.com/api/v3/simple/price?ids=${token.id}&vs_currencies=usd`
   )) as any;
-  const prices = marketChart.prices.map(
+  const prices = marketChartRes.data.prices.map(
     (d: any) =>
       ({
         timestamp: d[0],
@@ -51,7 +57,7 @@ export const getPriceChart = async (
   return {
     tokenId: token.id,
     tokenName: token.name,
-    currentPriceUSD: currentPrice[token.id].usd as number,
+    currentPriceUSD: currentPriceRes.data[token.id].usd as number,
     prices,
   };
 };

@@ -3,7 +3,7 @@ import styled from "styled-components";
 const Table = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: 5rem 1fr 5rem;
+  grid-template-columns: 7rem 1fr 5rem;
   grid-gap: 7px;
 
   padding: 6px 12px;
