@@ -1,4 +1,5 @@
 import axios from "axios";
+import { sortToken } from "../utils/helper";
 
 const MAINNET = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3";
 
@@ -32,5 +33,42 @@ export const getPoolTicks = async (
       price1
     }
   }`);
+
   return ticks as Tick[];
+};
+
+interface V3Token {
+  id: string;
+  name: string;
+  symbool: string;
+}
+export const getTokenList = async (): Promise<V3Token[]> => {
+  const { tokens } = await queryUniswap(`{
+    tokens(orderBy: id) {
+      id
+      name
+      symbol
+    }
+  }`);
+
+  return tokens as V3Token[];
+};
+
+export const getPoolFromPair = async (
+  token0: string,
+  token1: string
+): Promise<V3Token[]> => {
+  const sortedTokens = sortToken(token0, token1);
+
+  const { tokens } = await queryUniswap(`{
+    pools(orderBy: id, where: {
+        token0: "${sortedTokens[0]}",
+        token1: "${sortedTokens[1]}"}) {
+      id
+      feeTier
+      liquidity
+    }
+  }`);
+
+  return tokens as V3Token[];
 };
