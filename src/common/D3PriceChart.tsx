@@ -1,6 +1,7 @@
 import React from "react";
 import * as d3 from "d3";
 import { findMax, findMin } from "../utils/math";
+import { appendFile } from "fs";
 
 export interface Point {
   x: number;
@@ -16,6 +17,8 @@ interface D3PriceChartProps {
   height: number;
   data: Point[];
   mostActivePrice: number;
+  minRange: number;
+  maxRange: number;
 }
 class D3PriceChart {
   containerEl;
@@ -23,6 +26,9 @@ class D3PriceChart {
   svg;
   x;
   y;
+  xAxis;
+  yAxis;
+  brush;
 
   constructor(containerEl: any, props: D3PriceChartProps) {
     this.containerEl = containerEl;
@@ -45,7 +51,7 @@ class D3PriceChart {
       .scaleTime()
       .domain([findMin(xData), findMax(xData)])
       .range([0, props.width]);
-    this.svg
+    this.xAxis = this.svg
       .append("g")
       .attr("transform", "translate(0," + (props.height - 20) + ")")
       .attr("color", "#666")
@@ -57,9 +63,13 @@ class D3PriceChart {
       .scaleLinear()
       .domain([0, findMax(yData) * 1.25])
       .range([props.height, 0]);
-    this.svg.append("g").attr("color", "transparent").call(d3.axisLeft(y));
+    this.yAxis = this.svg
+      .append("g")
+      .attr("color", "transparent")
+      .call(d3.axisLeft(y));
     this.y = y;
 
+    // render chart
     this.svg
       .append("path")
       .datum(data)
@@ -96,6 +106,30 @@ class D3PriceChart {
 
     this.handleMouseMove();
     this.renderMostActivePriceAssumption(props.mostActivePrice);
+    this.brush = this.initBrush(props.minRange, props.maxRange);
+    let offsetY: number = 0;
+    this.brush.call(
+      d3
+        .drag<SVGRectElement, unknown>()
+        .on("start", (e: any) => {
+          offsetY = this.y(props.maxRange) - e.y;
+        })
+        .on("drag", (e: any) => {
+          this.brush.attr("y", e.y + offsetY);
+        })
+    );
+  }
+
+  initBrush(minRange: number, maxRange: number) {
+    return this.svg
+      .append("g")
+      .append("rect")
+      .style("fill", "rgba(37, 175, 96, 0.3)")
+      .style("cursor", "grab")
+      .attr("x", 0)
+      .attr("y", this.y(maxRange))
+      .attr("width", this.props.width)
+      .attr("height", this.y(minRange) - this.y(maxRange));
   }
 
   handleMouseMove() {

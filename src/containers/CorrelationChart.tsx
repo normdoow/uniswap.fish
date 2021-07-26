@@ -59,6 +59,8 @@ let d3Chart: D3PriceChart | null = null;
 const CorrelationChart = () => {
   const [data, setData] = useState<PriceChart | null>(null);
   const [mostActivePrice, setMostActivePrice] = useState<number>(2000);
+  const [minRange, setMinRange] = useState<number>(1500);
+  const [maxRange, setMaxRange] = useState<number>(2200);
 
   const refElement = useRef<HTMLDivElement>(null);
 
@@ -93,6 +95,8 @@ const CorrelationChart = () => {
       width,
       height,
       mostActivePrice,
+      minRange,
+      maxRange,
     });
   }, [data, refElement]);
 
@@ -102,6 +106,13 @@ const CorrelationChart = () => {
 
     d3Chart.renderMostActivePriceAssumption(mostActivePrice);
   }, [mostActivePrice]);
+
+  // useEffect(() => {
+  //   if (!minRange || !maxRange) return;
+  //   if (!d3Chart) return;
+
+  //   d3Chart.updateBrush(minRange, maxRange);
+  // }, [minRange, maxRange]);
 
   return (
     <Container>
