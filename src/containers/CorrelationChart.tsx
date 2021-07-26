@@ -57,11 +57,9 @@ const WrappedHeader = styled.div`
 
 let vis: D3PriceChart | null = null;
 const CorrelationChart = () => {
-  const [data, setData] = useState<any>(null);
-  const [width, setWidth] = useState(600);
-  const [height, setHeight] = useState(300);
+  const [data, setData] = useState<PriceChart | null>(null);
 
-  const refElement = useRef(null);
+  const refElement = useRef<HTMLDivElement>(null);
 
   const processData = (data: PriceChart): Point[] => {
     return data.prices.reduce((result: Point[], curr: Price) => {
@@ -73,43 +71,34 @@ const CorrelationChart = () => {
     const tokenPrice1 = await getPriceChart(
       "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
     );
-
-    vis = new D3PriceChart(refElement.current, {
-      data: processData(tokenPrice1),
-      width,
-      height,
-    });
+    setData(tokenPrice1);
   };
 
   useEffect(() => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (!data) return;
+
+    let width = 500;
+    let height = 250;
+    if (refElement.current) {
+      width = refElement.current.offsetWidth;
+    }
+
+    vis = new D3PriceChart(refElement.current, {
+      data: processData(data),
+      width,
+      height,
+    });
+  }, [data, refElement]);
+
   // useEffect(() => {
   //   if (data && data.length) {
   //     vis = new D3PriceChart(refElement.current, { data, width, height });
   //   }
   // }, [data]);
-
-  // useEffect(() => {
-  //   let resizeTimer: NodeJS.Timeout;
-  //   const handleResize = () => {
-  //     clearTimeout(resizeTimer);
-  //     resizeTimer = setTimeout(function () {
-  //       setWidth(window.innerWidth);
-  //       setHeight(window.innerHeight);
-  //     }, 300);
-  //   };
-
-  //   window.addEventListener("resize", handleResize);
-  //   return () => {
-  //     window.removeEventListener("resize", handleResize);
-  //   };
-  // }, []);
-
-  // useEffect(() => {
-  //   // vis && vis.resize(width, height);
-  // }, [width, height]);
 
   return (
     <Container>
