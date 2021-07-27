@@ -6,7 +6,7 @@ import Credit from "./containers/Credit";
 import EstimatedFees from "./containers/EstimatedFees";
 import Header from "./containers/Header";
 import Navbar from "./containers/Navbar";
-import SelectPairModal from "./containers/SelectPairModal";
+import SelectPairModal from "./containers/select-pair/SelectPairModal";
 import Setting from "./containers/setting/Setting";
 import { ModalContextProvider } from "./context/modal/context";
 

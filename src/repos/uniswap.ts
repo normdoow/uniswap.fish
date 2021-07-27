@@ -40,7 +40,7 @@ export const getPoolTicks = async (
 export interface V3Token {
   id: string;
   name: string;
-  symbool: string;
+  symbol: string;
 }
 export const getTokenList = async (): Promise<V3Token[]> => {
   const { tokens } = await queryUniswap(`{
