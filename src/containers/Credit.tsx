@@ -24,7 +24,7 @@ const CreditContainer = styled.div`
 const Credit = () => {
   return (
     <CreditContainer>
-      Made with <FontAwesomeIcon icon={faHeart} /> by{" "}
+      Crafted with <FontAwesomeIcon icon={faHeart} /> by{" "}
       <a href="https://twitter.com/chunza2542" target="_blank">
         @chunza2542
       </a>

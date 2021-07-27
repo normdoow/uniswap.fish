@@ -1,5 +1,4 @@
 import React from "react";
-import { useEffect } from "react";
 import styled from "styled-components";
 import { Br } from "./common/atomic";
 import CorrelationChart from "./containers/CorrelationChart";
@@ -8,14 +7,12 @@ import EstimatedFees from "./containers/EstimatedFees";
 import Header from "./containers/Header";
 import Navbar from "./containers/Navbar";
 import Setting from "./containers/setting/Setting";
-import { getPoolTicks } from "./repos/uniswap";
 
 const BodyContainer = styled.div`
   width: 900px;
   margin: auto auto;
   padding-top: 100px;
 `;
-
 const ContentContainer = styled.div`
   display: grid;
   grid-template-columns: 5fr 7fr;
@@ -24,12 +21,6 @@ const ContentContainer = styled.div`
 `;
 
 function App() {
-  useEffect(() => {
-    getPoolTicks("0x1d42064fc4beb5f8aaf85f4617ae8b3b5b8bd801").then(
-      console.log
-    );
-  }, []);
-
   return (
     <>
       <Navbar />
