@@ -13,6 +13,7 @@ interface State {
   minPriceRangeValue: number;
   maxPriceRangeValue: number;
   priceAssumptionValue: number;
+  outOfRangePercentageValue: number;
 }
 const initialState: State = {
   pool: null,
@@ -25,6 +26,7 @@ const initialState: State = {
   minPriceRangeValue: 0.0,
   maxPriceRangeValue: 0.0,
   priceAssumptionValue: 0.0,
+  outOfRangePercentageValue: 100,
 };
 
 export enum ActionType {
