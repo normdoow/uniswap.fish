@@ -6,7 +6,9 @@ import Credit from "./containers/Credit";
 import EstimatedFees from "./containers/EstimatedFees";
 import Header from "./containers/Header";
 import Navbar from "./containers/Navbar";
+import SelectPairModal from "./containers/SelectPairModal";
 import Setting from "./containers/setting/Setting";
+import { ModalContextProvider } from "./context/modal/context";
 
 const BodyContainer = styled.div`
   width: 900px;
@@ -23,6 +25,9 @@ const ContentContainer = styled.div`
 function App() {
   return (
     <>
+      <ModalContextProvider>
+        <SelectPairModal />
+      </ModalContextProvider>
       <Navbar />
       <BodyContainer>
         <Header />
