@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { Heading } from "../../common/atomic";
 import { V3Token } from "../../repos/uniswap";
 import ReactLoading from "react-loading";
+import { useEffect } from "react";
+import Fuse from "fuse.js";
 
 const Container = styled.div`
   width: 400px;
@@ -77,23 +79,56 @@ const TokenItem = styled.div`
   }
 `;
 
+const MAX_NUMBER_PER_PAGE = 300;
 interface SearchTokenPageProps {
   tokens: V3Token[];
 }
 const SearchTokenPage = ({ tokens }: SearchTokenPageProps) => {
   const [searchValue, setSearchValue] = useState<string>("");
+  const [filteredTokens, setFilteredTokens] = useState<V3Token[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    setFilteredTokens(tokens.slice(0, MAX_NUMBER_PER_PAGE));
+  }, [tokens]);
+
+  const handleSearch = (value: string) => {
+    if (value === "") {
+      setFilteredTokens(tokens.slice(0, MAX_NUMBER_PER_PAGE));
+      setIsLoading(false);
+      return;
+    }
+
+    timeoutId && clearTimeout(timeoutId);
+    setIsLoading(true);
+
+    const _timeoutId = setTimeout(() => {
+      const fuse = new Fuse(tokens, {
+        includeScore: true,
+        keys: ["id", "name", "symbol"],
+      });
+
+      setFilteredTokens(fuse.search(value).map((d) => d.item) as V3Token[]);
+
+      timeoutId && clearTimeout(timeoutId);
+      setIsLoading(false);
+    }, 1000);
+
+    setTimeoutId(_timeoutId);
+  };
 
   return (
     <>
       <Container>
         <Heading>Select a token</Heading>
         <SearchInput
-          onChange={(e) => setSearchValue(e.target.value)}
-          placeholder="Search token name"
+          onChange={(e) => handleSearch(e.target.value)}
+          placeholder="Search name or paste address"
         />
       </Container>
       <Divider />
-      {tokens.length === 0 && (
+      {(isLoading || tokens.length === 0) && (
         <LoadingContainer>
           <ReactLoading
             type="spin"
@@ -103,23 +138,19 @@ const SearchTokenPage = ({ tokens }: SearchTokenPageProps) => {
           />
         </LoadingContainer>
       )}
-      {tokens.length > 0 && (
+      {!isLoading && tokens.length > 0 && (
         <Scrollable>
-          {tokens
-            .filter((token) =>
-              `${token.name} ${token.symbol}`.includes(searchValue)
-            )
-            .map((token) => {
-              return (
-                <TokenItem id={`${token.symbol}_${token.name}_${token.id}`}>
-                  <img src={token.logoURI} alt={token.name} />
-                  <div>
-                    <h5>{token.symbol}</h5>
-                    <span>{token.name}</span>
-                  </div>
-                </TokenItem>
-              );
-            })}
+          {filteredTokens.map((token) => {
+            return (
+              <TokenItem id={`${token.symbol}_${token.name}_${token.id}`}>
+                <img src={token.logoURI} alt={token.name} />
+                <div>
+                  <h5>{token.symbol}</h5>
+                  <span>{token.name}</span>
+                </div>
+              </TokenItem>
+            );
+          })}
         </Scrollable>
       )}
     </>
