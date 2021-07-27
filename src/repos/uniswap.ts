@@ -15,7 +15,7 @@ const queryUniswap = async (query: string): Promise<any> => {
   return data.data;
 };
 
-interface Tick {
+export interface Tick {
   liquidityNet: number;
   price0: number;
   price1: number;
@@ -37,7 +37,7 @@ export const getPoolTicks = async (
   return ticks as Tick[];
 };
 
-interface V3Token {
+export interface V3Token {
   id: string;
   name: string;
   symbool: string;
@@ -54,13 +54,18 @@ export const getTokenList = async (): Promise<V3Token[]> => {
   return tokens as V3Token[];
 };
 
+export interface Pool {
+  id: string;
+  feeTier: string;
+  liquidity: string;
+}
 export const getPoolFromPair = async (
   token0: string,
   token1: string
-): Promise<V3Token[]> => {
+): Promise<Pool[]> => {
   const sortedTokens = sortToken(token0, token1);
 
-  const { tokens } = await queryUniswap(`{
+  const { pools } = await queryUniswap(`{
     pools(orderBy: id, where: {
         token0: "${sortedTokens[0]}",
         token1: "${sortedTokens[1]}"}) {
@@ -70,5 +75,5 @@ export const getPoolFromPair = async (
     }
   }`);
 
-  return tokens as V3Token[];
+  return pools as Pool[];
 };
