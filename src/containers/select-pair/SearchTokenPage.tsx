@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Heading } from "../../common/atomic";
 import { V3Token } from "../../repos/uniswap";
@@ -75,25 +75,34 @@ interface SearchTokenPageProps {
   tokens: V3Token[];
 }
 const SearchTokenPage = ({ tokens }: SearchTokenPageProps) => {
+  const [searchValue, setSearchValue] = useState<string>("");
+
   return (
     <>
       <Container>
         <Heading>Select a token</Heading>
-        <SearchInput placeholder="Search token name" />
+        <SearchInput
+          onChange={(e) => setSearchValue(e.target.value)}
+          placeholder="Search token name"
+        />
       </Container>
       <Divider />
       <Scrollable>
-        {tokens.map((token) => {
-          return (
-            <TokenItem id={`${token.symbol}_${token.name}`}>
-              <img src={getTokenLogoURL(token.id)} alt={token.name} />
-              <div>
-                <h5>{token.symbol}</h5>
-                <span>{token.name}</span>
-              </div>
-            </TokenItem>
-          );
-        })}
+        {tokens
+          .filter((token) =>
+            `${token.name} ${token.symbol}`.includes(searchValue)
+          )
+          .map((token) => {
+            return (
+              <TokenItem id={`${token.symbol}_${token.name}_${token.id}`}>
+                <img src={token.logoURI} alt={token.name} />
+                <div>
+                  <h5>{token.symbol}</h5>
+                  <span>{token.name}</span>
+                </div>
+              </TokenItem>
+            );
+          })}
       </Scrollable>
     </>
   );
