@@ -30,9 +30,11 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
+    "generate-token-image-uri-mapping": "node ./scripts/generateTokenImageURI.js",
     "generate-contract-address-mapping": "node ./scripts/generateTokenAddressMaping.js",
-    "start": "yarn generate-contract-address-mapping && react-scripts start",
-    "build": "yarn generate-contract-address-mapping && react-scripts build",
+    "generate": "yarn generate-token-image-uri-mapping && yarn generate-contract-address-mapping",
+    "start": "yarn generate && react-scripts start",
+    "build": "yarn generate && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
