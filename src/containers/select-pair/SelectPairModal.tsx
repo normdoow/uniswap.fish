@@ -9,6 +9,8 @@ import { PrimaryBlockButton } from "../../common/buttons";
 import { useState } from "react";
 import { getTokenList, V3Token } from "../../repos/uniswap";
 import SearchTokenPage from "./SearchTokenPage";
+import { useAppContext } from "../../context/app/appContext";
+import { AppActionType } from "../../context/app/appReducer";
 
 const ModalStyle = {
   overlay: {
@@ -108,8 +110,8 @@ const Logo = styled.h1`
 `;
 
 const SelectPairModal = () => {
-  const { state, dispatch } = useModalContext();
-  const [tokens, setTokens] = useState<V3Token[]>([]);
+  const appContext = useAppContext();
+  const modalContext = useModalContext();
   const [selectedTokens, setSelectedTokens] = useState<V3Token[] | null[]>([
     null,
     null,
@@ -125,21 +127,26 @@ const SelectPairModal = () => {
   }, []);
 
   const fetchTokens = async () => {
-    const tokens = await getTokenList();
-    setTokens(tokens);
+    const tokenList = await getTokenList();
+    appContext.dispatch({
+      type: AppActionType.RESET_TOKEN_LIST,
+      payload: { tokenList },
+    });
   };
 
   return (
     <>
       <Modal
         style={ModalStyle}
-        isOpen={state.isSelectPairModalOpen}
+        isOpen={modalContext.state.isSelectPairModalOpen}
         contentLabel="Example Modal"
       >
         <Logo>
           <span>🦄</span> UniswapCalculator
         </Logo>
-        {showSelectTokenPage && <SearchTokenPage tokens={tokens} />}
+        {showSelectTokenPage && (
+          <SearchTokenPage tokens={appContext.state.tokenList} />
+        )}
         {!showSelectTokenPage && (
           <Container>
             <Heading>Select Pair</Heading>

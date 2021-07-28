@@ -93,6 +93,7 @@ const SearchTokenPage = ({ tokens }: SearchTokenPageProps) => {
   }, [tokens]);
 
   const handleSearch = (value: string) => {
+    timeoutId && clearTimeout(timeoutId);
     value = value.trim();
 
     if (value === "") {
@@ -101,7 +102,6 @@ const SearchTokenPage = ({ tokens }: SearchTokenPageProps) => {
       return;
     }
 
-    timeoutId && clearTimeout(timeoutId);
     setIsLoading(true);
 
     const _timeoutId = setTimeout(() => {

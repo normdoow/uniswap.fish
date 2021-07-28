@@ -3,10 +3,17 @@ import { Pool, Tick, V3Token } from "../../repos/uniswap";
 import { AppContextState } from "./appContext";
 
 export enum AppActionType {
+  RESET_TOKEN_LIST = "RESET_TOKEN_LIST",
   RESET_PAIR = "RESET_PAIR",
   SWAP_CURRENT_PAIR = "SWAP_CURRENT_PAIR",
 }
 export type AppAction =
+  | {
+      type: AppActionType.RESET_TOKEN_LIST;
+      payload: {
+        tokenList: V3Token[];
+      };
+    }
   | {
       type: AppActionType.RESET_PAIR;
       payload: {
@@ -24,10 +31,15 @@ export const appReducer = (
   state: AppContextState,
   action: AppAction
 ): AppContextState => {
-  return state;
-  // switch (action.type) {
-  //   default: {
-  //     throw new Error(`Unhandled action type: ${action.type}`);
-  //   }
-  // }
+  switch (action.type) {
+    case AppActionType.RESET_TOKEN_LIST: {
+      return { ...state, tokenList: action.payload.tokenList };
+    }
+    case AppActionType.RESET_PAIR: {
+      return state;
+    }
+    case AppActionType.SWAP_CURRENT_PAIR: {
+      return state;
+    }
+  }
 };

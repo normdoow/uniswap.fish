@@ -8,6 +8,7 @@ import Header from "./containers/Header";
 import Navbar from "./containers/Navbar";
 import SelectPairModal from "./containers/select-pair/SelectPairModal";
 import Setting from "./containers/setting/Setting";
+import { AppContextProvider } from "./context/app/appContext";
 import { ModalContextProvider } from "./context/modal/modalContext";
 
 const BodyContainer = styled.div`
@@ -24,7 +25,7 @@ const ContentContainer = styled.div`
 
 function App() {
   return (
-    <>
+    <AppContextProvider>
       <ModalContextProvider>
         <SelectPairModal />
       </ModalContextProvider>
@@ -44,7 +45,7 @@ function App() {
 
         <Credit />
       </BodyContainer>
-    </>
+    </AppContextProvider>
   );
 }
 
