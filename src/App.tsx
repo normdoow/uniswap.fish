@@ -8,8 +8,7 @@ import Header from "./containers/Header";
 import Navbar from "./containers/Navbar";
 import SelectPairModal from "./containers/select-pair/SelectPairModal";
 import Setting from "./containers/setting/Setting";
-import { AppContextProvider } from "./context/app/appContext";
-import { ModalContextProvider } from "./context/modal/modalContext";
+import ContextProvider from "./context/ContextProvider";
 
 const BodyContainer = styled.div`
   width: 900px;
@@ -25,27 +24,25 @@ const ContentContainer = styled.div`
 
 function App() {
   return (
-    <AppContextProvider>
-      <ModalContextProvider>
-        <SelectPairModal />
-        <Navbar />
-        <BodyContainer>
-          <Header />
-          <ContentContainer>
-            <div>
-              <EstimatedFees />
-              <Br />
-              <Setting />
-            </div>
-            <div>
-              <CorrelationChart />
-            </div>
-          </ContentContainer>
+    <ContextProvider>
+      <SelectPairModal />
+      <Navbar />
+      <BodyContainer>
+        <Header />
+        <ContentContainer>
+          <div>
+            <EstimatedFees />
+            <Br />
+            <Setting />
+          </div>
+          <div>
+            <CorrelationChart />
+          </div>
+        </ContentContainer>
 
-          <Credit />
-        </BodyContainer>
-      </ModalContextProvider>
-    </AppContextProvider>
+        <Credit />
+      </BodyContainer>
+    </ContextProvider>
   );
 }
 
