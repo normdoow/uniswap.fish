@@ -55,6 +55,18 @@ const TokenSelect = styled.div`
   &:hover {
     background: rgba(255, 255, 255, 0.25);
   }
+
+  & > span {
+    display: flex;
+    align-items: center;
+
+    & > img {
+      width: 25px;
+      height: 25px;
+      margin-right: 10px;
+      border-radius: 50%;
+    }
+  }
 `;
 const Tier = styled.div`
   border-radius: 12px;
@@ -117,7 +129,8 @@ const SelectPairModal = () => {
     null,
   ]);
 
-  const [showSelectTokenPage, setShowSelectTokenPage] = useState<boolean>(true);
+  const [showSelectTokenPage, setShowSelectTokenPage] =
+    useState<boolean>(false);
   const [selectedTokenIndex, setSelectedTokenIndex] = useState<number | null>(
     null
   );
@@ -134,6 +147,18 @@ const SelectPairModal = () => {
     });
   };
 
+  const selectToken = (token: V3Token) => {
+    const _selectedTokens = JSON.parse(JSON.stringify(selectedTokens));
+
+    if (selectedTokenIndex !== null) {
+      _selectedTokens[selectedTokenIndex] = token;
+    }
+
+    setSelectedTokens(_selectedTokens);
+    setSelectedTokenIndex(null);
+    setShowSelectTokenPage(false);
+  };
+
   return (
     <>
       <Modal
@@ -145,7 +170,10 @@ const SelectPairModal = () => {
           <span>🦄</span> UniswapCalculator
         </Logo>
         {showSelectTokenPage && (
-          <SearchTokenPage tokens={appContext.state.tokenList} />
+          <SearchTokenPage
+            selectToken={selectToken}
+            tokens={appContext.state.tokenList}
+          />
         )}
         {!showSelectTokenPage && (
           <Container>
@@ -157,7 +185,16 @@ const SelectPairModal = () => {
                   setSelectedTokenIndex(0);
                 }}
               >
-                <span>Select a token</span>
+                {!selectedTokens[0] && <span>Select a token</span>}
+                {selectedTokens[0] && (
+                  <span>
+                    <img
+                      src={selectedTokens[0].logoURI}
+                      alt={selectedTokens[0].name}
+                    />
+                    {selectedTokens[0].symbol}
+                  </span>
+                )}
                 <span>
                   <FontAwesomeIcon icon={faChevronDown}></FontAwesomeIcon>
                 </span>
@@ -168,7 +205,16 @@ const SelectPairModal = () => {
                   setSelectedTokenIndex(1);
                 }}
               >
-                <span>Select a token</span>
+                {!selectedTokens[1] && <span>Select a token</span>}
+                {selectedTokens[1] && (
+                  <span>
+                    <img
+                      src={selectedTokens[1].logoURI}
+                      alt={selectedTokens[1].name}
+                    />
+                    {selectedTokens[1].symbol}
+                  </span>
+                )}
                 <span>
                   <FontAwesomeIcon icon={faChevronDown}></FontAwesomeIcon>
                 </span>

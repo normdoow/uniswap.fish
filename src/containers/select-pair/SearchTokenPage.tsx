@@ -82,8 +82,9 @@ const TokenItem = styled.div`
 const MAX_NUMBER_PER_PAGE = 100;
 interface SearchTokenPageProps {
   tokens: V3Token[];
+  selectToken: (token: V3Token) => void;
 }
-const SearchTokenPage = ({ tokens }: SearchTokenPageProps) => {
+const SearchTokenPage = ({ tokens, selectToken }: SearchTokenPageProps) => {
   const [filteredTokens, setFilteredTokens] = useState<V3Token[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
@@ -143,7 +144,10 @@ const SearchTokenPage = ({ tokens }: SearchTokenPageProps) => {
         <Scrollable>
           {filteredTokens.map((token) => {
             return (
-              <TokenItem id={`${token.symbol}_${token.name}_${token.id}`}>
+              <TokenItem
+                onClick={() => selectToken(token)}
+                id={`${token.symbol}_${token.name}_${token.id}`}
+              >
                 <img src={token.logoURI} alt={token.name} />
                 <div>
                   <h5>{token.symbol}</h5>

@@ -76,7 +76,7 @@ export const getTokenList = async (): Promise<V3Token[]> => {
         token.name = "Ethereum";
         token.symbol = "ETH";
         token.logoURI =
-          "https://ethereum.org/static/4b5288012dc4b32ae7ff21fccac98de1/31987/eth-diamond-black-gray.png";
+          "https://cdn.iconscout.com/icon/free/png-128/ethereum-2752194-2285011.png";
       }
       return token;
     })
