@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import Modal from "react-modal";
+import ReactLoading from "react-loading";
 import { useModalContext } from "../../context/modal/modalContext";
 import { Heading } from "../../common/atomic";
 import styled from "styled-components";
@@ -170,6 +171,8 @@ const SelectPairModal = () => {
   const [pools, setPools] = useState<Pool[]>([]);
   const [selectedPool, setSelectedPool] = useState<Pool | null>(null);
 
+  const [isSubmitLoading, setIsSubmitLoading] = useState<boolean>(false);
+
   useEffect(() => {
     fetchTokens();
   }, []);
@@ -177,6 +180,17 @@ const SelectPairModal = () => {
   useEffect(() => {
     fetchPools();
   }, [selectedTokens]);
+
+  const isFormDisabled =
+    isSubmitLoading ||
+    !(selectedTokens[0] && selectedTokens[1] && selectedPool);
+
+  const handleSubmit = () => {
+    if (isFormDisabled) return;
+    setIsSubmitLoading(true);
+
+    console.log("this");
+  };
 
   const fetchPools = async () => {
     if (!selectedTokens[0] || !selectedTokens[1]) return;
@@ -285,9 +299,11 @@ const SelectPairModal = () => {
               <SelectPairContainer>
                 <TokenSelect
                   onClick={() => {
-                    setSelectedPool(null);
-                    setShowSelectTokenPage(true);
-                    setSelectedTokenIndex(0);
+                    if (!isSubmitLoading) {
+                      setSelectedPool(null);
+                      setShowSelectTokenPage(true);
+                      setSelectedTokenIndex(0);
+                    }
                   }}
                 >
                   {!selectedTokens[0] && <span>Select a token</span>}
@@ -306,9 +322,11 @@ const SelectPairModal = () => {
                 </TokenSelect>
                 <TokenSelect
                   onClick={() => {
-                    setSelectedPool(null);
-                    setShowSelectTokenPage(true);
-                    setSelectedTokenIndex(1);
+                    if (!isSubmitLoading) {
+                      setSelectedPool(null);
+                      setShowSelectTokenPage(true);
+                      setSelectedTokenIndex(1);
+                    }
                   }}
                 >
                   {!selectedTokens[1] && <span>Select a token</span>}
@@ -332,8 +350,10 @@ const SelectPairModal = () => {
                 <Tier
                   style={getFeeTierStyle("500")}
                   onClick={() => {
-                    const tier = getFeeTier("500");
-                    tier && setSelectedPool(tier);
+                    if (!isSubmitLoading) {
+                      const tier = getFeeTier("500");
+                      tier && setSelectedPool(tier);
+                    }
                   }}
                 >
                   <h4 style={!getFeeTier("500") ? { color: "#999" } : {}}>
@@ -345,8 +365,10 @@ const SelectPairModal = () => {
                 <Tier
                   style={getFeeTierStyle("3000")}
                   onClick={() => {
-                    const tier = getFeeTier("3000");
-                    tier && setSelectedPool(tier);
+                    if (!isSubmitLoading) {
+                      const tier = getFeeTier("3000");
+                      tier && setSelectedPool(tier);
+                    }
                   }}
                 >
                   <h4 style={!getFeeTier("3000") ? { color: "#999" } : {}}>
@@ -358,8 +380,10 @@ const SelectPairModal = () => {
                 <Tier
                   style={getFeeTierStyle("10000")}
                   onClick={() => {
-                    const tier = getFeeTier("10000");
-                    tier && setSelectedPool(tier);
+                    if (!isSubmitLoading) {
+                      const tier = getFeeTier("10000");
+                      tier && setSelectedPool(tier);
+                    }
                   }}
                 >
                   <h4 style={!getFeeTier("10000") ? { color: "#999" } : {}}>
@@ -370,7 +394,28 @@ const SelectPairModal = () => {
                 </Tier>
               </FeeTiersContainer>
 
-              <PrimaryBlockButton>Calculate</PrimaryBlockButton>
+              <PrimaryBlockButton
+                onClick={handleSubmit}
+                disabled={isFormDisabled}
+                style={
+                  isFormDisabled
+                    ? {
+                        background: "rgba(255, 255, 255, 0.1)",
+                        cursor: "not-allowed",
+                      }
+                    : {}
+                }
+              >
+                {isSubmitLoading && (
+                  <ReactLoading
+                    type="spin"
+                    color="rgba(34, 114, 229, 1)"
+                    height={18}
+                    width={18}
+                  />
+                )}
+                {!isSubmitLoading && <span>Calculate</span>}
+              </PrimaryBlockButton>
             </Container>
           </>
         )}

@@ -39,7 +39,7 @@ const Scrollable = styled.div`
   overflow: scroll;
 `;
 const LoadingContainer = styled.div`
-  height: 250px;
+  height: 300px;
   display: flex;
   justify-content: center;
   align-items: center;

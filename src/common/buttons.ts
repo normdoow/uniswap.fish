@@ -61,6 +61,12 @@ export const PrimaryBlockButton = styled(PrimaryButton)`
   color: white;
   width: 100%;
   padding: 15px;
+  display: flex;
+  justify-content: center;
+
+  & svg {
+    transform: scale(1.5);
+  }
 
   background: linear-gradient(
     -30deg,
