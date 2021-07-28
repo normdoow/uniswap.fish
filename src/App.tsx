@@ -8,7 +8,7 @@ import Header from "./containers/Header";
 import Navbar from "./containers/Navbar";
 import SelectPairModal from "./containers/select-pair/SelectPairModal";
 import Setting from "./containers/setting/Setting";
-import { ModalContextProvider } from "./context/modal/context";
+import { ModalContextProvider } from "./context/modal/modalContext";
 
 const BodyContainer = styled.div`
   width: 900px;

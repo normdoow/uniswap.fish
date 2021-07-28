@@ -1,5 +1,5 @@
 import React from "react";
-import { ModalContextAction, modalContextReducer } from "./reducer";
+import { ModalContextAction, modalContextReducer } from "./modalReducer";
 
 export interface ModalContextState {
   isSelectPairModalOpen: boolean;
@@ -18,7 +18,9 @@ const ModalContext = React.createContext<
   | undefined
 >(undefined);
 
-const ModalContextProvider = ({ children }: ModalContextProviderProps) => {
+export const ModalContextProvider = ({
+  children,
+}: ModalContextProviderProps) => {
   const [state, dispatch] = React.useReducer(modalContextReducer, initialState);
   const value = { state, dispatch };
 
@@ -27,7 +29,7 @@ const ModalContextProvider = ({ children }: ModalContextProviderProps) => {
   );
 };
 
-function useModalContext() {
+export const useModalContext = () => {
   const context = React.useContext(ModalContext);
   if (context === undefined) {
     throw new Error(
@@ -35,6 +37,4 @@ function useModalContext() {
     );
   }
   return context;
-}
-
-export { ModalContextProvider, useModalContext };
+};

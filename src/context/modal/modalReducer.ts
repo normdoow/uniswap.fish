@@ -1,4 +1,4 @@
-import { ModalContextState } from "./context";
+import { ModalContextState } from "./modalContext";
 
 export enum ModalActionType {
   SET_SELECT_PAIR_MODAL_STATE = "SET_SELECT_PAIR_MODAL_STATE",
