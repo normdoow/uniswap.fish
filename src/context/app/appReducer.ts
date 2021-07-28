@@ -65,10 +65,6 @@ export const appReducer = (
         token1PriceChart,
       } = action.payload;
 
-      // minPriceRangeValue: number;
-      // maxPriceRangeValue: number;
-      // priceAssumptionValue: number;
-
       return {
         ...state,
         pool,
