@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Heading } from "../../common/atomic";
 import { useAppContext } from "../../context/app/appContext";
 import { AppActionType } from "../../context/app/appReducer";
+import { divideArray, findMax, findMin } from "../../utils/math";
 import Slider from "./Slider";
 
 const Group = styled.div`
@@ -49,9 +50,15 @@ const MinMaxPriceContainer = styled.div`
 const PriceRange = () => {
   const { state, dispatch } = useAppContext();
 
-  const currentPrice = Number(state.pool?.token0Price);
-  const min = 0;
-  const max = 10000;
+  const currentPrice = Number(Number(state.pool?.token0Price).toFixed(5));
+  const prices = divideArray(
+    (state.token1PriceChart?.prices || []).map((p) => p.value),
+    (state.token0PriceChart?.prices || []).map((p) => p.value)
+  );
+  const min = findMin(prices) * 0.5;
+  const max = findMax(prices) * 1.5;
+
+  console.log(min, max, currentPrice);
 
   useEffect(() => {
     dispatch({
@@ -88,8 +95,6 @@ const PriceRange = () => {
             placeholder="0.0"
             onChange={(e) => {
               let value = Number(e.target.value);
-              if (value > max) value = max;
-              if (value < min) value = min;
 
               dispatch({
                 type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE,
@@ -102,9 +107,10 @@ const PriceRange = () => {
           </span>
         </InputGroup>
         <Slider
+          thumbClassName="thumb-red"
           value={state.priceAssumptionValue}
-          min={0}
-          max={10000}
+          min={min}
+          max={max}
           onChange={(value, _) => {
             dispatch({
               type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE,

@@ -8,3 +8,11 @@ export const findMin = (data: number[]): number => {
     Number.MAX_SAFE_INTEGER
   );
 };
+
+export const divideArray = (data0: number[], data1: number[]): number[] => {
+  const result: number[] = [];
+  data0.forEach((d, i) => {
+    result[i] = d / data1[i];
+  });
+  return result;
+};

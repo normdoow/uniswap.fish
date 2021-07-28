@@ -55,8 +55,6 @@ const OutOfRangePercentage = () => {
             max={100}
             onChange={(e) => {
               let value = Number(e.target.value);
-              if (value > 100) value = 100;
-              if (value < 0) value = 0;
 
               dispatch({
                 type: AppActionType.UPDATE_OUT_OF_RANGE_PERCENTAGE,

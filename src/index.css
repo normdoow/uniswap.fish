@@ -36,6 +36,10 @@ input[type="number"] {
   font-family: "Gowun Batang", serif !important;
 }
 
+.thumb-red-0,
+.thumb-red-1 {
+  background-color: rgb(247, 2, 119) !important;
+}
 .thumb-green-0 {
   background-color: rgba(37, 175, 96, 1) !important;
 }
