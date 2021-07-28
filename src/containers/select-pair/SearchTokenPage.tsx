@@ -79,12 +79,11 @@ const TokenItem = styled.div`
   }
 `;
 
-const MAX_NUMBER_PER_PAGE = 300;
+const MAX_NUMBER_PER_PAGE = 100;
 interface SearchTokenPageProps {
   tokens: V3Token[];
 }
 const SearchTokenPage = ({ tokens }: SearchTokenPageProps) => {
-  const [searchValue, setSearchValue] = useState<string>("");
   const [filteredTokens, setFilteredTokens] = useState<V3Token[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);

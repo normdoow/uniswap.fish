@@ -41,6 +41,7 @@ export interface V3Token {
   id: string;
   name: string;
   symbol: string;
+  volumeUSD: string;
   logoURI: string;
 }
 const _getTokenList = async (
@@ -52,6 +53,7 @@ const _getTokenList = async (
       id
       name
       symbol
+      volumeUSD
     }
   }`);
 
@@ -78,7 +80,8 @@ export const getTokenList = async (): Promise<V3Token[]> => {
       }
       return token;
     })
-    .filter((token) => token.symbol.length < 30);
+    .filter((token) => token.symbol.length < 30)
+    .sort((a, b) => Number(b.volumeUSD) - Number(a.volumeUSD));
 };
 
 export interface Pool {
