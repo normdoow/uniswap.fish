@@ -1,7 +1,9 @@
+import { useState } from "react";
 import styled from "styled-components";
 import { Heading } from "../../common/atomic";
 import Table from "../../common/Table";
 import { useAppContext } from "../../context/app/appContext";
+import { AppActionType } from "../../context/app/appReducer";
 
 const InputGroup = styled.div`
   display: flex;
@@ -46,37 +48,72 @@ const Token = styled.div`
 `;
 
 const DepositAmounts = () => {
-  const appContext = useAppContext();
+  const { state, dispatch } = useAppContext();
+
+  const roundPercentage = (percent: number) => {
+    if (percent < 0) return 0;
+    if (percent > 1) return 1;
+    return percent;
+  };
+
+  const max = state.priceRangeValue[1];
+  const min = state.priceRangeValue[0];
+  const percentToken0 = roundPercentage(
+    (state.priceAssumptionValue - min) / (max - min)
+  );
+  const percentToken1 = roundPercentage(
+    (max - state.priceAssumptionValue) / (max - min)
+  );
+
+  const token0PriceUSD = state.token0PriceChart?.currentPriceUSD || 1;
+  const token1PriceUSD = state.token1PriceChart?.currentPriceUSD || 1;
 
   return (
     <div>
       <Heading>Deposit Amounts</Heading>
       <InputGroup>
         <span className="dollar">$</span>
-        <DepositInput type="number" placeholder="0.00" />
+        <DepositInput
+          value={state.depositAmountValue}
+          type="number"
+          placeholder="0.00"
+          onChange={(e) => {
+            let value = Number(e.target.value);
+            if (value < 0) value = 0;
+
+            dispatch({
+              type: AppActionType.UPDATE_DEPOSIT_AMOUNT,
+              payload: value,
+            });
+          }}
+        />
       </InputGroup>
 
       <Table>
         <Token>
-          <img
-            alt={appContext.state.token0?.name}
-            src={appContext.state.token0?.logoURI}
-          />{" "}
-          <span>{appContext.state.token0?.symbol}</span>
+          <img alt={state.token0?.name} src={state.token0?.logoURI} />{" "}
+          <span>{state.token0?.symbol}</span>
         </Token>
-        <div>0.0000023</div>
-        <div>$449.99</div>
+        <div>
+          {(
+            (state.depositAmountValue * percentToken0) /
+            token0PriceUSD
+          ).toFixed(5)}
+        </div>
+        <div>${(state.depositAmountValue * percentToken0).toFixed(2)}</div>
       </Table>
       <Table>
         <Token>
-          <img
-            alt={appContext.state.token1?.name}
-            src={appContext.state.token1?.logoURI}
-          />{" "}
-          <span>{appContext.state.token1?.symbol}</span>
+          <img alt={state.token1?.name} src={state.token1?.logoURI} />{" "}
+          <span>{state.token1?.symbol}</span>
         </Token>
-        <div>1.19</div>
-        <div>$500.00</div>
+        <div>
+          {(
+            (state.depositAmountValue * percentToken1) /
+            token1PriceUSD
+          ).toFixed(5)}
+        </div>
+        <div>${(state.depositAmountValue * percentToken1).toFixed(2)}</div>
       </Table>
     </div>
   );

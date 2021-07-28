@@ -54,8 +54,8 @@ const PriceRange = () => {
     (state.token1PriceChart?.prices || []).map((p) => p.value),
     (state.token0PriceChart?.prices || []).map((p) => p.value)
   );
-  const min = findMin(prices) * 0.5;
-  const max = findMax(prices) * 1.5;
+  const min = findMin(prices) * 0.75;
+  const max = findMax(prices) * 1.25;
   const step = (max - min) / 1000;
 
   useEffect(() => {
