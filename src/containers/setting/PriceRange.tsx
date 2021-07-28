@@ -64,6 +64,10 @@ const PriceRange = () => {
       type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE,
       payload: currentPrice,
     });
+    dispatch({
+      type: AppActionType.UPDATE_PRICE_RANGE,
+      payload: [min, max],
+    });
   }, [state.pool]);
 
   return (
@@ -73,16 +77,56 @@ const PriceRange = () => {
         <MinMaxPriceContainer>
           <InputGroup>
             <span>Min Price</span>
-            <Input type="number" placeholder="0.0" />
-            <span>UNI per ETH</span>
+            <Input
+              value={state.priceRangeValue[0]}
+              type="number"
+              placeholder="0.0"
+              onChange={(e) => {
+                let value = Number(e.target.value);
+
+                dispatch({
+                  type: AppActionType.UPDATE_PRICE_RANGE,
+                  payload: [value, state.priceRangeValue[0]],
+                });
+              }}
+            />
+            <span>
+              {state.token0?.symbol} per {state.token1?.symbol}
+            </span>
           </InputGroup>
           <InputGroup>
             <span>Max Price</span>
-            <Input type="number" placeholder="0.0" />
-            <span>UNI per ETH</span>
+            <Input
+              value={state.priceRangeValue[1]}
+              type="number"
+              placeholder="0.0"
+              onChange={(e) => {
+                let value = Number(e.target.value);
+
+                dispatch({
+                  type: AppActionType.UPDATE_PRICE_RANGE,
+                  payload: [state.priceRangeValue[0], value],
+                });
+              }}
+            />
+            <span>
+              {state.token0?.symbol} per {state.token1?.symbol}
+            </span>
           </InputGroup>
         </MinMaxPriceContainer>
-        {/* <Slider /> */}
+        <Slider
+          thumbClassName="thumb-green"
+          value={state.priceRangeValue}
+          min={min}
+          max={max}
+          step={step}
+          onChange={(value, _) => {
+            dispatch({
+              type: AppActionType.UPDATE_PRICE_RANGE,
+              payload: value,
+            });
+          }}
+        />
       </Group>
 
       <Group style={{ marginTop: 7 }}>

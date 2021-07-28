@@ -40,6 +40,7 @@ input[type="number"] {
 .thumb-red-1 {
   background-color: rgb(247, 2, 119) !important;
 }
-.thumb-green-0 {
+.thumb-green-0,
+.thumb-green-1 {
   background-color: rgba(37, 175, 96, 1) !important;
 }
