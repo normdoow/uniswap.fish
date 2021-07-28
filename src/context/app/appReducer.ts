@@ -36,7 +36,28 @@ export const appReducer = (
       return { ...state, tokenList: action.payload.tokenList };
     }
     case AppActionType.RESET_PAIR: {
-      return state;
+      const {
+        pool,
+        poolTicks,
+        token0,
+        token1,
+        token0PriceChart,
+        token1PriceChart,
+      } = action.payload;
+
+      // minPriceRangeValue: number;
+      // maxPriceRangeValue: number;
+      // priceAssumptionValue: number;
+
+      return {
+        ...state,
+        pool,
+        poolTicks,
+        token0,
+        token1,
+        token0PriceChart,
+        token1PriceChart,
+      };
     }
     case AppActionType.SWAP_CURRENT_PAIR: {
       return state;

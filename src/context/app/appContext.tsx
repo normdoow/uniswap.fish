@@ -29,7 +29,7 @@ const initialState: AppContextState = {
   token0PriceChart: null,
   token1PriceChart: null,
 
-  depositAmountValue: 0.0,
+  depositAmountValue: 1000.0,
   minPriceRangeValue: 0.0,
   maxPriceRangeValue: 0.0,
   priceAssumptionValue: 0.0,

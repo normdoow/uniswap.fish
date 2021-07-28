@@ -21,12 +21,9 @@ export interface Tick {
   price1: number;
   tickIdx: number;
 }
-export const getPoolTicks = async (
-  poolAddress: string,
-  skip: number = 0
-): Promise<Tick[]> => {
+export const getPoolTicks = async (poolAddress: string): Promise<Tick[]> => {
   const { ticks } = await queryUniswap(`{
-    ticks(skip: ${skip}, where: { poolAddress: "${poolAddress}" }, orderBy: tickIdx) {
+    ticks(skip: 0, where: { poolAddress: "${poolAddress}" }, orderBy: tickIdx) {
       tickIdx
       liquidityNet
       price0

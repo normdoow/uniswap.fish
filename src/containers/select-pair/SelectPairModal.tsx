@@ -10,6 +10,7 @@ import { PrimaryBlockButton } from "../../common/buttons";
 import { useState } from "react";
 import {
   getPoolFromPair,
+  getPoolTicks,
   getTokenList,
   Pool,
   V3Token,
@@ -17,6 +18,12 @@ import {
 import SearchTokenPage from "./SearchTokenPage";
 import { useAppContext } from "../../context/app/appContext";
 import { AppActionType } from "../../context/app/appReducer";
+import { sortToken } from "../../utils/helper";
+import { getPriceChart } from "../../repos/coingecko";
+import {
+  ModalActionType,
+  modalContextReducer,
+} from "../../context/modal/modalReducer";
 
 const ModalStyle = {
   overlay: {
@@ -185,11 +192,38 @@ const SelectPairModal = () => {
     isSubmitLoading ||
     !(selectedTokens[0] && selectedTokens[1] && selectedPool);
 
-  const handleSubmit = () => {
-    if (isFormDisabled) return;
+  const handleSubmit = async () => {
+    if (
+      isSubmitLoading ||
+      !(selectedTokens[0] && selectedTokens[1] && selectedPool)
+    ) {
+      return;
+    }
     setIsSubmitLoading(true);
 
-    console.log("this");
+    const [token0, token1] = sortToken(selectedTokens[0], selectedTokens[1]);
+    const pool = selectedPool;
+    const poolTicks = await getPoolTicks(pool.id);
+    const token0PriceChart = await getPriceChart(token0.id);
+    const token1PriceChart = await getPriceChart(token1.id);
+
+    appContext.dispatch({
+      type: AppActionType.RESET_PAIR,
+      payload: {
+        pool,
+        poolTicks,
+        token0,
+        token1,
+        token0PriceChart,
+        token1PriceChart,
+      },
+    });
+
+    setIsSubmitLoading(false);
+    modalContext.dispatch({
+      type: ModalActionType.SET_SELECT_PAIR_MODAL_STATE,
+      payload: false,
+    });
   };
 
   const fetchPools = async () => {
