@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Br } from "../../common/atomic";
 import DepositAmounts from "./DepositAmounts";
+import OutOfRangePercentage from "./OutOfRangePercentage";
 import PriceRange from "./PriceRange";
 
 const SettingContainer = styled.div`
@@ -16,6 +17,8 @@ const Setting = () => {
       <DepositAmounts />
       <Br />
       <PriceRange />
+      <Br />
+      <OutOfRangePercentage />
     </SettingContainer>
   );
 };

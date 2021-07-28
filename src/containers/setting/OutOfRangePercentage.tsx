@@ -35,39 +35,16 @@ const Input = styled.input`
     outline: none;
   }
 `;
-const MinMaxPriceContainer = styled.div`
-  display: grid;
-  grid-gap: 7px;
-  grid-template-columns: repeat(2, 1fr);
 
-  margin-bottom: 7px;
-`;
-
-const PriceRange = () => {
+const OutOfRangePercentage = () => {
   return (
     <div>
-      <Heading>Price Range</Heading>
+      <Heading>Out of Range Percentage</Heading>
       <Group>
-        <MinMaxPriceContainer>
-          <InputGroup>
-            <span>Min Price</span>
-            <Input type="number" placeholder="0.0" />
-            <span>UNI per ETH</span>
-          </InputGroup>
-          <InputGroup>
-            <span>Max Price</span>
-            <Input type="number" placeholder="0.0" />
-            <span>UNI per ETH</span>
-          </InputGroup>
-        </MinMaxPriceContainer>
-        <Slider />
-      </Group>
-
-      <Group style={{ marginTop: 7 }}>
         <InputGroup>
-          <span>Most Active Price Assumption</span>
+          <span>Out of Range Percentage</span>
           <Input type="number" placeholder="0.0" />
-          <span>UNI per ETH</span>
+          <span>Percent</span>
         </InputGroup>
         <Slider />
       </Group>
@@ -75,4 +52,4 @@ const PriceRange = () => {
   );
 };
 
-export default PriceRange;
+export default OutOfRangePercentage;

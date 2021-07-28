@@ -27,7 +27,7 @@ const Thumb = (props: any, state: any) => <StyledThumb {...props} />;
 
 const Track = (props: any, state: any) => <StyledTrack {...props} />;
 
-const MinMaxRangeSlider = () => {
+const Slider = () => {
   return (
     <StyledSlider
       defaultValue={[50, 75]}
@@ -37,4 +37,4 @@ const MinMaxRangeSlider = () => {
   );
 };
 
-export default MinMaxRangeSlider;
+export default Slider;

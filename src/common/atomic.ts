@@ -11,3 +11,19 @@ export const Heading = styled.h3`
 export const Br = styled.div`
   height: 20px;
 `;
+
+const Input = styled.input`
+  display: block;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: white;
+  font-weight: 400;
+  font-size: 1.2rem;
+  text-align: center;
+  margin-top: 3px;
+
+  &:focus {
+    outline: none;
+  }
+`;
