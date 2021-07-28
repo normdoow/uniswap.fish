@@ -4,7 +4,7 @@ import { useModalContext } from "../../context/modal/modalContext";
 import { Heading } from "../../common/atomic";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { PrimaryBlockButton } from "../../common/buttons";
 import { useState } from "react";
 import {
@@ -108,6 +108,23 @@ const FeeTiersContainer = styled.div`
   grid-gap: 7px;
   grid-template-columns: repeat(3, 1fr);
   margin-bottom: 20px;
+`;
+const GoBack = styled.h1`
+  color: white;
+  margin: 0;
+  font-weight: 500;
+  display: flex;
+  padding: 15px;
+  justify-content: center;
+  align-items: center;
+  background: rgb(50, 50, 50);
+  font-size: 1rem;
+
+  & > div {
+    cursor: pointer;
+    position: absolute;
+    left: 15px;
+  }
 `;
 const Logo = styled.h1`
   color: white;
@@ -239,106 +256,123 @@ const SelectPairModal = () => {
         isOpen={modalContext.state.isSelectPairModalOpen}
         contentLabel="Example Modal"
       >
-        <Logo>
-          <span>🦄</span> UniswapCalculator
-        </Logo>
         {showSelectTokenPage && (
-          <SearchTokenPage
-            selectToken={selectToken}
-            tokens={appContext.state.tokenList}
-          />
+          <>
+            <GoBack>
+              <div
+                onClick={() => {
+                  setShowSelectTokenPage(false);
+                  setSelectedTokenIndex(null);
+                }}
+              >
+                <FontAwesomeIcon icon={faArrowLeft} />
+              </div>
+              <span>Select Token</span>
+            </GoBack>
+            <SearchTokenPage
+              selectToken={selectToken}
+              tokens={appContext.state.tokenList}
+            />
+          </>
         )}
         {!showSelectTokenPage && (
-          <Container>
-            <Heading>Select Pair</Heading>
-            <SelectPairContainer>
-              <TokenSelect
-                onClick={() => {
-                  setShowSelectTokenPage(true);
-                  setSelectedTokenIndex(0);
-                }}
-              >
-                {!selectedTokens[0] && <span>Select a token</span>}
-                {selectedTokens[0] && (
+          <>
+            <Logo>
+              <span>🦄</span> UniswapCalculator
+            </Logo>
+            <Container>
+              <Heading>Select Pair</Heading>
+              <SelectPairContainer>
+                <TokenSelect
+                  onClick={() => {
+                    setSelectedPool(null);
+                    setShowSelectTokenPage(true);
+                    setSelectedTokenIndex(0);
+                  }}
+                >
+                  {!selectedTokens[0] && <span>Select a token</span>}
+                  {selectedTokens[0] && (
+                    <span>
+                      <img
+                        src={selectedTokens[0].logoURI}
+                        alt={selectedTokens[0].name}
+                      />
+                      {selectedTokens[0].symbol}
+                    </span>
+                  )}
                   <span>
-                    <img
-                      src={selectedTokens[0].logoURI}
-                      alt={selectedTokens[0].name}
-                    />
-                    {selectedTokens[0].symbol}
+                    <FontAwesomeIcon icon={faChevronDown}></FontAwesomeIcon>
                   </span>
-                )}
-                <span>
-                  <FontAwesomeIcon icon={faChevronDown}></FontAwesomeIcon>
-                </span>
-              </TokenSelect>
-              <TokenSelect
-                onClick={() => {
-                  setShowSelectTokenPage(true);
-                  setSelectedTokenIndex(1);
-                }}
-              >
-                {!selectedTokens[1] && <span>Select a token</span>}
-                {selectedTokens[1] && (
+                </TokenSelect>
+                <TokenSelect
+                  onClick={() => {
+                    setSelectedPool(null);
+                    setShowSelectTokenPage(true);
+                    setSelectedTokenIndex(1);
+                  }}
+                >
+                  {!selectedTokens[1] && <span>Select a token</span>}
+                  {selectedTokens[1] && (
+                    <span>
+                      <img
+                        src={selectedTokens[1].logoURI}
+                        alt={selectedTokens[1].name}
+                      />
+                      {selectedTokens[1].symbol}
+                    </span>
+                  )}
                   <span>
-                    <img
-                      src={selectedTokens[1].logoURI}
-                      alt={selectedTokens[1].name}
-                    />
-                    {selectedTokens[1].symbol}
+                    <FontAwesomeIcon icon={faChevronDown}></FontAwesomeIcon>
                   </span>
-                )}
-                <span>
-                  <FontAwesomeIcon icon={faChevronDown}></FontAwesomeIcon>
-                </span>
-              </TokenSelect>
-            </SelectPairContainer>
+                </TokenSelect>
+              </SelectPairContainer>
 
-            <Heading>Select Fee Tier</Heading>
-            <FeeTiersContainer>
-              <Tier
-                style={getFeeTierStyle("500")}
-                onClick={() => {
-                  const tier = getFeeTier("500");
-                  tier && setSelectedPool(tier);
-                }}
-              >
-                <h4 style={!getFeeTier("500") ? { color: "#999" } : {}}>
-                  0.05% fee
-                </h4>
-                <span>Best for stable pairs.</span>
-                <div>{getFeeTierPercentage("500")}</div>
-              </Tier>
-              <Tier
-                style={getFeeTierStyle("3000")}
-                onClick={() => {
-                  const tier = getFeeTier("3000");
-                  tier && setSelectedPool(tier);
-                }}
-              >
-                <h4 style={!getFeeTier("3000") ? { color: "#999" } : {}}>
-                  0.3% fee
-                </h4>
-                <span>Best for most pairs.</span>
-                <div>{getFeeTierPercentage("3000")}</div>
-              </Tier>
-              <Tier
-                style={getFeeTierStyle("10000")}
-                onClick={() => {
-                  const tier = getFeeTier("10000");
-                  tier && setSelectedPool(tier);
-                }}
-              >
-                <h4 style={!getFeeTier("10000") ? { color: "#999" } : {}}>
-                  1% fee
-                </h4>
-                <span>Best for exotic pairs.</span>
-                <div>{getFeeTierPercentage("10000")}</div>
-              </Tier>
-            </FeeTiersContainer>
+              <Heading>Select Fee Tier</Heading>
+              <FeeTiersContainer>
+                <Tier
+                  style={getFeeTierStyle("500")}
+                  onClick={() => {
+                    const tier = getFeeTier("500");
+                    tier && setSelectedPool(tier);
+                  }}
+                >
+                  <h4 style={!getFeeTier("500") ? { color: "#999" } : {}}>
+                    0.05% fee
+                  </h4>
+                  <span>Best for stable pairs.</span>
+                  <div>{getFeeTierPercentage("500")}</div>
+                </Tier>
+                <Tier
+                  style={getFeeTierStyle("3000")}
+                  onClick={() => {
+                    const tier = getFeeTier("3000");
+                    tier && setSelectedPool(tier);
+                  }}
+                >
+                  <h4 style={!getFeeTier("3000") ? { color: "#999" } : {}}>
+                    0.3% fee
+                  </h4>
+                  <span>Best for most pairs.</span>
+                  <div>{getFeeTierPercentage("3000")}</div>
+                </Tier>
+                <Tier
+                  style={getFeeTierStyle("10000")}
+                  onClick={() => {
+                    const tier = getFeeTier("10000");
+                    tier && setSelectedPool(tier);
+                  }}
+                >
+                  <h4 style={!getFeeTier("10000") ? { color: "#999" } : {}}>
+                    1% fee
+                  </h4>
+                  <span>Best for exotic pairs.</span>
+                  <div>{getFeeTierPercentage("10000")}</div>
+                </Tier>
+              </FeeTiersContainer>
 
-            <PrimaryBlockButton>Calculate</PrimaryBlockButton>
-          </Container>
+              <PrimaryBlockButton>Calculate</PrimaryBlockButton>
+            </Container>
+          </>
         )}
       </Modal>
     </>

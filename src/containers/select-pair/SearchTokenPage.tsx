@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Heading } from "../../common/atomic";
 import { V3Token } from "../../repos/uniswap";
 import ReactLoading from "react-loading";
 import { useEffect } from "react";
@@ -36,7 +35,7 @@ const Divider = styled.div`
   background: rgba(255, 255, 255, 0.1);
 `;
 const Scrollable = styled.div`
-  height: 250px;
+  height: 300px;
   overflow: scroll;
 `;
 const LoadingContainer = styled.div`
@@ -123,7 +122,6 @@ const SearchTokenPage = ({ tokens, selectToken }: SearchTokenPageProps) => {
   return (
     <>
       <Container>
-        <Heading>Select a token</Heading>
         <SearchInput
           onChange={(e) => handleSearch(e.target.value)}
           placeholder="Search name or paste address"
