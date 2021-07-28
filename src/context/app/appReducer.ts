@@ -6,6 +6,7 @@ export enum AppActionType {
   RESET_TOKEN_LIST = "RESET_TOKEN_LIST",
   RESET_PAIR = "RESET_PAIR",
   SWAP_CURRENT_PAIR = "SWAP_CURRENT_PAIR",
+  UPDATE_OUT_OF_RANGE_PERCENTAGE = "UPDATE_OUT_OF_RANGE_PERCENTAGE",
 }
 export type AppAction =
   | {
@@ -25,13 +26,17 @@ export type AppAction =
         token1PriceChart: PriceChart;
       };
     }
-  | { type: AppActionType.SWAP_CURRENT_PAIR };
+  | { type: AppActionType.SWAP_CURRENT_PAIR }
+  | { type: AppActionType.UPDATE_OUT_OF_RANGE_PERCENTAGE; payload: number };
 
 export const appReducer = (
   state: AppContextState,
   action: AppAction
 ): AppContextState => {
   switch (action.type) {
+    case AppActionType.UPDATE_OUT_OF_RANGE_PERCENTAGE: {
+      return { ...state, outOfRangePercentageValue: action.payload };
+    }
     case AppActionType.RESET_TOKEN_LIST: {
       return { ...state, tokenList: action.payload.tokenList };
     }

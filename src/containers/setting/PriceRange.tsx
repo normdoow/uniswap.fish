@@ -60,7 +60,7 @@ const PriceRange = () => {
             <span>UNI per ETH</span>
           </InputGroup>
         </MinMaxPriceContainer>
-        <Slider />
+        {/* <Slider /> */}
       </Group>
 
       <Group style={{ marginTop: 7 }}>
@@ -69,7 +69,7 @@ const PriceRange = () => {
           <Input type="number" placeholder="0.0" />
           <span>UNI per ETH</span>
         </InputGroup>
-        <Slider />
+        {/* <Slider /> */}
       </Group>
     </div>
   );

@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { Heading } from "../../common/atomic";
+import { useAppContext } from "../../context/app/appContext";
+import { AppActionType } from "../../context/app/appReducer";
 import Slider from "./Slider";
 
 const Group = styled.div`
@@ -37,16 +39,45 @@ const Input = styled.input`
 `;
 
 const OutOfRangePercentage = () => {
+  const { state, dispatch } = useAppContext();
+
   return (
     <div>
       <Heading>Out of Range Percentage</Heading>
       <Group>
         <InputGroup>
           <span>Out of Range Percentage</span>
-          <Input type="number" placeholder="0.0" />
+          <Input
+            value={state.outOfRangePercentageValue}
+            type="number"
+            placeholder="0.0"
+            min={0}
+            max={100}
+            onChange={(e) => {
+              let value = Number(e.target.value);
+              if (value > 100) value = 100;
+              if (value < 0) value = 0;
+
+              dispatch({
+                type: AppActionType.UPDATE_OUT_OF_RANGE_PERCENTAGE,
+                payload: value,
+              });
+            }}
+          />
           <span>Percent</span>
         </InputGroup>
-        <Slider />
+        <Slider
+          value={state.outOfRangePercentageValue}
+          min={0}
+          max={100}
+          thumbClassName="thumb-white"
+          onChange={(value, _) => {
+            dispatch({
+              type: AppActionType.UPDATE_OUT_OF_RANGE_PERCENTAGE,
+              payload: value,
+            });
+          }}
+        />
       </Group>
     </div>
   );

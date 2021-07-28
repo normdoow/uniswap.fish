@@ -11,7 +11,7 @@ const StyledThumb = styled.div`
   height: 20px;
   width: 5px;
   text-align: center;
-  background-color: rgba(37, 175, 96, 1);
+  background-color: white;
   cursor: grab;
   border-radius: 3px;
   transform: translateY(calc(3px / 2 + -20px / 2));
@@ -23,16 +23,27 @@ const StyledTrack = styled.div`
   background-color: rgba(255, 255, 255, 0.25);
 `;
 
-const Thumb = (props: any, state: any) => <StyledThumb {...props} />;
+const Thumb = (props: any) => <StyledThumb {...props} />;
 
-const Track = (props: any, state: any) => <StyledTrack {...props} />;
+const Track = (props: any) => <StyledTrack {...props} />;
 
-const Slider = () => {
+interface SliderProps {
+  thumbClassName?: string;
+  value: number | number[];
+  min: number;
+  max: number;
+  onChange: (value: any, index: number) => void;
+}
+const Slider = (props: SliderProps) => {
   return (
     <StyledSlider
-      defaultValue={[50, 75]}
       renderTrack={Track}
       renderThumb={Thumb}
+      min={props.min}
+      max={props.max}
+      onChange={props.onChange}
+      value={props.value}
+      thumbClassName={props.thumbClassName}
     />
   );
 };

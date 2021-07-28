@@ -35,3 +35,7 @@ input[type="number"] {
 .dollar {
   font-family: "Gowun Batang", serif !important;
 }
+
+.thumb-green-0 {
+  background-color: rgba(37, 175, 96, 1) !important;
+}

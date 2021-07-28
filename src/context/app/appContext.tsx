@@ -33,7 +33,7 @@ const initialState: AppContextState = {
   minPriceRangeValue: 0.0,
   maxPriceRangeValue: 0.0,
   priceAssumptionValue: 0.0,
-  outOfRangePercentageValue: 100,
+  outOfRangePercentageValue: 0,
 };
 
 interface AppContextProviderProps {
