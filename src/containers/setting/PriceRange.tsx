@@ -1,11 +1,16 @@
 import styled from "styled-components";
 import { Heading } from "../../common/atomic";
+import MinMaxRangeSlider from "./MinMaxRangeSlider";
 
-const InputGroup = styled.div`
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+const Group = styled.div`
+  border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 6px 8px;
-
+  border-radius: 12px;
+`;
+const InputGroup = styled.div`
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 6px 8px;
+  border-radius: 12px;
   & > span {
     font-size: 0.8rem;
     text-align: center;
@@ -40,18 +45,21 @@ const PriceRange = () => {
   return (
     <div>
       <Heading>Price Range</Heading>
-      <MinMaxPriceContainer>
-        <InputGroup>
-          <span>Min Price</span>
-          <PriceRangeInput type="number" placeholder="0.0" />
-          <span>UNI per ETH</span>
-        </InputGroup>
-        <InputGroup>
-          <span>Max Price</span>
-          <PriceRangeInput type="number" placeholder="0.0" />
-          <span>UNI per ETH</span>
-        </InputGroup>
-      </MinMaxPriceContainer>
+      <Group>
+        <MinMaxPriceContainer>
+          <InputGroup>
+            <span>Min Price</span>
+            <PriceRangeInput type="number" placeholder="0.0" />
+            <span>UNI per ETH</span>
+          </InputGroup>
+          <InputGroup>
+            <span>Max Price</span>
+            <PriceRangeInput type="number" placeholder="0.0" />
+            <span>UNI per ETH</span>
+          </InputGroup>
+        </MinMaxPriceContainer>
+        <MinMaxRangeSlider />
+      </Group>
       <InputGroup>
         <span>Most Active Price Assumption</span>
         <PriceRangeInput type="number" placeholder="0.0" />
