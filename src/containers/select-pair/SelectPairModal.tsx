@@ -7,7 +7,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { PrimaryBlockButton } from "../../common/buttons";
 import { useState } from "react";
-import { getTokenList, V3Token } from "../../repos/uniswap";
+import {
+  getPoolFromPair,
+  getTokenList,
+  Pool,
+  V3Token,
+} from "../../repos/uniswap";
 import SearchTokenPage from "./SearchTokenPage";
 import { useAppContext } from "../../context/app/appContext";
 import { AppActionType } from "../../context/app/appReducer";
@@ -120,24 +125,92 @@ const Logo = styled.h1`
     margin-right: 7px;
   }
 `;
+const FEE_TIER_STYLES = {
+  DISABLE: {
+    cursor: "not-allowed",
+    background: "rgba(255, 255, 255, 0.1)",
+  },
+  ACTIVE: {
+    border: "1px solid rgba(38, 109, 221, 1)",
+    background: "rgba(38, 109, 221, 0.25)",
+  },
+};
 
 const SelectPairModal = () => {
   const appContext = useAppContext();
   const modalContext = useModalContext();
+
   const [selectedTokens, setSelectedTokens] = useState<V3Token[] | null[]>([
     null,
     null,
   ]);
-
   const [showSelectTokenPage, setShowSelectTokenPage] =
     useState<boolean>(false);
   const [selectedTokenIndex, setSelectedTokenIndex] = useState<number | null>(
     null
   );
 
+  const [pools, setPools] = useState<Pool[]>([]);
+  const [selectedPool, setSelectedPool] = useState<Pool | null>(null);
+
   useEffect(() => {
     fetchTokens();
   }, []);
+
+  useEffect(() => {
+    fetchPools();
+  }, [selectedTokens]);
+
+  const fetchPools = async () => {
+    if (!selectedTokens[0] || !selectedTokens[1]) return;
+    const pools = await getPoolFromPair(selectedTokens[0], selectedTokens[1]);
+    setPools(pools);
+
+    if (pools.length === 0) {
+      setSelectedPool(null);
+      return;
+    }
+
+    let maxPool = pools[0];
+    let maxLiquidity = Number(pools[0].liquidity);
+    pools.forEach((pool) => {
+      if (Number(pool.liquidity) > maxLiquidity) {
+        maxPool = pool;
+        maxLiquidity = Number(pool.liquidity);
+      }
+    });
+    setSelectedPool(maxPool);
+  };
+
+  const getFeeTier = (feeTier: string) => {
+    return pools.find((pool) => pool.feeTier === feeTier) || null;
+  };
+
+  const getFeeTierPercentage = (feeTier: string) => {
+    const tier = getFeeTier(feeTier);
+    if (tier === null) {
+      return "Not Available";
+    }
+    const totalLiquidity = pools.reduce(
+      (result, curr) => result + Number(curr.liquidity),
+      0
+    );
+    return `${Math.round(
+      (100 * Number(tier.liquidity)) / totalLiquidity
+    )}% select`;
+  };
+
+  const getFeeTierStyle = (feeTier: string) => {
+    if (selectedPool?.feeTier === feeTier) {
+      return FEE_TIER_STYLES.ACTIVE;
+    }
+
+    if (getFeeTier(feeTier) === null) {
+      return FEE_TIER_STYLES.DISABLE;
+    }
+
+    return {};
+  };
 
   const fetchTokens = async () => {
     const tokenList = await getTokenList();
@@ -223,25 +296,44 @@ const SelectPairModal = () => {
 
             <Heading>Select Fee Tier</Heading>
             <FeeTiersContainer>
-              <Tier>
-                <h4>0.05% fee</h4>
-                <span>Best for stable pairs.</span>
-                <div>1% select</div>
-              </Tier>
               <Tier
-                style={{
-                  border: "1px solid rgba(38, 109, 221, 1)",
-                  background: "rgba(38, 109, 221, 0.25)",
+                style={getFeeTierStyle("500")}
+                onClick={() => {
+                  const tier = getFeeTier("500");
+                  tier && setSelectedPool(tier);
                 }}
               >
-                <h4>0.3% fee</h4>
-                <span>Best for most pairs.</span>
-                <div>99% select</div>
+                <h4 style={!getFeeTier("500") ? { color: "#999" } : {}}>
+                  0.05% fee
+                </h4>
+                <span>Best for stable pairs.</span>
+                <div>{getFeeTierPercentage("500")}</div>
               </Tier>
-              <Tier>
-                <h4>1% fee</h4>
+              <Tier
+                style={getFeeTierStyle("3000")}
+                onClick={() => {
+                  const tier = getFeeTier("3000");
+                  tier && setSelectedPool(tier);
+                }}
+              >
+                <h4 style={!getFeeTier("3000") ? { color: "#999" } : {}}>
+                  0.3% fee
+                </h4>
+                <span>Best for most pairs.</span>
+                <div>{getFeeTierPercentage("3000")}</div>
+              </Tier>
+              <Tier
+                style={getFeeTierStyle("10000")}
+                onClick={() => {
+                  const tier = getFeeTier("10000");
+                  tier && setSelectedPool(tier);
+                }}
+              >
+                <h4 style={!getFeeTier("10000") ? { color: "#999" } : {}}>
+                  1% fee
+                </h4>
                 <span>Best for exotic pairs.</span>
-                <div>0% select</div>
+                <div>{getFeeTierPercentage("10000")}</div>
               </Tier>
             </FeeTiersContainer>
 

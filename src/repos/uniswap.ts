@@ -90,15 +90,15 @@ export interface Pool {
   liquidity: string;
 }
 export const getPoolFromPair = async (
-  token0: string,
-  token1: string
+  token0: V3Token,
+  token1: V3Token
 ): Promise<Pool[]> => {
   const sortedTokens = sortToken(token0, token1);
 
   const { pools } = await queryUniswap(`{
-    pools(orderBy: id, where: {
-        token0: "${sortedTokens[0]}",
-        token1: "${sortedTokens[1]}"}) {
+    pools(orderBy: feeTier, where: {
+        token0: "${sortedTokens[0].id}",
+        token1: "${sortedTokens[1].id}"}) {
       id
       feeTier
       liquidity
