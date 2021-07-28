@@ -70,7 +70,6 @@ const OutOfRangePercentage = () => {
           value={state.outOfRangePercentageValue}
           min={0}
           max={100}
-          thumbClassName="thumb-white"
           onChange={(value, _) => {
             dispatch({
               type: AppActionType.UPDATE_OUT_OF_RANGE_PERCENTAGE,

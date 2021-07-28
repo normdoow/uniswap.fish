@@ -14,8 +14,7 @@ export interface AppContextState {
   token1PriceChart: PriceChart | null;
 
   depositAmountValue: number;
-  minPriceRangeValue: number;
-  maxPriceRangeValue: number;
+  priceRangeValue: number[];
   priceAssumptionValue: number;
   outOfRangePercentageValue: number;
 }
@@ -30,8 +29,7 @@ const initialState: AppContextState = {
   token1PriceChart: null,
 
   depositAmountValue: 1000.0,
-  minPriceRangeValue: 0.0,
-  maxPriceRangeValue: 0.0,
+  priceRangeValue: [0, 0],
   priceAssumptionValue: 0.0,
   outOfRangePercentageValue: 0,
 };

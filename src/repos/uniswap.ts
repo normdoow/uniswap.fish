@@ -85,6 +85,8 @@ export interface Pool {
   id: string;
   feeTier: string;
   liquidity: string;
+  token0Price: string;
+  token1Price: string;
 }
 export const getPoolFromPair = async (
   token0: V3Token,
@@ -99,6 +101,8 @@ export const getPoolFromPair = async (
       id
       feeTier
       liquidity
+      token0Price
+      token1Price
     }
   }`);
 
