@@ -32,6 +32,7 @@ interface SliderProps {
   value: number | number[];
   min: number;
   max: number;
+  step?: number;
   onChange: (value: any, index: number) => void;
 }
 const Slider = (props: SliderProps) => {
@@ -43,6 +44,7 @@ const Slider = (props: SliderProps) => {
       max={props.max}
       onChange={props.onChange}
       value={props.value}
+      step={props.step || 1}
       thumbClassName={props.thumbClassName}
     />
   );

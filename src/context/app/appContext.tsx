@@ -28,9 +28,9 @@ const initialState: AppContextState = {
   token0PriceChart: null,
   token1PriceChart: null,
 
-  depositAmountValue: 1000.0,
+  depositAmountValue: 1000,
   priceRangeValue: [0, 0],
-  priceAssumptionValue: 0.0,
+  priceAssumptionValue: 0,
   outOfRangePercentageValue: 0,
 };
 

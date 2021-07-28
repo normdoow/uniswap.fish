@@ -13,6 +13,7 @@ export const divideArray = (data0: number[], data1: number[]): number[] => {
   const result: number[] = [];
   data0.forEach((d, i) => {
     result[i] = d / data1[i];
+    if (isNaN(result[i])) result[i] = result[i - 1];
   });
   return result;
 };

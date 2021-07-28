@@ -50,22 +50,21 @@ const MinMaxPriceContainer = styled.div`
 const PriceRange = () => {
   const { state, dispatch } = useAppContext();
 
-  const currentPrice = Number(Number(state.pool?.token0Price).toFixed(5));
   const prices = divideArray(
     (state.token1PriceChart?.prices || []).map((p) => p.value),
     (state.token0PriceChart?.prices || []).map((p) => p.value)
   );
   const min = findMin(prices) * 0.5;
   const max = findMax(prices) * 1.5;
-
-  console.log(min, max, currentPrice);
+  const step = (max - min) / 1000;
 
   useEffect(() => {
+    const currentPrice = Number(Number(state.pool?.token0Price).toFixed(5));
     dispatch({
       type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE,
       payload: currentPrice,
     });
-  }, []);
+  }, [state.pool]);
 
   return (
     <div>
@@ -90,7 +89,7 @@ const PriceRange = () => {
         <InputGroup>
           <span>Most Active Price Assumption</span>
           <Input
-            value={state.priceAssumptionValue}
+            value={state.priceAssumptionValue || 0}
             type="number"
             placeholder="0.0"
             onChange={(e) => {
@@ -111,6 +110,7 @@ const PriceRange = () => {
           value={state.priceAssumptionValue}
           min={min}
           max={max}
+          step={step}
           onChange={(value, _) => {
             dispatch({
               type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE,
