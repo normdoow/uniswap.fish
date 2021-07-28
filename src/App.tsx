@@ -28,23 +28,23 @@ function App() {
     <AppContextProvider>
       <ModalContextProvider>
         <SelectPairModal />
-      </ModalContextProvider>
-      <Navbar />
-      <BodyContainer>
-        <Header />
-        <ContentContainer>
-          <div>
-            <EstimatedFees />
-            <Br />
-            <Setting />
-          </div>
-          <div>
-            <CorrelationChart />
-          </div>
-        </ContentContainer>
+        <Navbar />
+        <BodyContainer>
+          <Header />
+          <ContentContainer>
+            <div>
+              <EstimatedFees />
+              <Br />
+              <Setting />
+            </div>
+            <div>
+              <CorrelationChart />
+            </div>
+          </ContentContainer>
 
-        <Credit />
-      </BodyContainer>
+          <Credit />
+        </BodyContainer>
+      </ModalContextProvider>
     </AppContextProvider>
   );
 }
