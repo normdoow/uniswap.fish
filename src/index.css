@@ -31,3 +31,7 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
+.dollar {
+  font-family: "Gowun Batang", serif !important;
+}
