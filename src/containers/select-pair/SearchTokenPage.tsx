@@ -93,6 +93,8 @@ const SearchTokenPage = ({ tokens }: SearchTokenPageProps) => {
   }, [tokens]);
 
   const handleSearch = (value: string) => {
+    value = value.trim();
+
     if (value === "") {
       setFilteredTokens(tokens.slice(0, MAX_NUMBER_PER_PAGE));
       setIsLoading(false);

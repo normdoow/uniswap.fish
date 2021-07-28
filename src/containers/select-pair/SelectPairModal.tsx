@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Modal from "react-modal";
-import { useModalContext } from "../../context/modal/context";
+import { useModalContext } from "../../context/modal/modalContext";
 import { Heading } from "../../common/atomic";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
