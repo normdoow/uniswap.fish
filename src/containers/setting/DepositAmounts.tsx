@@ -50,23 +50,26 @@ const Token = styled.div`
 const DepositAmounts = () => {
   const { state, dispatch } = useAppContext();
 
-  const roundPercentage = (percent: number) => {
-    if (percent < 0) return 0;
-    if (percent > 1) return 1;
-    return percent;
-  };
+  // for calculation detail, please visit README.md (Section: Calculation Breakdown)
+  const P = state.priceAssumptionValue;
+  const Pu = state.priceRangeValue[1];
+  const Pl = state.priceRangeValue[0];
+  const priceUSDX = state.token1PriceChart?.currentPriceUSD || 1;
+  const priceUSDY = state.token0PriceChart?.currentPriceUSD || 1;
+  const targetAmounts = state.depositAmountValue;
 
-  const max = state.priceRangeValue[1];
-  const min = state.priceRangeValue[0];
-  const percentToken0 = roundPercentage(
-    (state.priceAssumptionValue - min) / (max - min)
-  );
-  const percentToken1 = roundPercentage(
-    (max - state.priceAssumptionValue) / (max - min)
-  );
+  const deltaL =
+    targetAmounts /
+    ((Math.sqrt(P) - Math.sqrt(Pl)) * priceUSDY +
+      (1 / Math.sqrt(P) - 1 / Math.sqrt(Pu)) * priceUSDX);
 
-  const token0PriceUSD = state.token0PriceChart?.currentPriceUSD || 1;
-  const token1PriceUSD = state.token1PriceChart?.currentPriceUSD || 1;
+  let deltaY = deltaL * (Math.sqrt(P) - Math.sqrt(Pl));
+  if (deltaY * priceUSDY < 0) deltaY = 0;
+  if (deltaY * priceUSDY > targetAmounts) deltaY = targetAmounts / priceUSDY;
+
+  let deltaX = deltaL * (1 / Math.sqrt(P) - 1 / Math.sqrt(Pu));
+  if (deltaX * priceUSDX < 0) deltaX = 0;
+  if (deltaX * priceUSDX > targetAmounts) deltaX = targetAmounts / priceUSDX;
 
   return (
     <div>
@@ -94,26 +97,16 @@ const DepositAmounts = () => {
           <img alt={state.token0?.name} src={state.token0?.logoURI} />{" "}
           <span>{state.token0?.symbol}</span>
         </Token>
-        <div>
-          {(
-            (state.depositAmountValue * percentToken0) /
-            token0PriceUSD
-          ).toFixed(5)}
-        </div>
-        <div>${(state.depositAmountValue * percentToken0).toFixed(2)}</div>
+        <div>{deltaY.toFixed(5)}</div>
+        <div>${(deltaY * priceUSDY).toFixed(2)}</div>
       </Table>
       <Table>
         <Token>
           <img alt={state.token1?.name} src={state.token1?.logoURI} />{" "}
           <span>{state.token1?.symbol}</span>
         </Token>
-        <div>
-          {(
-            (state.depositAmountValue * percentToken1) /
-            token1PriceUSD
-          ).toFixed(5)}
-        </div>
-        <div>${(state.depositAmountValue * percentToken1).toFixed(2)}</div>
+        <div>{deltaX.toFixed(5)}</div>
+        <div>${(deltaX * priceUSDX).toFixed(2)}</div>
       </Table>
     </div>
   );
