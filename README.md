@@ -2,9 +2,16 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+TODO: Link, Screenshot, Request Feature / Report Bugs
+
+## About
+
+TODO: Overview, Features
+
 ## Calculation Breakdown
 
 | Please ping me if I'm wrong 😉
+TODO: Disclaimer
 
 ### 1. Calculate deposit amounts of token0 and token1
 
@@ -19,3 +26,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - After we've calculated deltaL, we can calculate deltaX and deltaY using the formulas mentioned in Uniswap v3 Whitepaper
   - `deltaY = deltaL * (sqrt(P) - sqrt(Pl))`
   - `deltaX = deltaL * (1 / sqrt(P) - 1 / sqrt(Pu))`
+
+---
+
+TODO: Credit
