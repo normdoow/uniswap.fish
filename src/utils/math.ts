@@ -14,7 +14,9 @@ export function formatInt128ToDecimal(n: number | string | bn): bn {
   return new bn(n).dividedBy(new bn(10).pow(18));
 }
 
-bn.config({ EXPONENTIAL_AT: 999999, DECIMAL_PLACES: 40 });
+export const calculateAvg = (data: number[]): number => {
+  return data.reduce((result, val) => result + val, 0) / data.length;
+};
 
 export const findMax = (data: number[]): number => {
   return data.reduce((max, val) => (max > val ? max : val), 0);

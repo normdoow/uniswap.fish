@@ -4,6 +4,7 @@ import { Heading } from "../common/atomic";
 import { getPriceChart, Price, PriceChart } from "../repos/coingecko";
 import D3PriceChart, { Point } from "../common/D3PriceChart";
 import { useAppContext } from "../context/app/appContext";
+import { calculateAvg, findMax, findMin } from "../utils/math";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -59,6 +60,7 @@ const WrappedHeader = styled.div`
 let d3Chart: D3PriceChart | null = null;
 const CorrelationChart = () => {
   const { state, dispatch } = useAppContext();
+  const [data, setData] = useState<Point[]>([]);
   const refElement = useRef<HTMLDivElement>(null);
 
   const processData = (
@@ -88,6 +90,9 @@ const CorrelationChart = () => {
   useEffect(() => {
     if (!state.token0PriceChart || !state.token1PriceChart) return;
 
+    const data = processData(state.token0PriceChart, state.token1PriceChart);
+    setData(data);
+
     let width = 500;
     let height = 250;
     if (refElement.current) {
@@ -95,7 +100,7 @@ const CorrelationChart = () => {
     }
 
     d3Chart = new D3PriceChart(refElement.current, {
-      data: processData(state.token0PriceChart, state.token1PriceChart),
+      data,
       width,
       height,
       minRange: state.priceRangeValue[0],
@@ -119,13 +124,6 @@ const CorrelationChart = () => {
     );
   }, [state.priceRangeValue]);
 
-  // useEffect(() => {
-  //   if (!minRange || !maxRange) return;
-  //   if (!d3Chart) return;
-
-  //   d3Chart.updateBrush(minRange, maxRange);
-  // }, [minRange, maxRange]);
-
   return (
     <Container>
       <Padding>
@@ -146,13 +144,16 @@ const CorrelationChart = () => {
       <Padding>
         <Stat>
           <StatItem>
-            <div>MIN</div> <span>12312.23</span>
+            <div>MIN</div>{" "}
+            <span>{findMin(data.map((d) => d.y)).toFixed(4)}</span>
           </StatItem>
           <StatItem>
-            <div>MAX</div> <span>512312.23</span>
+            <div>MAX</div>{" "}
+            <span>{findMax(data.map((d) => d.y)).toFixed(4)}</span>
           </StatItem>
           <StatItem>
-            <div>AVG</div> <span>15322.23</span>
+            <div>AVG</div>{" "}
+            <span>{calculateAvg(data.map((d) => d.y)).toFixed(4)}</span>
           </StatItem>
         </Stat>
       </Padding>
