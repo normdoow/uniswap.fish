@@ -59,7 +59,6 @@ const WrappedHeader = styled.div`
 let d3Chart: D3PriceChart | null = null;
 const CorrelationChart = () => {
   const { state, dispatch } = useAppContext();
-  const [mostActivePrice, setMostActivePrice] = useState<number>(2000);
   const [minRange, setMinRange] = useState<number>(1500);
   const [maxRange, setMaxRange] = useState<number>(2200);
 
@@ -90,6 +89,8 @@ const CorrelationChart = () => {
   };
 
   useEffect(() => {
+    if (!state.token0PriceChart || !state.token1PriceChart) return;
+
     let width = 500;
     let height = 250;
     if (refElement.current) {
@@ -100,18 +101,17 @@ const CorrelationChart = () => {
       data: processData(state.token0PriceChart, state.token1PriceChart),
       width,
       height,
-      mostActivePrice,
       minRange,
       maxRange,
+      mostActivePrice: state.priceAssumptionValue,
     });
   }, [refElement, state.token0PriceChart, state.token1PriceChart]);
 
   useEffect(() => {
-    if (!mostActivePrice) return;
     if (!d3Chart) return;
 
-    d3Chart.renderMostActivePriceAssumption(mostActivePrice);
-  }, [mostActivePrice]);
+    d3Chart.updateMostActivePriceAssumption(state.priceAssumptionValue);
+  }, [state.priceAssumptionValue]);
 
   // useEffect(() => {
   //   if (!minRange || !maxRange) return;

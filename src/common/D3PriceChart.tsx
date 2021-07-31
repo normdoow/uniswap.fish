@@ -27,6 +27,7 @@ class D3PriceChart {
   y;
   xAxis;
   yAxis;
+  mostActivePrice;
   // brush;
 
   constructor(containerEl: any, props: D3PriceChartProps) {
@@ -60,7 +61,7 @@ class D3PriceChart {
     // add y axis
     const y = d3
       .scaleLinear()
-      .domain([0, findMax(yData) * 1.25])
+      .domain([findMin(yData) * 0.5, findMax(yData) * 1.25])
       .range([props.height, 0]);
     this.yAxis = this.svg
       .append("g")
@@ -104,7 +105,9 @@ class D3PriceChart {
       );
 
     this.handleMouseMove();
-    this.renderMostActivePriceAssumption(props.mostActivePrice);
+    this.mostActivePrice = this.renderMostActivePriceAssumption(
+      props.mostActivePrice
+    );
     // this.brush = this.initBrush(props.minRange, props.maxRange);
     // let offsetY: number = 0;
     // this.brush.call(
@@ -207,27 +210,23 @@ class D3PriceChart {
   }
 
   renderMostActivePriceAssumption(price: number) {
-    this.svg
+    return this.svg
       .append("g")
       .append("line")
-      .style("stroke-width", 1)
-      .style("stroke-dasharray", "3, 3")
-      .style("stroke", "white")
+      .style("stroke-width", 1.25)
+      .style("stroke-dasharray", "10, 3")
+      .style("stroke", "rgb(255, 112, 181)")
       .attr("x1", 0)
       .attr("y1", this.y(price))
       .attr("x2", this.props.width)
       .attr("y2", this.y(price));
-    this.svg
-      .append("g")
-      .append("text")
-      .attr("fill", "white")
-      .attr("font-size", "0.6rem")
-      .attr("font-weight", "bold")
-      .attr("text-anchor", "left")
-      .attr("alignment-baseline", "middle")
-      .html(`Price Assumption: ${price.toFixed(2)}`)
-      .attr("x", 17)
-      .attr("y", this.y(price) - 7);
+  }
+  updateMostActivePriceAssumption(price: number) {
+    this.mostActivePrice
+      .attr("x1", 0)
+      .attr("y1", this.y(price))
+      .attr("x2", this.props.width)
+      .attr("y2", this.y(price));
   }
 
   createLinearGradient(id: string, { r, g, b }: RGB) {
