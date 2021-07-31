@@ -131,6 +131,10 @@ class D3PriceChart {
     // );
   }
 
+  destroy() {
+    this.svg.remove();
+  }
+
   // initBrush(minRange: number, maxRange: number) {
   //   return this.svg
   //     .append("g")

@@ -99,6 +99,8 @@ const CorrelationChart = () => {
       width = refElement.current.offsetWidth;
     }
 
+    if (d3Chart) d3Chart.destroy();
+
     d3Chart = new D3PriceChart(refElement.current, {
       data,
       width,
@@ -129,7 +131,8 @@ const CorrelationChart = () => {
       <Padding>
         <WrappedHeader>
           <Heading>
-            UNI / ETH Correlation Chart <Tag>(1mth)</Tag>
+            {state.token0?.symbol} / {state.token1?.symbol} Correlation Chart{" "}
+            <Tag>(1mth)</Tag>
           </Heading>
 
           <div>
