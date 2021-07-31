@@ -27,6 +27,7 @@ export type AppAction =
         token1: V3Token;
         token0PriceChart: PriceChart;
         token1PriceChart: PriceChart;
+        volume24H: number;
       };
     }
   | { type: AppActionType.SWAP_CURRENT_PAIR }
@@ -63,6 +64,7 @@ export const appReducer = (
         token1,
         token0PriceChart,
         token1PriceChart,
+        volume24H,
       } = action.payload;
 
       return {
@@ -73,6 +75,7 @@ export const appReducer = (
         token1,
         token0PriceChart,
         token1PriceChart,
+        volume24H,
       };
     }
     case AppActionType.SWAP_CURRENT_PAIR: {

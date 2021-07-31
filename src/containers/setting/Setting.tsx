@@ -17,8 +17,8 @@ const Setting = () => {
       <DepositAmounts />
       <Br />
       <PriceRange />
-      <Br />
-      <OutOfRangePercentage />
+      {/* <Br />
+      <OutOfRangePercentage /> */}
     </SettingContainer>
   );
 };

@@ -1,3 +1,21 @@
+import bn from "bignumber.js";
+
+bn.config({ EXPONENTIAL_AT: 999999, DECIMAL_PLACES: 40 });
+
+export const x96ToDecimal = (value: number | string | bn): bn => {
+  return new bn(value).div(new bn(2).pow(96));
+};
+
+export function expandDecimals(n: number | string | bn, exp: number): bn {
+  return new bn(n).multipliedBy(new bn(10).pow(exp));
+}
+
+export function formatInt128ToDecimal(n: number | string | bn): bn {
+  return new bn(n).dividedBy(new bn(10).pow(18));
+}
+
+bn.config({ EXPONENTIAL_AT: 999999, DECIMAL_PLACES: 40 });
+
 export const findMax = (data: number[]): number => {
   return data.reduce((max, val) => (max > val ? max : val), 0);
 };

@@ -12,6 +12,7 @@ import {
   getPoolFromPair,
   getPoolTicks,
   getTokenList,
+  getVolumn24H,
   Pool,
   V3Token,
 } from "../../repos/uniswap";
@@ -206,6 +207,7 @@ const SelectPairModal = () => {
     const poolTicks = await getPoolTicks(pool.id);
     const token0PriceChart = await getPriceChart(token0.id);
     const token1PriceChart = await getPriceChart(token1.id);
+    const volume24H = await getVolumn24H(pool.id);
 
     appContext.dispatch({
       type: AppActionType.RESET_PAIR,
@@ -216,6 +218,7 @@ const SelectPairModal = () => {
         token1,
         token0PriceChart,
         token1PriceChart,
+        volume24H,
       },
     });
 

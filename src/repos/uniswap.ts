@@ -15,15 +15,32 @@ const queryUniswap = async (query: string): Promise<any> => {
   return data.data;
 };
 
+export const getVolumn24H = async (poolAddress: string): Promise<number> => {
+  const { poolDayDatas } = await queryUniswap(`{
+    poolDayDatas(skip: 1, first:3, orderBy: date, orderDirection: desc, where:{pool: "${poolAddress}"}) {
+      volumeUSD
+    }
+  }`);
+
+  const data = poolDayDatas.map((d: { volumeUSD: string }) =>
+    Number(d.volumeUSD)
+  );
+
+  return (
+    data.reduce((result: number, curr: number) => result + curr, 0) /
+    data.length
+  );
+};
+
 export interface Tick {
-  liquidityNet: number;
-  price0: number;
-  price1: number;
-  tickIdx: number;
+  tickIdx: string;
+  liquidityNet: string;
+  price0: string;
+  price1: string;
 }
 export const getPoolTicks = async (poolAddress: string): Promise<Tick[]> => {
   const { ticks } = await queryUniswap(`{
-    ticks(skip: 0, where: { poolAddress: "${poolAddress}" }, orderBy: tickIdx) {
+    ticks(first: 1000, skip: 0, where: { poolAddress: "${poolAddress}" }, orderBy: tickIdx) {
       tickIdx
       liquidityNet
       price0
@@ -40,6 +57,7 @@ export interface V3Token {
   symbol: string;
   volumeUSD: string;
   logoURI: string;
+  decimals: string;
 }
 const _getTokenList = async (
   result: V3Token[],
@@ -51,6 +69,7 @@ const _getTokenList = async (
       name
       symbol
       volumeUSD
+      decimals
     }
   }`);
 

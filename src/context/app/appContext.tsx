@@ -12,6 +12,7 @@ export interface AppContextState {
   token1: V3Token | null;
   token0PriceChart: PriceChart | null;
   token1PriceChart: PriceChart | null;
+  volume24H: number;
 
   depositAmountValue: number;
   priceRangeValue: number[];
@@ -27,6 +28,7 @@ const initialState: AppContextState = {
   token1: null,
   token0PriceChart: null,
   token1PriceChart: null,
+  volume24H: 0,
 
   depositAmountValue: 1000,
   priceRangeValue: [0, 0],
