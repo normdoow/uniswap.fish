@@ -79,7 +79,25 @@ export const appReducer = (
       };
     }
     case AppActionType.SWAP_CURRENT_PAIR: {
-      return state;
+      const token0 = state.token1;
+      const token1 = state.token0;
+      const pool = {
+        ...state.pool,
+        token0Price: state.pool?.token1Price,
+        token1Price: state.pool?.token0Price,
+      } as Pool;
+      const token0PriceChart = state.token1PriceChart;
+      const token1PriceChart = state.token0PriceChart;
+
+      return {
+        ...state,
+        isSwap: !state.isSwap,
+        pool,
+        token0,
+        token1,
+        token0PriceChart,
+        token1PriceChart,
+      };
     }
   }
 };

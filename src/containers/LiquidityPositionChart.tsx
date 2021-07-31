@@ -70,16 +70,33 @@ const LiquidityPositionChart = () => {
     if (d3Chart) d3Chart.destroy();
 
     const currentPrice = Number(state.priceAssumptionValue);
+    let currentTick;
+
+    if (state.isSwap) {
+      currentTick = getTickFromPrice(currentPrice).toNumber();
+    } else {
+      currentTick = -getTickFromPrice(currentPrice).toNumber();
+    }
+
+    let token0Symbol;
+    let token1Symbol;
+    if (state.isSwap) {
+      token0Symbol = state.token1?.symbol;
+      token1Symbol = state.token0?.symbol;
+    } else {
+      token0Symbol = state.token0?.symbol;
+      token1Symbol = state.token1?.symbol;
+    }
 
     d3Chart = new D3LiquidityHistogram(refElement.current, {
       width,
       height,
-      currentTick: -getTickFromPrice(currentPrice).toNumber(),
-      minTick: -getTickFromPrice(state.priceRangeValue[0]).toNumber(),
-      maxTick: -getTickFromPrice(state.priceRangeValue[1]).toNumber(),
+      minTick: 0,
+      maxTick: 0,
+      currentTick,
+      token0Symbol,
+      token1Symbol,
       data: processData(state.poolTicks),
-      token0Symbol: state.token0?.symbol,
-      token1Symbol: state.token1?.symbol,
     });
   }, [
     refElement,
@@ -92,15 +109,27 @@ const LiquidityPositionChart = () => {
   useEffect(() => {
     if (!d3Chart) return;
     const currentPrice = Number(state.priceAssumptionValue);
-    d3Chart.updateCurrentTick(-getTickFromPrice(currentPrice).toNumber());
+    if (state.isSwap) {
+      d3Chart.updateCurrentTick(getTickFromPrice(currentPrice).toNumber());
+    } else {
+      d3Chart.updateCurrentTick(-getTickFromPrice(currentPrice).toNumber());
+    }
   }, [state.priceAssumptionValue]);
 
   useEffect(() => {
     if (!d3Chart) return;
-    d3Chart.updateMinMaxTickRange(
-      -getTickFromPrice(state.priceRangeValue[0]).toNumber(),
-      -getTickFromPrice(state.priceRangeValue[1]).toNumber()
-    );
+    let minTick: number;
+    let maxTick: number;
+
+    if (state.isSwap) {
+      minTick = getTickFromPrice(state.priceRangeValue[0]).toNumber();
+      maxTick = getTickFromPrice(state.priceRangeValue[1]).toNumber();
+    } else {
+      minTick = -getTickFromPrice(state.priceRangeValue[0]).toNumber();
+      maxTick = -getTickFromPrice(state.priceRangeValue[1]).toNumber();
+    }
+
+    d3Chart.updateMinMaxTickRange(minTick, maxTick);
   }, [state.priceRangeValue]);
 
   return (

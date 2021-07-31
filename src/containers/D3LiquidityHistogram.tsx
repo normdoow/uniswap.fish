@@ -7,11 +7,6 @@ export interface Bin {
   x1: number;
   y: number;
 }
-interface RGB {
-  r: number;
-  g: number;
-  b: number;
-}
 interface D3LiquidityHistogramProps {
   width: number;
   height: number;
@@ -33,10 +28,14 @@ class D3LiquidityHistogram {
   currentTick;
   minTick;
   maxTick;
+  token0Symbol;
+  token1Symbol;
 
   constructor(containerEl: any, props: D3LiquidityHistogramProps) {
     this.containerEl = containerEl;
     this.props = props;
+    this.token0Symbol = props.token0Symbol;
+    this.token1Symbol = props.token1Symbol;
 
     this.svg = d3
       .select(containerEl)
@@ -192,8 +191,8 @@ class D3LiquidityHistogram {
       if (this.x(x0) > this.props.width * 0.8) {
         focusTextToken0
           .html(
-            `${this.props.token0Symbol}: ${getPriceFromTick(x0).toFixed(6)} ${
-              this.props.token1Symbol
+            `${this.token0Symbol}: ${getPriceFromTick(x0).toFixed(6)} ${
+              this.token1Symbol
             }`
           )
           .attr("x", function (d: any) {
@@ -203,9 +202,9 @@ class D3LiquidityHistogram {
           .attr("y", 5);
         focusTextToken1
           .html(
-            `${this.props.token1Symbol}: ${(1 / getPriceFromTick(x0)).toFixed(
-              6
-            )} ${this.props.token0Symbol}`
+            `${this.token1Symbol}: ${(1 / getPriceFromTick(x0)).toFixed(6)} ${
+              this.token0Symbol
+            }`
           )
           .attr("x", function (d: any) {
             return self.x(x0) - (this.getComputedTextLength() + 5);
@@ -215,8 +214,8 @@ class D3LiquidityHistogram {
       } else {
         focusTextToken0
           .html(
-            `${this.props.token0Symbol}: ${getPriceFromTick(x0).toFixed(6)} ${
-              this.props.token1Symbol
+            `${this.token0Symbol}: ${getPriceFromTick(x0).toFixed(6)} ${
+              this.token1Symbol
             }`
           )
           .attr("x", this.x(x0) + 5)
@@ -224,9 +223,9 @@ class D3LiquidityHistogram {
           .attr("y", 5);
         focusTextToken1
           .html(
-            `${this.props.token1Symbol}: ${(1 / getPriceFromTick(x0)).toFixed(
-              6
-            )} ${this.props.token0Symbol}`
+            `${this.token1Symbol}: ${(1 / getPriceFromTick(x0)).toFixed(6)} ${
+              this.token0Symbol
+            }`
           )
           .attr("x", this.x(x0) + 5)
           .attr("text-anchor", "left")

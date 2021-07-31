@@ -42,8 +42,15 @@ const EstimatedFees = () => {
     for (let i = 0; i < ticks.length - 1; ++i) {
       liquidity = liquidity.plus(new bn(ticks[i].liquidityNet));
 
-      const upperPrice = Number(ticks[i].price1);
-      const lowerPrice = Number(ticks[i + 1].price1);
+      let upperPrice: number;
+      let lowerPrice: number;
+      if (state.isSwap) {
+        upperPrice = Number(ticks[i + 1].price0);
+        lowerPrice = Number(ticks[i].price0);
+      } else {
+        upperPrice = Number(ticks[i].price1);
+        lowerPrice = Number(ticks[i + 1].price1);
+      }
 
       if (lowerPrice <= currentPrice && currentPrice <= upperPrice) {
         break;

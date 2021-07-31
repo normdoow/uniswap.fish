@@ -5,6 +5,7 @@ import { AppAction, appReducer } from "./appReducer";
 
 export interface AppContextState {
   tokenList: V3Token[];
+  isSwap: boolean;
 
   pool: Pool | null;
   poolTicks: Tick[] | null;
@@ -21,6 +22,7 @@ export interface AppContextState {
 }
 const initialState: AppContextState = {
   tokenList: [],
+  isSwap: false,
 
   pool: null,
   poolTicks: null,

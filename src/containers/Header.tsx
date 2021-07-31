@@ -4,6 +4,7 @@ import React from "react";
 import styled from "styled-components";
 import { Button, PrimaryButton } from "../common/buttons";
 import { useAppContext } from "../context/app/appContext";
+import { AppActionType } from "../context/app/appReducer";
 import { useModalContext } from "../context/modal/modalContext";
 import { ModalActionType } from "../context/modal/modalReducer";
 
@@ -89,7 +90,16 @@ const Header = () => {
         </h2>
       </PairToken>
       <div>
-        <Button style={{ marginRight: 7 }}>Swap Current Pair</Button>
+        <Button
+          style={{ marginRight: 7 }}
+          onClick={() => {
+            appContext.dispatch({
+              type: AppActionType.SWAP_CURRENT_PAIR,
+            });
+          }}
+        >
+          Swap Current Pair
+        </Button>
         <PrimaryButton
           onClick={() => {
             modalContext.dispatch({
