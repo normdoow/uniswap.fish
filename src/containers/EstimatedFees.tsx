@@ -12,8 +12,14 @@ const Fee = styled.span`
   display: block;
   color: rgb(37, 175, 96);
   font-weight: 500;
-  font-size: 2.6rem;
+  font-size: 2.4rem;
   margin-top: -10px;
+
+  & > span {
+    margin-right: 3px;
+    display: inline-block;
+    transform: translateY(2px);
+  }
 `;
 const Tag = styled.div`
   display: inline-block;
@@ -27,7 +33,7 @@ const EstimatedFees = () => {
         Estimated Fees <Tag>(24h)</Tag>
       </Heading>
       <Fee>
-        <span>$</span>42.15
+        <span className="dollar">$</span>42.15
       </Fee>
 
       <Table>
