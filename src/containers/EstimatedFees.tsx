@@ -72,15 +72,14 @@ const EstimatedFees = () => {
   const volume24H = state.volume24H;
   const feeTier = getFeeTierPercentage(state.pool?.feeTier || "");
 
-  let deltaL =
+  const deltaL =
     targetAmounts /
     ((Math.sqrt(P) - Math.sqrt(Pl)) * priceUSDY +
       (1 / Math.sqrt(P) - 1 / Math.sqrt(Pu)) * priceUSDX);
-  if (P < Pl || P > Pu) deltaL = 0;
 
   const L = calculateLiquidity(state.poolTicks || [], P);
-
-  const fee = feeTier * volume24H * calculateLiquidityPercentage(L, deltaL);
+  let fee = feeTier * volume24H * calculateLiquidityPercentage(L, deltaL);
+  if (P < Pl || P > Pu) fee = 0;
 
   return (
     <SettingContainer>
