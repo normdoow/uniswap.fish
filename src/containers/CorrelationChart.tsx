@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Heading } from "../common/atomic";
 import { getPriceChart, Price, PriceChart } from "../repos/coingecko";
 import D3PriceChart, { Point } from "../common/D3PriceChart";
+import { useAppContext } from "../context/app/appContext";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -57,33 +58,38 @@ const WrappedHeader = styled.div`
 
 let d3Chart: D3PriceChart | null = null;
 const CorrelationChart = () => {
-  const [data, setData] = useState<PriceChart | null>(null);
+  const { state, dispatch } = useAppContext();
   const [mostActivePrice, setMostActivePrice] = useState<number>(2000);
   const [minRange, setMinRange] = useState<number>(1500);
   const [maxRange, setMaxRange] = useState<number>(2200);
 
   const refElement = useRef<HTMLDivElement>(null);
 
-  const processData = (data: PriceChart): Point[] => {
-    return data.prices.reduce((result: Point[], curr: Price) => {
-      return [...result, { x: curr.timestamp, y: curr.value }];
-    }, []);
-  };
+  const processData = (
+    token0PriceChart: PriceChart | null,
+    token1PriceChart: PriceChart | null
+  ): Point[] => {
+    console.log(token0PriceChart, token1PriceChart);
+    if (token0PriceChart === null || token1PriceChart === null) {
+      return [];
+    }
 
-  const fetchData = async () => {
-    const tokenPrice1 = await getPriceChart(
-      "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+    const points: Point[] = [];
+    const length = Math.min(
+      token0PriceChart.prices.length,
+      token1PriceChart.prices.length
     );
-    setData(tokenPrice1);
+    for (let i = 0; i < length; ++i) {
+      points.push({
+        x: token0PriceChart.prices[i].timestamp,
+        y: token1PriceChart.prices[i].value / token0PriceChart.prices[i].value,
+      });
+    }
+
+    return points;
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (!data) return;
-
     let width = 500;
     let height = 250;
     if (refElement.current) {
@@ -91,14 +97,14 @@ const CorrelationChart = () => {
     }
 
     d3Chart = new D3PriceChart(refElement.current, {
-      data: processData(data),
+      data: processData(state.token0PriceChart, state.token1PriceChart),
       width,
       height,
       mostActivePrice,
       minRange,
       maxRange,
     });
-  }, [data, refElement]);
+  }, [refElement, state.token0PriceChart, state.token1PriceChart]);
 
   useEffect(() => {
     if (!mostActivePrice) return;
@@ -122,7 +128,10 @@ const CorrelationChart = () => {
             UNI / ETH Correlation Chart <Tag>(1mth)</Tag>
           </Heading>
 
-          <div>Current Price: 123.21</div>
+          <div>
+            Current: {Number(state.pool?.token0Price).toFixed(2)}{" "}
+            {state.token0?.symbol} / {state.token1?.symbol}
+          </div>
         </WrappedHeader>
       </Padding>
 
