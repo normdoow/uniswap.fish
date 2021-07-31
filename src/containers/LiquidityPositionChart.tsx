@@ -2,9 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Heading } from "../common/atomic";
 import { PriceChart } from "../repos/coingecko";
-import D3CorrelationChart, { Point } from "./D3CorrelationChart";
+import D3LiquidityHistogram, { Bin } from "./D3LiquidityHistogram";
 import { useAppContext } from "../context/app/appContext";
-import { calculateAvg, findMax, findMin } from "../utils/math";
+import { Tick } from "../repos/uniswap";
+import { getTickFromPrice } from "../utils/math";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -57,40 +58,28 @@ const WrappedHeader = styled.div`
   }
 `;
 
-let d3Chart: D3CorrelationChart | null = null;
-const CorrelationChart = () => {
+let d3Chart: D3LiquidityHistogram | null = null;
+const LiquidityPositionChart = () => {
   const { state } = useAppContext();
-  const [data, setData] = useState<Point[]>([]);
   const refElement = useRef<HTMLDivElement>(null);
 
-  const processData = (
-    token0PriceChart: PriceChart | null,
-    token1PriceChart: PriceChart | null
-  ): Point[] => {
-    if (token0PriceChart === null || token1PriceChart === null) {
-      return [];
-    }
+  const processData = (ticks: Tick[]): Bin[] => {
+    const bins: Bin[] = [];
+    let liquidity = 0;
+    for (let i = 0; i < ticks.length - 1; ++i) {
+      liquidity += Number(ticks[i].liquidityNet);
 
-    const points: Point[] = [];
-    const length = Math.min(
-      token0PriceChart.prices.length,
-      token1PriceChart.prices.length
-    );
-    for (let i = 0; i < length; ++i) {
-      points.push({
-        x: token0PriceChart.prices[i].timestamp,
-        y: token1PriceChart.prices[i].value / token0PriceChart.prices[i].value,
+      bins.push({
+        x0: Number(ticks[i].tickIdx),
+        x1: Number(ticks[i + 1].tickIdx),
+        y: liquidity,
       });
     }
-
-    return points;
+    return bins;
   };
 
   useEffect(() => {
-    if (!state.token0PriceChart || !state.token1PriceChart) return;
-
-    const data = processData(state.token0PriceChart, state.token1PriceChart);
-    setData(data);
+    if (!state.poolTicks || !state.priceAssumptionValue) return;
 
     let width = 500;
     let height = 250;
@@ -100,51 +89,34 @@ const CorrelationChart = () => {
 
     if (d3Chart) d3Chart.destroy();
 
-    d3Chart = new D3CorrelationChart(refElement.current, {
-      data,
+    const currentPrice = Number(state.priceAssumptionValue);
+
+    d3Chart = new D3LiquidityHistogram(refElement.current, {
       width,
       height,
-      minRange: state.priceRangeValue[0],
-      maxRange: state.priceRangeValue[1],
-      mostActivePrice: state.priceAssumptionValue,
+      currentTick: -getTickFromPrice(currentPrice).toNumber(),
+      data: processData(state.poolTicks),
     });
-  }, [refElement, state.token0PriceChart, state.token1PriceChart]);
+  }, [refElement, state.poolTicks, state.priceAssumptionValue]);
 
   useEffect(() => {
     if (!d3Chart) return;
-
-    d3Chart.updateMostActivePriceAssumption(state.priceAssumptionValue);
+    const currentPrice = Number(state.priceAssumptionValue);
+    d3Chart.updateCurrentTick(-getTickFromPrice(currentPrice).toNumber());
   }, [state.priceAssumptionValue]);
-
-  useEffect(() => {
-    if (!d3Chart) return;
-
-    d3Chart.updateMinMaxPriceRange(
-      state.priceRangeValue[0],
-      state.priceRangeValue[1]
-    );
-  }, [state.priceRangeValue]);
 
   return (
     <Container>
       <Padding>
         <WrappedHeader>
-          <Heading>
-            {state.token0?.symbol} / {state.token1?.symbol} Correlation Chart{" "}
-            <Tag>(1mth)</Tag>
-          </Heading>
-
-          <div>
-            Current: {Number(state.pool?.token0Price).toFixed(2)}{" "}
-            {state.token0?.symbol} / {state.token1?.symbol}
-          </div>
+          <Heading>Liquidity Position</Heading>
         </WrappedHeader>
       </Padding>
 
       <div ref={refElement} />
 
       <Padding>
-        <Stat>
+        {/* <Stat>
           <StatItem>
             <div>MIN</div>{" "}
             <span>{findMin(data.map((d) => d.y)).toFixed(4)}</span>
@@ -157,10 +129,10 @@ const CorrelationChart = () => {
             <div>AVG</div>{" "}
             <span>{calculateAvg(data.map((d) => d.y)).toFixed(4)}</span>
           </StatItem>
-        </Stat>
+        </Stat> */}
       </Padding>
     </Container>
   );
 };
 
-export default CorrelationChart;
+export default LiquidityPositionChart;

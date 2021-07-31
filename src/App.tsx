@@ -6,6 +6,7 @@ import Credit from "./containers/Credit";
 import EstimatedFees from "./containers/EstimatedFees";
 import Header from "./containers/Header";
 import Navbar from "./containers/Navbar";
+import LiquidityPositionChart from "./containers/LiquidityPositionChart";
 import SelectPairModal from "./containers/select-pair/SelectPairModal";
 import Setting from "./containers/setting/Setting";
 import ContextProvider from "./context/ContextProvider";
@@ -36,6 +37,8 @@ function App() {
             <Setting />
           </div>
           <div>
+            <LiquidityPositionChart />
+            <Br />
             <CorrelationChart />
           </div>
         </ContentContainer>

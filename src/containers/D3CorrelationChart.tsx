@@ -11,7 +11,7 @@ interface RGB {
   g: number;
   b: number;
 }
-interface D3PriceChartProps {
+interface D3CorrelationChartProps {
   width: number;
   height: number;
   data: Point[];
@@ -19,7 +19,7 @@ interface D3PriceChartProps {
   minRange: number;
   maxRange: number;
 }
-class D3PriceChart {
+class D3CorrelationChart {
   containerEl;
   props;
   svg;
@@ -32,7 +32,7 @@ class D3PriceChart {
   maxPrice;
   // brush;
 
-  constructor(containerEl: any, props: D3PriceChartProps) {
+  constructor(containerEl: any, props: D3CorrelationChartProps) {
     this.containerEl = containerEl;
     this.props = props;
 
@@ -313,4 +313,4 @@ class D3PriceChart {
   }
 }
 
-export default D3PriceChart;
+export default D3CorrelationChart;

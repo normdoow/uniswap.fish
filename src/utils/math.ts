@@ -14,6 +14,11 @@ export function formatInt128ToDecimal(n: number | string | bn): bn {
   return new bn(n).dividedBy(new bn(10).pow(18));
 }
 
+export const getTickFromPrice = (price: number): bn => {
+  return new bn(Math.log(price).toString())
+    .div(new bn(Math.log(1.0001).toString()))
+    .integerValue(0);
+};
 export const calculateAvg = (data: number[]): number => {
   return data.reduce((result, val) => result + val, 0) / data.length;
 };
