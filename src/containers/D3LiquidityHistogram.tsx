@@ -17,6 +17,8 @@ interface D3LiquidityHistogramProps {
   height: number;
   data: Bin[];
   currentTick: number;
+  minTick: number;
+  maxTick: number;
 }
 class D3LiquidityHistogram {
   containerEl;
@@ -27,6 +29,8 @@ class D3LiquidityHistogram {
   xAxis;
   yAxis;
   currentTick;
+  minTick;
+  maxTick;
 
   constructor(containerEl: any, props: D3LiquidityHistogramProps) {
     this.containerEl = containerEl;
@@ -78,47 +82,58 @@ class D3LiquidityHistogram {
       })
       .style("fill", "rgb(38, 108, 221)");
 
-    // render chart
-    // this.svg
-    //   .append("path")
-    //   .datum(this.data0)
-    //   .attr("fill", "transparent")
-    //   .attr("stroke", "rgb(38, 108, 221)")
-    //   .attr("stroke-width", 1.5)
-    //   .attr(
-    //     "d",
-    //     d3
-    //       .line()
-    //       .x(function (d: any) {
-    //         return x(d.x);
-    //       })
-    //       .y(function (d: any) {
-    //         return y(d.y);
-    //       })
-    //   );
-    // this.svg
-    //   .append("path")
-    //   .datum(this.data0)
-    //   .attr("fill", "url(#blue-gradient)")
-    //   .attr(
-    //     "d",
-    //     d3
-    //       .area()
-    //       .x(function (d: any) {
-    //         return x(d.x);
-    //       })
-    //       .y0(y(0))
-    //       .y1(function (d: any) {
-    //         return y(d.y);
-    //       })
-    //   );
-
     // this.handleMouseMove();
     this.currentTick = this.renderCurrentTick(this.props.currentTick);
+
+    const { minTickSVG, maxTickSVG } = this.renderMinMaxTickRange(
+      props.minTick,
+      props.maxTick
+    );
+    this.minTick = minTickSVG;
+    this.maxTick = maxTickSVG;
   }
 
   destroy() {
     this.svg.remove();
+  }
+
+  renderMinMaxTickRange(minTick: number, maxTick: number) {
+    const minTickSVG = this.svg
+      .append("g")
+      .append("line")
+      .style("stroke-width", 1.25)
+      .style("stroke-dasharray", "10, 3")
+      .style("stroke", "rgba(37, 175, 96, 1)")
+      .attr("y1", 0)
+      .attr("x1", this.x(minTick))
+      .attr("y2", this.props.height - 20)
+      .attr("x2", this.x(minTick));
+
+    const maxTickSVG = this.svg
+      .append("g")
+      .append("line")
+      .style("stroke-width", 1.25)
+      .style("stroke-dasharray", "10, 3")
+      .style("stroke", "rgba(37, 175, 96, 1)")
+      .attr("y1", 0)
+      .attr("x1", this.x(maxTick))
+      .attr("y2", this.props.height - 20)
+      .attr("x2", this.x(maxTick));
+
+    return { minTickSVG, maxTickSVG };
+  }
+  updateMinMaxTickRange(minTick: number, maxTick: number) {
+    this.minTick
+      .attr("y1", 0)
+      .attr("x1", this.x(minTick))
+      .attr("y2", this.props.height - 20)
+      .attr("x2", this.x(minTick));
+
+    this.maxTick
+      .attr("y1", 0)
+      .attr("x1", this.x(maxTick))
+      .attr("y2", this.props.height - 20)
+      .attr("x2", this.x(maxTick));
   }
 
   renderCurrentTick(currentTick: number) {

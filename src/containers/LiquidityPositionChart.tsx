@@ -14,32 +14,6 @@ const Container = styled.div`
 const Padding = styled.div`
   padding: 16px;
 `;
-const Tag = styled.div`
-  display: inline-block;
-  color: rgba(255, 255, 255, 0.3);
-`;
-const Stat = styled.div`
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 7px;
-`;
-const StatItem = styled.div`
-  display: flex;
-  align-items: center;
-  font-size: 0.8rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  color: #999;
-  padding: 3px;
-
-  & > div {
-    padding: 3px 12px;
-    margin-right: 7px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.05);
-  }
-`;
 const WrappedHeader = styled.div`
   display: flex;
   justify-content: space-between;
@@ -95,6 +69,8 @@ const LiquidityPositionChart = () => {
       width,
       height,
       currentTick: -getTickFromPrice(currentPrice).toNumber(),
+      minTick: -getTickFromPrice(state.priceRangeValue[0]).toNumber(),
+      maxTick: -getTickFromPrice(state.priceRangeValue[1]).toNumber(),
       data: processData(state.poolTicks),
     });
   }, [refElement, state.poolTicks, state.priceAssumptionValue]);
@@ -105,6 +81,14 @@ const LiquidityPositionChart = () => {
     d3Chart.updateCurrentTick(-getTickFromPrice(currentPrice).toNumber());
   }, [state.priceAssumptionValue]);
 
+  useEffect(() => {
+    if (!d3Chart) return;
+    d3Chart.updateMinMaxTickRange(
+      -getTickFromPrice(state.priceRangeValue[0]).toNumber(),
+      -getTickFromPrice(state.priceRangeValue[1]).toNumber()
+    );
+  }, [state.priceRangeValue]);
+
   return (
     <Container>
       <Padding>
@@ -114,23 +98,6 @@ const LiquidityPositionChart = () => {
       </Padding>
 
       <div ref={refElement} />
-
-      <Padding>
-        {/* <Stat>
-          <StatItem>
-            <div>MIN</div>{" "}
-            <span>{findMin(data.map((d) => d.y)).toFixed(4)}</span>
-          </StatItem>
-          <StatItem>
-            <div>MAX</div>{" "}
-            <span>{findMax(data.map((d) => d.y)).toFixed(4)}</span>
-          </StatItem>
-          <StatItem>
-            <div>AVG</div>{" "}
-            <span>{calculateAvg(data.map((d) => d.y)).toFixed(4)}</span>
-          </StatItem>
-        </Stat> */}
-      </Padding>
     </Container>
   );
 };
