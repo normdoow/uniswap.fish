@@ -1,6 +1,6 @@
 import React from "react";
 import * as d3 from "d3";
-import { findMax, findMin } from "../utils/math";
+import { findMax, findMin, getPriceFromTick } from "../utils/math";
 
 export interface Bin {
   x0: number;
@@ -19,6 +19,8 @@ interface D3LiquidityHistogramProps {
   currentTick: number;
   minTick: number;
   maxTick: number;
+  token0Symbol: string;
+  token1Symbol: string;
 }
 class D3LiquidityHistogram {
   containerEl;
@@ -82,7 +84,7 @@ class D3LiquidityHistogram {
       })
       .style("fill", "rgb(38, 108, 221)");
 
-    // this.handleMouseMove();
+    this.handleMouseMove();
     this.currentTick = this.renderCurrentTick(this.props.currentTick);
 
     const { minTickSVG, maxTickSVG } = this.renderMinMaxTickRange(
@@ -156,80 +158,100 @@ class D3LiquidityHistogram {
       .attr("y2", this.props.height - 20);
   }
 
-  // handleMouseMove() {
-  //   const bisect = d3.bisector(function (d: Point) {
-  //     return d.x;
-  //   }).left;
-  //   const focus = this.svg
-  //     .append("g")
-  //     .append("circle")
-  //     .style("fill", "rgba(255,255,255,0.15)")
-  //     .attr("stroke", "white")
-  //     .attr("r", 5)
-  //     .style("opacity", 0);
-  //   const focusText = this.svg
-  //     .append("g")
-  //     .append("text")
-  //     .style("opacity", 0)
-  //     .attr("fill", "white")
-  //     .attr("font-size", "0.6rem")
-  //     .attr("alignment-baseline", "middle");
-  //   const verticalLine = this.svg
-  //     .append("g")
-  //     .append("line")
-  //     .style("stroke-width", 1)
-  //     .style("stroke", "rgba(255,255,255,0.15)");
+  handleMouseMove() {
+    const focusTextToken0 = this.svg
+      .append("g")
+      .append("text")
+      .style("opacity", 0)
+      .attr("fill", "white")
+      .attr("font-size", "0.6rem")
+      .attr("alignment-baseline", "middle");
+    const focusTextToken1 = this.svg
+      .append("g")
+      .append("text")
+      .style("opacity", 0)
+      .attr("fill", "white")
+      .attr("font-size", "0.6rem")
+      .attr("alignment-baseline", "middle");
+    const verticalLine = this.svg
+      .append("g")
+      .append("line")
+      .style("stroke-width", 1)
+      .style("stroke", "rgba(255,255,255,0.25)");
 
-  //   const onMouseMove = (e: any) => {
-  //     let coords = d3.pointer(e);
-  //     const x0 = this.x.invert(coords[0]);
-  //     const i = bisect(this.data0, x0, 1);
-  //     const selectedData = this.data0[i];
-  //     verticalLine
-  //       .attr("x1", this.x(selectedData.x))
-  //       .attr("y1", 0)
-  //       .attr("x2", this.x(selectedData.x))
-  //       .attr("y2", this.props.height - 20);
-  //     focus
-  //       .attr("cx", this.x(selectedData.x))
-  //       .attr("cy", this.y(selectedData.y));
+    const onMouseMove = (e: any) => {
+      let coords = d3.pointer(e);
+      const x0 = this.x.invert(coords[0]);
+      verticalLine
+        .attr("x1", this.x(x0))
+        .attr("y1", 0)
+        .attr("x2", this.x(x0))
+        .attr("y2", this.props.height - 20);
 
-  //     const self = this;
-  //     if (this.x(selectedData.x) > this.props.width * 0.8) {
-  //       focusText
-  //         .html(`Price: ${selectedData.y.toFixed(4)}`)
-  //         .attr("x", function (d: any) {
-  //           return self.x(selectedData.x) - (this.getComputedTextLength() + 5);
-  //         })
-  //         .attr("text-anchor", "right")
-  //         .attr("y", 5);
-  //     } else {
-  //       focusText
-  //         .html(`Price: ${selectedData.y.toFixed(4)}`)
-  //         .attr("x", this.x(selectedData.x) + 5)
-  //         .attr("text-anchor", "left")
-  //         .attr("y", 5);
-  //     }
-  //   };
+      const self = this;
+      if (this.x(x0) > this.props.width * 0.8) {
+        focusTextToken0
+          .html(
+            `${this.props.token0Symbol}: ${getPriceFromTick(x0).toFixed(6)} ${
+              this.props.token1Symbol
+            }`
+          )
+          .attr("x", function (d: any) {
+            return self.x(x0) - (this.getComputedTextLength() + 5);
+          })
+          .attr("text-anchor", "right")
+          .attr("y", 5);
+        focusTextToken1
+          .html(
+            `${this.props.token1Symbol}: ${(1 / getPriceFromTick(x0)).toFixed(
+              6
+            )} ${this.props.token0Symbol}`
+          )
+          .attr("x", function (d: any) {
+            return self.x(x0) - (this.getComputedTextLength() + 5);
+          })
+          .attr("text-anchor", "right")
+          .attr("y", 20);
+      } else {
+        focusTextToken0
+          .html(
+            `${this.props.token0Symbol}: ${getPriceFromTick(x0).toFixed(6)} ${
+              this.props.token1Symbol
+            }`
+          )
+          .attr("x", this.x(x0) + 5)
+          .attr("text-anchor", "left")
+          .attr("y", 5);
+        focusTextToken1
+          .html(
+            `${this.props.token1Symbol}: ${(1 / getPriceFromTick(x0)).toFixed(
+              6
+            )} ${this.props.token0Symbol}`
+          )
+          .attr("x", this.x(x0) + 5)
+          .attr("text-anchor", "left")
+          .attr("y", 20);
+      }
+    };
 
-  //   this.svg
-  //     .append("rect")
-  //     .style("fill", "none")
-  //     .style("pointer-events", "all")
-  //     .attr("width", this.props.width)
-  //     .attr("height", this.props.height)
-  //     .on("mouseover", () => {
-  //       focus.style("opacity", 1);
-  //       focusText.style("opacity", 1);
-  //       verticalLine.style("opacity", 1);
-  //     })
-  //     .on("mouseout", () => {
-  //       focus.style("opacity", 0);
-  //       focusText.style("opacity", 0);
-  //       verticalLine.style("opacity", 0);
-  //     })
-  //     .on("mousemove", onMouseMove);
-  // }
+    this.svg
+      .append("rect")
+      .style("fill", "none")
+      .style("pointer-events", "all")
+      .attr("width", this.props.width)
+      .attr("height", this.props.height)
+      .on("mouseover", () => {
+        focusTextToken0.style("opacity", 1);
+        focusTextToken1.style("opacity", 1);
+        verticalLine.style("opacity", 1);
+      })
+      .on("mouseout", () => {
+        focusTextToken0.style("opacity", 0);
+        focusTextToken1.style("opacity", 0);
+        verticalLine.style("opacity", 0);
+      })
+      .on("mousemove", onMouseMove);
+  }
 }
 
 export default D3LiquidityHistogram;

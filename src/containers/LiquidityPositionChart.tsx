@@ -53,7 +53,13 @@ const LiquidityPositionChart = () => {
   };
 
   useEffect(() => {
-    if (!state.poolTicks || !state.priceAssumptionValue) return;
+    if (
+      !state.poolTicks ||
+      !state.priceAssumptionValue ||
+      !state.token0 ||
+      !state.token1
+    )
+      return;
 
     let width = 500;
     let height = 250;
@@ -72,8 +78,16 @@ const LiquidityPositionChart = () => {
       minTick: -getTickFromPrice(state.priceRangeValue[0]).toNumber(),
       maxTick: -getTickFromPrice(state.priceRangeValue[1]).toNumber(),
       data: processData(state.poolTicks),
+      token0Symbol: state.token0?.symbol,
+      token1Symbol: state.token1?.symbol,
     });
-  }, [refElement, state.poolTicks, state.priceAssumptionValue]);
+  }, [
+    refElement,
+    state.poolTicks,
+    state.priceAssumptionValue,
+    state.token0,
+    state.token1,
+  ]);
 
   useEffect(() => {
     if (!d3Chart) return;

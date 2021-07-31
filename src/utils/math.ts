@@ -19,6 +19,11 @@ export const getTickFromPrice = (price: number): bn => {
     .div(new bn(Math.log(1.0001).toString()))
     .integerValue(0);
 };
+
+export const getPriceFromTick = (tick: number): number => {
+  return Math.pow(1.0001, tick);
+};
+
 export const calculateAvg = (data: number[]): number => {
   return data.reduce((result, val) => result + val, 0) / data.length;
 };
