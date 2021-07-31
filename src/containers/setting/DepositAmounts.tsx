@@ -50,7 +50,7 @@ const Token = styled.div`
 const DepositAmounts = () => {
   const { state, dispatch } = useAppContext();
 
-  // for calculation detail, please visit README.md (Section: Calculation Breakdown)
+  // for calculation detail, please visit README.md (Section: Calculation Breakdown, No. 1)
   const P = state.priceAssumptionValue;
   const Pu = state.priceRangeValue[1];
   const Pl = state.priceRangeValue[0];

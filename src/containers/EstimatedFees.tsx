@@ -32,6 +32,7 @@ const Tag = styled.div`
   color: rgba(255, 255, 255, 0.3);
 `;
 
+// for calculation detail, please visit README.md (Section: Calculation Breakdown, No. 2)
 const EstimatedFees = () => {
   const { state } = useAppContext();
 

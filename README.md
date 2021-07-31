@@ -27,6 +27,14 @@ TODO: Disclaimer
   - `deltaY = deltaL * (sqrt(P) - sqrt(Pl))`
   - `deltaX = deltaL * (1 / sqrt(P) - 1 / sqrt(Pu))`
 
+### 2. Calculate estimated fee
+
+- Estimated fee (daily) can be calculated by this simple equation
+  - `fee = feeTier * volume24H * (deltaL / (L + deltaL))` where:
+    - `volume24H` = average of 24h volume from `[currentDay - 4, currentDay - 1]`
+    - `deltaL` = delta liquidity (same as 1.)
+    - `L` = total liquidity (cumulative of `liquidityNet` from all ticks that `il <= ic`)
+
 ---
 
 TODO: Credit
