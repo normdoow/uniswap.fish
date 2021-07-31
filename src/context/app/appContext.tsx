@@ -18,6 +18,7 @@ export interface AppContextState {
   depositAmountValue: number;
   priceRangeValue: number[];
   priceAssumptionValue: number;
+  isPriceAssumptionInit: boolean;
   outOfRangePercentageValue: number;
 }
 const initialState: AppContextState = {
@@ -35,6 +36,7 @@ const initialState: AppContextState = {
   depositAmountValue: 1000,
   priceRangeValue: [0, 0],
   priceAssumptionValue: 0,
+  isPriceAssumptionInit: false,
   outOfRangePercentageValue: 0,
 };
 

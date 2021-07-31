@@ -60,6 +60,9 @@ const PriceRange = () => {
 
   useEffect(() => {
     const currentPrice = Number(Number(state.pool?.token0Price).toFixed(5));
+
+    if (Number.isNaN(currentPrice)) return;
+
     dispatch({
       type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE,
       payload: currentPrice,
@@ -67,6 +70,11 @@ const PriceRange = () => {
     dispatch({
       type: AppActionType.UPDATE_PRICE_RANGE,
       payload: [findMin(prices), findMax(prices)],
+    });
+
+    dispatch({
+      type: AppActionType.RESET_IS_PRICE_ASSUMPTION_INIT,
+      payload: true,
     });
   }, [state.pool]);
 

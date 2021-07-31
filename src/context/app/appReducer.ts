@@ -10,6 +10,7 @@ export enum AppActionType {
   UPDATE_PRICE_ASSUMPTION_VALUE = "UPDATE_PRICE_ASSUMPTION_VALUE",
   UPDATE_PRICE_RANGE = "UPDATE_PRICE_RANGE",
   UPDATE_DEPOSIT_AMOUNT = "UPDATE_DEPOSIT_AMOUNT",
+  RESET_IS_PRICE_ASSUMPTION_INIT = "RESET_IS_PRICE_ASSUMPTION_INIT",
 }
 export type AppAction =
   | {
@@ -34,13 +35,17 @@ export type AppAction =
   | { type: AppActionType.UPDATE_OUT_OF_RANGE_PERCENTAGE; payload: number }
   | { type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE; payload: number }
   | { type: AppActionType.UPDATE_PRICE_RANGE; payload: number[] }
-  | { type: AppActionType.UPDATE_DEPOSIT_AMOUNT; payload: number };
+  | { type: AppActionType.UPDATE_DEPOSIT_AMOUNT; payload: number }
+  | { type: AppActionType.RESET_IS_PRICE_ASSUMPTION_INIT; payload: boolean };
 
 export const appReducer = (
   state: AppContextState,
   action: AppAction
 ): AppContextState => {
   switch (action.type) {
+    case AppActionType.RESET_IS_PRICE_ASSUMPTION_INIT: {
+      return { ...state, isPriceAssumptionInit: action.payload };
+    }
     case AppActionType.UPDATE_DEPOSIT_AMOUNT: {
       return { ...state, depositAmountValue: action.payload };
     }
@@ -97,6 +102,7 @@ export const appReducer = (
         token1,
         token0PriceChart,
         token1PriceChart,
+        isPriceAssumptionInit: false,
       };
     }
   }

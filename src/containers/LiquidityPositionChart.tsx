@@ -35,7 +35,6 @@ const WrappedHeader = styled.div`
 let d3Chart: D3LiquidityHistogram | null = null;
 const LiquidityPositionChart = () => {
   const { state } = useAppContext();
-  const [isCurrentPriceLoaded, setIsCurrentPriceLoaded] = useState(false);
   const refElement = useRef<HTMLDivElement>(null);
 
   const processData = (ticks: Tick[]): Bin[] => {
@@ -58,7 +57,7 @@ const LiquidityPositionChart = () => {
       !state.poolTicks ||
       !state.token0 ||
       !state.token1 ||
-      !isCurrentPriceLoaded
+      !state.isPriceAssumptionInit
     )
       return;
 
@@ -104,14 +103,10 @@ const LiquidityPositionChart = () => {
     state.poolTicks,
     state.token0,
     state.token1,
-    isCurrentPriceLoaded,
+    state.isPriceAssumptionInit,
   ]);
 
   useEffect(() => {
-    if (!isCurrentPriceLoaded && state.priceAssumptionValue) {
-      setIsCurrentPriceLoaded(true);
-      return;
-    }
     if (!d3Chart) return;
 
     const currentPrice = Number(state.priceAssumptionValue);
@@ -136,7 +131,7 @@ const LiquidityPositionChart = () => {
     }
 
     d3Chart.updateMinMaxTickRange(minTick, maxTick);
-  }, [state.priceRangeValue, isCurrentPriceLoaded]);
+  }, [state.priceRangeValue]);
 
   return (
     <Container>
