@@ -28,6 +28,8 @@ class D3PriceChart {
   xAxis;
   yAxis;
   mostActivePrice;
+  minPrice;
+  maxPrice;
   // brush;
 
   constructor(containerEl: any, props: D3PriceChartProps) {
@@ -108,6 +110,13 @@ class D3PriceChart {
     this.mostActivePrice = this.renderMostActivePriceAssumption(
       props.mostActivePrice
     );
+
+    const { minPriceSVG, maxPriceSVG } = this.renderMinMaxPriceRange(
+      props.minRange,
+      props.maxRange
+    );
+    this.minPrice = minPriceSVG;
+    this.maxPrice = maxPriceSVG;
     // this.brush = this.initBrush(props.minRange, props.maxRange);
     // let offsetY: number = 0;
     // this.brush.call(
@@ -122,17 +131,17 @@ class D3PriceChart {
     // );
   }
 
-  initBrush(minRange: number, maxRange: number) {
-    return this.svg
-      .append("g")
-      .append("rect")
-      .style("fill", "rgba(37, 175, 96, 0.3)")
-      .style("cursor", "grab")
-      .attr("x", 0)
-      .attr("y", this.y(maxRange))
-      .attr("width", this.props.width)
-      .attr("height", this.y(minRange) - this.y(maxRange));
-  }
+  // initBrush(minRange: number, maxRange: number) {
+  //   return this.svg
+  //     .append("g")
+  //     .append("rect")
+  //     .style("fill", "rgba(37, 175, 96, 0.3)")
+  //     .style("cursor", "grab")
+  //     .attr("x", 0)
+  //     .attr("y", this.y(maxRange))
+  //     .attr("width", this.props.width)
+  //     .attr("height", this.y(minRange) - this.y(maxRange));
+  // }
 
   handleMouseMove() {
     const bisect = d3.bisector(function (d: Point) {
@@ -227,6 +236,45 @@ class D3PriceChart {
       .attr("y1", this.y(price))
       .attr("x2", this.props.width)
       .attr("y2", this.y(price));
+  }
+
+  renderMinMaxPriceRange(minPrice: number, maxPrice: number) {
+    const minPriceSVG = this.svg
+      .append("g")
+      .append("line")
+      .style("stroke-width", 1.25)
+      .style("stroke-dasharray", "10, 3")
+      .style("stroke", "rgba(37, 175, 96, 1)")
+      .attr("x1", 0)
+      .attr("y1", this.y(minPrice))
+      .attr("x2", this.props.width)
+      .attr("y2", this.y(minPrice));
+
+    const maxPriceSVG = this.svg
+      .append("g")
+      .append("line")
+      .style("stroke-width", 1.25)
+      .style("stroke-dasharray", "10, 3")
+      .style("stroke", "rgba(37, 175, 96, 1)")
+      .attr("x1", 0)
+      .attr("y1", this.y(maxPrice))
+      .attr("x2", this.props.width)
+      .attr("y2", this.y(maxPrice));
+
+    return { minPriceSVG, maxPriceSVG };
+  }
+  updateMinMaxPriceRange(minPrice: number, maxPrice: number) {
+    this.minPrice
+      .attr("x1", 0)
+      .attr("y1", this.y(minPrice))
+      .attr("x2", this.props.width)
+      .attr("y2", this.y(minPrice));
+
+    this.maxPrice
+      .attr("x1", 0)
+      .attr("y1", this.y(maxPrice))
+      .attr("x2", this.props.width)
+      .attr("y2", this.y(maxPrice));
   }
 
   createLinearGradient(id: string, { r, g, b }: RGB) {

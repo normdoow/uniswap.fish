@@ -66,7 +66,7 @@ const PriceRange = () => {
     });
     dispatch({
       type: AppActionType.UPDATE_PRICE_RANGE,
-      payload: [min, max],
+      payload: [findMin(prices), findMax(prices)],
     });
   }, [state.pool]);
 
