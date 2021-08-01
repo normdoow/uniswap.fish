@@ -25,8 +25,23 @@ export const getTickFromPrice = (
   return Math.log(sqrtPrice.toNumber()) / Math.log(Math.sqrt(1.0001));
 };
 
-export const getPriceFromTick = (tick: number): number => {
-  return Math.pow(1.0001, tick);
+export const getPriceFromTick = (
+  tick: number,
+  token0Decimal: string,
+  token1Decimal: string
+): number => {
+  const sqrtPrice = new bn(Math.pow(Math.sqrt(1.0001), tick)).multipliedBy(
+    new bn(2).pow(96)
+  );
+  const token0 = expandDecimals(1, Number(token0Decimal));
+  const token1 = expandDecimals(1, Number(token1Decimal));
+  const L2 = mulDiv(encodePriceSqrt(token0), encodePriceSqrt(token1), Q96);
+  const price = mulDiv(L2, Q96, sqrtPrice)
+    .div(new bn(2).pow(96))
+    .div(new bn(10).pow(token0Decimal))
+    .pow(2);
+
+  return price.toNumber();
 };
 
 // for calculation detail, please visit README.md (Section: Calculation Breakdown, No. 1)

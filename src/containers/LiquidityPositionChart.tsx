@@ -4,21 +4,8 @@ import { Heading } from "../common/atomic";
 import D3LiquidityHistogram, { Bin } from "./D3LiquidityHistogram";
 import { useAppContext } from "../context/app/appContext";
 import { Tick } from "../repos/uniswap";
-import {
-  divideArray,
-  encodePriceSqrt,
-  expandDecimals,
-  findMax,
-  findMin,
-} from "../utils/math";
-import bn from "bignumber.js";
+import { divideArray, findMax, findMin } from "../utils/math";
 import { getTickFromPrice } from "../utils/liquidityMath";
-bn.config({ EXPONENTIAL_AT: 999999, DECIMAL_PLACES: 40 });
-
-const Q96 = new bn(2).pow(96);
-const mulDiv = (a: bn, b: bn, multiplier: bn) => {
-  return a.multipliedBy(b).div(multiplier);
-};
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -142,15 +129,6 @@ const LiquidityPositionChart = () => {
       );
     }
 
-    console.log({
-      id: state.pool.id,
-      tick: state.pool.tick,
-      price: state.pool.token0Price,
-      currentTick,
-      // calculatedTick: Math.log(sqrtP.toNumber()) / Math.log(Math.sqrt(1.0001)),
-      sqrtPrice: new bn(state.pool.sqrtPrice).div(new bn(2).pow(96)).toString(),
-    });
-
     const ticks = [minTick, maxTick].sort((a, b) => a - b);
 
     let token0Symbol;
@@ -171,6 +149,8 @@ const LiquidityPositionChart = () => {
       currentTick,
       token0Symbol,
       token1Symbol,
+      token0Decimal: state.token0.decimals,
+      token1Decimal: state.token1.decimals,
       data: processData(state.poolTicks, ticks[0], ticks[1]),
     });
   }, [
