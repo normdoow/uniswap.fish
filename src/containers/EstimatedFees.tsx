@@ -7,6 +7,11 @@ import { Tick } from "../repos/uniswap";
 import { expandDecimals } from "../utils/math";
 import { getFeeTierPercentage } from "../utils/helper";
 import bn from "bignumber.js";
+import {
+  calculateFee,
+  getLiquidityForAmounts,
+  getTokenAmountsFromDepositAmounts,
+} from "../utils/liquidityMath";
 
 const SettingContainer = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -32,7 +37,6 @@ const Tag = styled.div`
   color: rgba(255, 255, 255, 0.3);
 `;
 
-// for calculation detail, please visit README.md (Section: Calculation Breakdown, No. 2)
 const EstimatedFees = () => {
   const { state } = useAppContext();
 
@@ -60,32 +64,36 @@ const EstimatedFees = () => {
     return liquidity;
   };
 
-  const calculateLiquidityPercentage = (L: bn, deltaL: number): number => {
-    const exp = Math.floor(
-      (Number(state.token0?.decimals || 18) +
-        Number(state.token1?.decimals || 18)) /
-        2
-    );
-    const _deltaL = expandDecimals(deltaL, exp);
-    return _deltaL.div(L.plus(_deltaL)).toNumber();
-  };
-
   const P = state.priceAssumptionValue;
-  const Pu = state.priceRangeValue[1];
   const Pl = state.priceRangeValue[0];
+  const Pu = state.priceRangeValue[1];
   const priceUSDX = state.token1PriceChart?.currentPriceUSD || 1;
   const priceUSDY = state.token0PriceChart?.currentPriceUSD || 1;
   const targetAmounts = state.depositAmountValue;
-  const volume24H = state.volume24H;
-  const feeTier = getFeeTierPercentage(state.pool?.feeTier || "");
 
-  const deltaL =
-    targetAmounts /
-    ((Math.sqrt(P) - Math.sqrt(Pl)) * priceUSDY +
-      (1 / Math.sqrt(P) - 1 / Math.sqrt(Pu)) * priceUSDX);
+  const { amount0, amount1 } = getTokenAmountsFromDepositAmounts(
+    P,
+    Pl,
+    Pu,
+    priceUSDX,
+    priceUSDY,
+    targetAmounts
+  );
 
+  const deltaL = getLiquidityForAmounts(
+    P,
+    Pl,
+    Pu,
+    amount0,
+    Number(state.token1?.decimals || 18),
+    amount1,
+    Number(state.token0?.decimals || 18)
+  );
   const L = calculateLiquidity(state.poolTicks || [], P);
-  let fee = feeTier * volume24H * calculateLiquidityPercentage(L, deltaL);
+  const volume24H = state.volume24H;
+  const feeTier = state.pool?.feeTier || "";
+
+  let fee = calculateFee(deltaL, L, volume24H, feeTier);
   if (P < Pl || P > Pu) fee = 0;
 
   return (

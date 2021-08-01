@@ -1,17 +1,8 @@
 import bn from "bignumber.js";
-
 bn.config({ EXPONENTIAL_AT: 999999, DECIMAL_PLACES: 40 });
 
-export const x96ToDecimal = (value: number | string | bn): bn => {
-  return new bn(value).div(new bn(2).pow(96));
-};
-
-export const encodePriceSqrt = (reserve1: bn, reserve0: bn): bn => {
-  return new bn(reserve1.toString())
-    .div(reserve0.toString())
-    .sqrt()
-    .multipliedBy(new bn(2).pow(96))
-    .integerValue(3);
+export const encodePriceSqrt = (price: number): bn => {
+  return new bn(price).sqrt().multipliedBy(new bn(2).pow(96)).integerValue(3);
 };
 
 export function expandDecimals(n: number | string | bn, exp: number): bn {
