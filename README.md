@@ -15,7 +15,7 @@ Uniswap V3 Fee Calculator created with React & Typescript, Visit: [uniswapv3.the
 
 ## Calculation Breakdown
 
-| Please correct me if I'm wrong 
+> Please correct me if I'm wrong 
 
 ### 1. Calculate deposit amounts of token0 and token1
 
