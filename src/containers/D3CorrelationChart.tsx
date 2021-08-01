@@ -61,9 +61,12 @@ class D3CorrelationChart {
     this.x = x;
 
     // add y axis
+    const min = findMin(yData);
+    const max = findMax(yData);
+    const margin = (max - min) * 1.25;
     const y = d3
       .scaleLinear()
-      .domain([findMin(yData) * 0.5, findMax(yData) * 1.25])
+      .domain([min - margin, max + margin / 2])
       .range([props.height, 0]);
     this.yAxis = this.svg
       .append("g")
@@ -100,7 +103,7 @@ class D3CorrelationChart {
           .x(function (d: any) {
             return x(d.x);
           })
-          .y0(y(0))
+          .y0(props.height)
           .y1(function (d: any) {
             return y(d.y);
           })
