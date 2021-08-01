@@ -61,10 +61,10 @@ const PriceRange = () => {
 
   const min = Math.max(0, findMin(prices) - margin);
   const max = findMax(prices) + margin;
-  const step = (max - min) / 1000000;
+  const step = (max - min) / 10000000;
 
   useEffect(() => {
-    const currentPrice = Number(Number(state.pool?.token0Price).toFixed(5));
+    const currentPrice = Number(state.pool?.token0Price || NaN);
 
     if (Number.isNaN(currentPrice)) return;
 
@@ -75,11 +75,6 @@ const PriceRange = () => {
     dispatch({
       type: AppActionType.UPDATE_PRICE_RANGE,
       payload: [_min, _max],
-    });
-
-    dispatch({
-      type: AppActionType.RESET_IS_PRICE_ASSUMPTION_INIT,
-      payload: true,
     });
   }, [state.pool]);
 

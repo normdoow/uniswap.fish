@@ -53,23 +53,18 @@ const LiquidityPositionChart = () => {
   };
 
   useEffect(() => {
-    if (
-      !state.poolTicks ||
-      !state.token0 ||
-      !state.token1 ||
-      !state.isPriceAssumptionInit
-    )
+    if (!state.poolTicks || !state.pool || !state.token0 || !state.token1)
       return;
 
     let width = 500;
-    let height = 245;
+    let height = 240;
     if (refElement.current) {
       width = refElement.current.offsetWidth;
     }
 
     if (d3Chart) d3Chart.destroy();
 
-    const currentPrice = Number(state.priceAssumptionValue);
+    const currentPrice = Number(state.pool.token0Price);
     let currentTick;
 
     if (state.isSwap) {
@@ -98,13 +93,7 @@ const LiquidityPositionChart = () => {
       token1Symbol,
       data: processData(state.poolTicks),
     });
-  }, [
-    refElement,
-    state.poolTicks,
-    state.token0,
-    state.token1,
-    state.isPriceAssumptionInit,
-  ]);
+  }, [refElement, state.poolTicks, state.pool, state.token0, state.token1]);
 
   useEffect(() => {
     if (!d3Chart) return;

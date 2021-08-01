@@ -7,10 +7,9 @@ export enum AppActionType {
   RESET_PAIR = "RESET_PAIR",
   SWAP_CURRENT_PAIR = "SWAP_CURRENT_PAIR",
   UPDATE_OUT_OF_RANGE_PERCENTAGE = "UPDATE_OUT_OF_RANGE_PERCENTAGE",
-  UPDATE_PRICE_ASSUMPTION_VALUE = "UPDATE_PRICE_ASSUMPTION_VALUE",
   UPDATE_PRICE_RANGE = "UPDATE_PRICE_RANGE",
   UPDATE_DEPOSIT_AMOUNT = "UPDATE_DEPOSIT_AMOUNT",
-  RESET_IS_PRICE_ASSUMPTION_INIT = "RESET_IS_PRICE_ASSUMPTION_INIT",
+  UPDATE_PRICE_ASSUMPTION_VALUE = "UPDATE_PRICE_ASSUMPTION_VALUE",
 }
 export type AppAction =
   | {
@@ -35,17 +34,13 @@ export type AppAction =
   | { type: AppActionType.UPDATE_OUT_OF_RANGE_PERCENTAGE; payload: number }
   | { type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE; payload: number }
   | { type: AppActionType.UPDATE_PRICE_RANGE; payload: number[] }
-  | { type: AppActionType.UPDATE_DEPOSIT_AMOUNT; payload: number }
-  | { type: AppActionType.RESET_IS_PRICE_ASSUMPTION_INIT; payload: boolean };
+  | { type: AppActionType.UPDATE_DEPOSIT_AMOUNT; payload: number };
 
 export const appReducer = (
   state: AppContextState,
   action: AppAction
 ): AppContextState => {
   switch (action.type) {
-    case AppActionType.RESET_IS_PRICE_ASSUMPTION_INIT: {
-      return { ...state, isPriceAssumptionInit: action.payload };
-    }
     case AppActionType.UPDATE_DEPOSIT_AMOUNT: {
       return { ...state, depositAmountValue: action.payload };
     }
@@ -102,7 +97,6 @@ export const appReducer = (
         token1,
         token0PriceChart,
         token1PriceChart,
-        isPriceAssumptionInit: false,
       };
     }
   }
