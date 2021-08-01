@@ -6,12 +6,16 @@ export const x96ToDecimal = (value: number | string | bn): bn => {
   return new bn(value).div(new bn(2).pow(96));
 };
 
+export const encodePriceSqrt = (reserve1: bn, reserve0: bn): bn => {
+  return new bn(reserve1.toString())
+    .div(reserve0.toString())
+    .sqrt()
+    .multipliedBy(new bn(2).pow(96))
+    .integerValue(3);
+};
+
 export function expandDecimals(n: number | string | bn, exp: number): bn {
   return new bn(n).multipliedBy(new bn(10).pow(exp));
-}
-
-export function formatInt128ToDecimal(n: number | string | bn): bn {
-  return new bn(n).dividedBy(new bn(10).pow(18));
 }
 
 export const getTickFromPrice = (price: number): bn => {

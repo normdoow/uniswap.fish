@@ -4,6 +4,7 @@ import { Heading } from "../../common/atomic";
 import Table from "../../common/Table";
 import { useAppContext } from "../../context/app/appContext";
 import { AppActionType } from "../../context/app/appReducer";
+import { getTokenAmountsFromDepositAmounts } from "../../utils/liquidityMath";
 
 const InputGroup = styled.div`
   display: flex;
@@ -50,26 +51,21 @@ const Token = styled.div`
 const DepositAmounts = () => {
   const { state, dispatch } = useAppContext();
 
-  // for calculation detail, please visit README.md (Section: Calculation Breakdown, No. 1)
   const P = state.priceAssumptionValue;
-  const Pu = state.priceRangeValue[1];
   const Pl = state.priceRangeValue[0];
+  const Pu = state.priceRangeValue[1];
   const priceUSDX = state.token1PriceChart?.currentPriceUSD || 1;
   const priceUSDY = state.token0PriceChart?.currentPriceUSD || 1;
   const targetAmounts = state.depositAmountValue;
 
-  const deltaL =
-    targetAmounts /
-    ((Math.sqrt(P) - Math.sqrt(Pl)) * priceUSDY +
-      (1 / Math.sqrt(P) - 1 / Math.sqrt(Pu)) * priceUSDX);
-
-  let deltaY = deltaL * (Math.sqrt(P) - Math.sqrt(Pl));
-  if (deltaY * priceUSDY < 0) deltaY = 0;
-  if (deltaY * priceUSDY > targetAmounts) deltaY = targetAmounts / priceUSDY;
-
-  let deltaX = deltaL * (1 / Math.sqrt(P) - 1 / Math.sqrt(Pu));
-  if (deltaX * priceUSDX < 0) deltaX = 0;
-  if (deltaX * priceUSDX > targetAmounts) deltaX = targetAmounts / priceUSDX;
+  const { amount0, amount1 } = getTokenAmountsFromDepositAmounts(
+    P,
+    Pl,
+    Pu,
+    priceUSDX,
+    priceUSDY,
+    targetAmounts
+  );
 
   return (
     <div>
@@ -97,16 +93,16 @@ const DepositAmounts = () => {
           <img alt={state.token0?.name} src={state.token0?.logoURI} />{" "}
           <span>{state.token0?.symbol}</span>
         </Token>
-        <div>{deltaY.toFixed(5)}</div>
-        <div>${(deltaY * priceUSDY).toFixed(2)}</div>
+        <div>{amount1.toFixed(5)}</div>
+        <div>${(amount1 * priceUSDY).toFixed(2)}</div>
       </Table>
       <Table>
         <Token>
           <img alt={state.token1?.name} src={state.token1?.logoURI} />{" "}
           <span>{state.token1?.symbol}</span>
         </Token>
-        <div>{deltaX.toFixed(5)}</div>
-        <div>${(deltaX * priceUSDX).toFixed(2)}</div>
+        <div>{amount0.toFixed(5)}</div>
+        <div>${(amount0 * priceUSDX).toFixed(2)}</div>
       </Table>
     </div>
   );
