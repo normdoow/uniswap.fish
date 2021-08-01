@@ -19,16 +19,42 @@ const CreditContainer = styled.div`
     font-weight: bold;
     text-decoration: none;
   }
+
+  & > div:nth-child(2) {
+    margin-top: 7px;
+
+    & > a {
+      color: #777;
+      margin: 0 7px;
+    }
+  }
 `;
 
 const Credit = () => {
   return (
     <CreditContainer>
-      Crafted with <FontAwesomeIcon icon={faHeart} /> by{" "}
-      <a href="https://twitter.com/chunza2542" target="_blank">
-        @chunza2542
-      </a>
-      , Happy Uniswapping 🦄!!
+      <div>
+        Crafted with <FontAwesomeIcon icon={faHeart} /> by{" "}
+        <a href="https://twitter.com/chunza2542" target="_blank">
+          @chunza2542
+        </a>
+        , Happy Uniswapping 🦄!!
+      </div>
+      <div>
+        <a
+          href="https://github.com/chunza2542/uniswapv3-calculator"
+          target="_blank"
+        >
+          How it works?
+        </a>
+        <a
+          href="https://github.com/chunza2542/uniswapv3-calculator/issues"
+          target="_blank"
+        >
+          Report a bug or request a feature
+        </a>
+        <a href="mailto:hello@thechun.dev">Contact: hello@thechun.dev</a>
+      </div>
     </CreditContainer>
   );
 };
