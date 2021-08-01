@@ -104,6 +104,8 @@ export interface Pool {
   id: string;
   feeTier: string;
   liquidity: string;
+  tick: string;
+  sqrtPrice: string;
   token0Price: string;
   token1Price: string;
 }
@@ -118,6 +120,8 @@ export const getPoolFromPair = async (
         token0: "${sortedTokens[0].id}",
         token1: "${sortedTokens[1].id}"}) {
       id
+      tick
+      sqrtPrice
       feeTier
       liquidity
       token0Price

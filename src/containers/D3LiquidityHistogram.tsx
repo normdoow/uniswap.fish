@@ -1,6 +1,6 @@
 import React from "react";
 import * as d3 from "d3";
-import { findMax, findMin, getPriceFromTick } from "../utils/math";
+import { findMax, findMin } from "../utils/math";
 
 export interface Bin {
   x0: number;
@@ -190,22 +190,22 @@ class D3LiquidityHistogram {
       const self = this;
       if (this.x(x0) > this.props.width * 0.8) {
         focusTextToken0
-          .html(
-            `${this.token0Symbol}: ${getPriceFromTick(x0).toFixed(6)} ${
-              this.token1Symbol
-            }`
-          )
+          // .html(
+          //   `${this.token0Symbol}: ${getPriceFromTick(x0).toFixed(6)} ${
+          //     this.token1Symbol
+          //   }`
+          // )
           .attr("x", function (d: any) {
             return self.x(x0) - (this.getComputedTextLength() + 5);
           })
           .attr("text-anchor", "right")
           .attr("y", 5);
         focusTextToken1
-          .html(
-            `${this.token1Symbol}: ${(1 / getPriceFromTick(x0)).toFixed(6)} ${
-              this.token0Symbol
-            }`
-          )
+          // .html(
+          //   `${this.token1Symbol}: ${(1 / getPriceFromTick(x0)).toFixed(6)} ${
+          //     this.token0Symbol
+          //   }`
+          // )
           .attr("x", function (d: any) {
             return self.x(x0) - (this.getComputedTextLength() + 5);
           })
@@ -213,20 +213,20 @@ class D3LiquidityHistogram {
           .attr("y", 20);
       } else {
         focusTextToken0
-          .html(
-            `${this.token0Symbol}: ${getPriceFromTick(x0).toFixed(6)} ${
-              this.token1Symbol
-            }`
-          )
+          // .html(
+          //   `${this.token0Symbol}: ${getPriceFromTick(x0).toFixed(6)} ${
+          //     this.token1Symbol
+          //   }`
+          // )
           .attr("x", this.x(x0) + 5)
           .attr("text-anchor", "left")
           .attr("y", 5);
         focusTextToken1
-          .html(
-            `${this.token1Symbol}: ${(1 / getPriceFromTick(x0)).toFixed(6)} ${
-              this.token0Symbol
-            }`
-          )
+          // .html(
+          //   `${this.token1Symbol}: ${(1 / getPriceFromTick(x0)).toFixed(6)} ${
+          //     this.token0Symbol
+          //   }`
+          // )
           .attr("x", this.x(x0) + 5)
           .attr("text-anchor", "left")
           .attr("y", 20);

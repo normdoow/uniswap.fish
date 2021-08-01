@@ -1,11 +1,24 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { Heading } from "../common/atomic";
-import { PriceChart } from "../repos/coingecko";
 import D3LiquidityHistogram, { Bin } from "./D3LiquidityHistogram";
 import { useAppContext } from "../context/app/appContext";
 import { Tick } from "../repos/uniswap";
-import { divideArray, findMax, findMin, getTickFromPrice } from "../utils/math";
+import {
+  divideArray,
+  encodePriceSqrt,
+  expandDecimals,
+  findMax,
+  findMin,
+} from "../utils/math";
+import bn from "bignumber.js";
+import { getTickFromPrice } from "../utils/liquidityMath";
+bn.config({ EXPONENTIAL_AT: 999999, DECIMAL_PLACES: 40 });
+
+const Q96 = new bn(2).pow(96);
+const mulDiv = (a: bn, b: bn, multiplier: bn) => {
+  return a.multipliedBy(b).div(multiplier);
+};
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -37,17 +50,26 @@ const LiquidityPositionChart = () => {
   const { state } = useAppContext();
   const refElement = useRef<HTMLDivElement>(null);
 
-  const processData = (ticks: Tick[]): Bin[] => {
+  const processData = (
+    ticks: Tick[],
+    minTick: number,
+    maxTick: number
+  ): Bin[] => {
     const bins: Bin[] = [];
     let liquidity = 0;
     for (let i = 0; i < ticks.length - 1; ++i) {
       liquidity += Number(ticks[i].liquidityNet);
 
-      bins.push({
-        x0: Number(ticks[i].tickIdx),
-        x1: Number(ticks[i + 1].tickIdx),
-        y: liquidity,
-      });
+      const lowerTick = Number(ticks[i].tickIdx);
+      const upperTick = Number(ticks[i + 1].tickIdx);
+
+      if (upperTick > minTick && lowerTick < maxTick) {
+        bins.push({
+          x0: Number(ticks[i].tickIdx),
+          x1: Number(ticks[i + 1].tickIdx),
+          y: liquidity,
+        });
+      }
     }
     return bins;
   };
@@ -77,7 +99,7 @@ const LiquidityPositionChart = () => {
     );
     const _min = findMin(prices);
     const _max = findMax(prices);
-    const margin = (_max - _min) * 1.5;
+    const margin = (_max - _min) * 1.25;
     const minPrice = _min - margin <= 0 ? _min : _min - margin;
     const maxPrice = _max + margin;
     const currentPrice = Number(state.pool.token0Price);
@@ -86,15 +108,48 @@ const LiquidityPositionChart = () => {
     let minTick;
     let maxTick;
 
-    if (state.isSwap) {
-      currentTick = getTickFromPrice(currentPrice).toNumber();
-      minTick = getTickFromPrice(minPrice).toNumber();
-      maxTick = getTickFromPrice(maxPrice).toNumber();
+    if (!state.isSwap) {
+      currentTick = getTickFromPrice(
+        currentPrice,
+        state.token0.decimals,
+        state.token1.decimals
+      );
+      minTick = getTickFromPrice(
+        minPrice,
+        state.token0.decimals,
+        state.token1.decimals
+      );
+      maxTick = getTickFromPrice(
+        maxPrice,
+        state.token0.decimals,
+        state.token1.decimals
+      );
     } else {
-      currentTick = -getTickFromPrice(currentPrice).toNumber();
-      minTick = -getTickFromPrice(minPrice).toNumber();
-      maxTick = -getTickFromPrice(maxPrice).toNumber();
+      currentTick = -getTickFromPrice(
+        currentPrice,
+        state.token0.decimals,
+        state.token1.decimals
+      );
+      minTick = -getTickFromPrice(
+        minPrice,
+        state.token0.decimals,
+        state.token1.decimals
+      );
+      maxTick = -getTickFromPrice(
+        maxPrice,
+        state.token0.decimals,
+        state.token1.decimals
+      );
     }
+
+    console.log({
+      id: state.pool.id,
+      tick: state.pool.tick,
+      price: state.pool.token0Price,
+      currentTick,
+      // calculatedTick: Math.log(sqrtP.toNumber()) / Math.log(Math.sqrt(1.0001)),
+      sqrtPrice: new bn(state.pool.sqrtPrice).div(new bn(2).pow(96)).toString(),
+    });
 
     const ticks = [minTick, maxTick].sort((a, b) => a - b);
 
@@ -116,7 +171,7 @@ const LiquidityPositionChart = () => {
       currentTick,
       token0Symbol,
       token1Symbol,
-      data: processData(state.poolTicks),
+      data: processData(state.poolTicks, ticks[0], ticks[1]),
     });
   }, [
     refElement,
@@ -130,30 +185,61 @@ const LiquidityPositionChart = () => {
 
   useEffect(() => {
     if (!d3Chart) return;
+    if (!state.token0 || !state.token1) return;
 
     const currentPrice = Number(state.priceAssumptionValue);
-    if (state.isSwap) {
-      d3Chart.updateCurrentTick(getTickFromPrice(currentPrice).toNumber());
+    if (!state.isSwap) {
+      d3Chart.updateCurrentTick(
+        getTickFromPrice(
+          currentPrice,
+          state.token0.decimals,
+          state.token1.decimals
+        )
+      );
     } else {
-      d3Chart.updateCurrentTick(-getTickFromPrice(currentPrice).toNumber());
+      d3Chart.updateCurrentTick(
+        -getTickFromPrice(
+          currentPrice,
+          state.token0.decimals,
+          state.token1.decimals
+        )
+      );
     }
-  }, [state.priceAssumptionValue]);
+  }, [state.priceAssumptionValue, state.token0, state.token1]);
 
   useEffect(() => {
     if (!d3Chart) return;
+    if (!state.token0 || !state.token1) return;
+
     let minTick: number;
     let maxTick: number;
 
-    if (state.isSwap) {
-      minTick = getTickFromPrice(state.priceRangeValue[0]).toNumber();
-      maxTick = getTickFromPrice(state.priceRangeValue[1]).toNumber();
+    if (!state.isSwap) {
+      minTick = getTickFromPrice(
+        state.priceRangeValue[0],
+        state.token0.decimals,
+        state.token1.decimals
+      );
+      maxTick = getTickFromPrice(
+        state.priceRangeValue[1],
+        state.token0.decimals,
+        state.token1.decimals
+      );
     } else {
-      minTick = -getTickFromPrice(state.priceRangeValue[0]).toNumber();
-      maxTick = -getTickFromPrice(state.priceRangeValue[1]).toNumber();
+      minTick = -getTickFromPrice(
+        state.priceRangeValue[0],
+        state.token0.decimals,
+        state.token1.decimals
+      );
+      maxTick = -getTickFromPrice(
+        state.priceRangeValue[1],
+        state.token0.decimals,
+        state.token1.decimals
+      );
     }
 
     d3Chart.updateMinMaxTickRange(minTick, maxTick);
-  }, [state.priceRangeValue]);
+  }, [state.priceRangeValue, state.token0, state.token1]);
 
   return (
     <Container>

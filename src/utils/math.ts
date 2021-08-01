@@ -1,23 +1,13 @@
 import bn from "bignumber.js";
 bn.config({ EXPONENTIAL_AT: 999999, DECIMAL_PLACES: 40 });
 
-export const encodePriceSqrt = (price: number): bn => {
+export const encodePriceSqrt = (price: number | string | bn): bn => {
   return new bn(price).sqrt().multipliedBy(new bn(2).pow(96)).integerValue(3);
 };
 
 export function expandDecimals(n: number | string | bn, exp: number): bn {
   return new bn(n).multipliedBy(new bn(10).pow(exp));
 }
-
-export const getTickFromPrice = (price: number): bn => {
-  return new bn(Math.log(price).toString())
-    .div(new bn(Math.log(1.0001).toString()))
-    .integerValue(0);
-};
-
-export const getPriceFromTick = (tick: number): number => {
-  return Math.pow(1.0001, tick);
-};
 
 export const calculateAvg = (data: number[]): number => {
   return data.reduce((result, val) => result + val, 0) / data.length;

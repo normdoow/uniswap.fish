@@ -9,6 +9,26 @@ const mulDiv = (a: bn, b: bn, multiplier: bn) => {
   return a.multipliedBy(b).div(multiplier);
 };
 
+export const getTickFromPrice = (
+  price: number,
+  token0Decimal: string,
+  token1Decimal: string
+): number => {
+  const token0 = expandDecimals(price, Number(token0Decimal));
+  const token1 = expandDecimals(1, Number(token1Decimal));
+  const sqrtPrice = mulDiv(
+    encodePriceSqrt(token1),
+    Q96,
+    encodePriceSqrt(token0)
+  ).div(new bn(2).pow(96));
+
+  return Math.log(sqrtPrice.toNumber()) / Math.log(Math.sqrt(1.0001));
+};
+
+export const getPriceFromTick = (tick: number): number => {
+  return Math.pow(1.0001, tick);
+};
+
 // for calculation detail, please visit README.md (Section: Calculation Breakdown, No. 1)
 export const getTokenAmountsFromDepositAmounts = (
   P: number,
