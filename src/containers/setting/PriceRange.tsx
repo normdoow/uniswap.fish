@@ -54,9 +54,14 @@ const PriceRange = () => {
     (state.token1PriceChart?.prices || []).map((p) => p.value),
     (state.token0PriceChart?.prices || []).map((p) => p.value)
   );
-  const min = findMin(prices) * 0.75;
-  const max = findMax(prices) * 1.25;
-  const step = (max - min) / 1000;
+
+  const _min = findMin(prices);
+  const _max = findMax(prices);
+  const margin = _max - _min;
+
+  const min = Math.max(0, findMin(prices) - margin);
+  const max = findMax(prices) + margin;
+  const step = (max - min) / 1000000;
 
   useEffect(() => {
     const currentPrice = Number(Number(state.pool?.token0Price).toFixed(5));
@@ -69,7 +74,7 @@ const PriceRange = () => {
     });
     dispatch({
       type: AppActionType.UPDATE_PRICE_RANGE,
-      payload: [findMin(prices), findMax(prices)],
+      payload: [_min, _max],
     });
 
     dispatch({
