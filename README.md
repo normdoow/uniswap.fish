@@ -32,8 +32,13 @@ TODO: Disclaimer
 - Estimated fee (daily) can be calculated by this simple equation
   - `fee = feeTier * volume24H * (deltaL / (L + deltaL))` where:
     - `volume24H` = average of 24h volume from `[currentDay - 4, currentDay - 1]`
-    - `deltaL` = delta liquidity (same as 1.)
     - `L` = total liquidity (cumulative of `liquidityNet` from all ticks that `il <= ic`)
+    - `deltaL` = delta liquidity, can be calculated from:
+      - `liquidityAmount0 = amount0 * (sqrt(pu) * sqrt(pl)) / (sqrt(pu) - sqrt(pl))`
+      - `liquidityAmount1 = amount1 / (sqrt(pu) - sqrt(pl))`
+      - if `ic < il`; `deltaL = liquidityAmount0`
+      - if `ic > iu`; `deltaL = liquidityAmount1`
+      - if `ic >= il && ic <= iu`; `deltaL = min(liquidityAmount0, liquidityAmount1)`
 
 ---
 
