@@ -64,7 +64,7 @@ const Navbar = () => {
           <FontAwesomeIcon icon={faTwitter} />
         </a>
         <a
-          href="https://github.com/chunza2542/uniswapcalculator"
+          href="https://github.com/chunza2542/uniswapv3-calculator"
           target="_blank"
           rel="noreferrer"
         >
