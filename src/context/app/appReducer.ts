@@ -76,6 +76,7 @@ export const appReducer = (
         token0PriceChart,
         token1PriceChart,
         volume24H,
+        isSwap: false,
       };
     }
     case AppActionType.SWAP_CURRENT_PAIR: {

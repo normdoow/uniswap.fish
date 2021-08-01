@@ -89,18 +89,28 @@ const getLiquidityForAmount1 = (
   return mulDiv(amount1, Q96, sqrtRatioBX96.minus(sqrtRatioAX96));
 };
 
+export const getSqrtPriceX96 = (
+  price: number,
+  token0Decimal: string,
+  token1Decimal: string
+): bn => {
+  const token0 = expandDecimals(price, Number(token0Decimal));
+  const token1 = expandDecimals(1, Number(token1Decimal));
+  // return mulDiv(encodePriceSqrt(token1), Q96, encodePriceSqrt(token0)).div(
+  //   new bn(2).pow(96)
+  // );
+  return token0.div(token1).sqrt().multipliedBy(new bn(2).pow(96));
+};
+
 export const getLiquidityForAmounts = (
-  currentPrice: number,
-  lowerPrice: number,
-  upperPrice: number,
+  sqrtRatioX96: bn,
+  sqrtRatioAX96: bn,
+  sqrtRatioBX96: bn,
   _amount0: number,
   amount0Decimal: number,
   _amount1: number,
   amount1Decimal: number
 ): bn => {
-  const sqrtRatioX96 = encodePriceSqrt(currentPrice);
-  const sqrtRatioAX96 = encodePriceSqrt(lowerPrice);
-  const sqrtRatioBX96 = encodePriceSqrt(upperPrice);
   const amount0 = expandDecimals(_amount0, amount0Decimal);
   const amount1 = expandDecimals(_amount1, amount1Decimal);
 

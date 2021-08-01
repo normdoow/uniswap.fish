@@ -8,6 +8,7 @@ import bn from "bignumber.js";
 import {
   calculateFee,
   getLiquidityForAmounts,
+  getSqrtPriceX96,
   getTickFromPrice,
   getTokenAmountsFromDepositAmounts,
 } from "../utils/liquidityMath";
@@ -72,10 +73,26 @@ const EstimatedFees = () => {
     targetAmounts
   );
 
-  const deltaL = getLiquidityForAmounts(
+  const sqrtRatioX96 = getSqrtPriceX96(
     P,
+    state.token0?.decimals || "18",
+    state.token1?.decimals || "18"
+  );
+  const sqrtRatioAX96 = getSqrtPriceX96(
     Pl,
+    state.token0?.decimals || "18",
+    state.token1?.decimals || "18"
+  );
+  const sqrtRatioBX96 = getSqrtPriceX96(
     Pu,
+    state.token0?.decimals || "18",
+    state.token1?.decimals || "18"
+  );
+
+  const deltaL = getLiquidityForAmounts(
+    sqrtRatioX96,
+    sqrtRatioAX96,
+    sqrtRatioBX96,
     amount0,
     Number(state.token1?.decimals || 18),
     amount1,
@@ -87,6 +104,8 @@ const EstimatedFees = () => {
     state.token0?.decimals || "18",
     state.token1?.decimals || "18"
   );
+
+  console.log({ currentTick });
   if (state.isSwap) currentTick = -currentTick;
 
   const L = calculateLiquidity(state.poolTicks || [], currentTick);
