@@ -4,6 +4,8 @@ import { faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import styled from "styled-components";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { DangerButton } from "../common/buttons";
+import { useModalContext } from "../context/modal/modalContext";
+import { ModalActionType } from "../context/modal/modalReducer";
 
 const NavbarContainer = styled.div`
   display: flex;
@@ -50,6 +52,8 @@ const Menubar = styled.a`
 `;
 
 const Navbar = () => {
+  const { dispatch } = useModalContext();
+
   return (
     <NavbarContainer>
       <Logo>
@@ -73,8 +77,16 @@ const Navbar = () => {
         <a href="mailto:hello@thechun.dev">
           <FontAwesomeIcon icon={faEnvelope} />
         </a>
-        {/* TODO: Implement Modal */}
-        <DangerButton>Donate</DangerButton>
+        <DangerButton
+          onClick={() => {
+            dispatch({
+              type: ModalActionType.SET_DONATE_MODAL_STATE,
+              payload: true,
+            });
+          }}
+        >
+          Donate
+        </DangerButton>
       </Menubar>
     </NavbarContainer>
   );

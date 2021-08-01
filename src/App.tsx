@@ -16,6 +16,7 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import DonateModal from "./containers/DonateModal";
 
 const BodyContainer = styled.div`
   width: 900px;
@@ -112,6 +113,7 @@ function App() {
       {(isEnter || screenWidth > 960) && (
         <>
           <SelectPairModal />
+          <DonateModal />
           <Navbar />
           <BodyContainer>
             <Header />
