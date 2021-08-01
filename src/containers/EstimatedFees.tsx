@@ -4,12 +4,11 @@ import { Heading } from "../common/atomic";
 import Table from "../common/Table";
 import { useAppContext } from "../context/app/appContext";
 import { Tick } from "../repos/uniswap";
-import { expandDecimals } from "../utils/math";
-import { getFeeTierPercentage } from "../utils/helper";
 import bn from "bignumber.js";
 import {
   calculateFee,
   getLiquidityForAmounts,
+  getTickFromPrice,
   getTokenAmountsFromDepositAmounts,
 } from "../utils/liquidityMath";
 
@@ -40,23 +39,16 @@ const Tag = styled.div`
 const EstimatedFees = () => {
   const { state } = useAppContext();
 
-  const calculateLiquidity = (ticks: Tick[], currentPrice: number): bn => {
+  const calculateLiquidity = (ticks: Tick[], currentTick: number): bn => {
     if (ticks.length <= 1) return new bn(0);
     let liquidity: bn = new bn(0);
     for (let i = 0; i < ticks.length - 1; ++i) {
       liquidity = liquidity.plus(new bn(ticks[i].liquidityNet));
 
-      let upperPrice: number;
-      let lowerPrice: number;
-      if (state.isSwap) {
-        upperPrice = Number(ticks[i + 1].price0);
-        lowerPrice = Number(ticks[i].price0);
-      } else {
-        upperPrice = Number(ticks[i].price1);
-        lowerPrice = Number(ticks[i + 1].price1);
-      }
+      let lowerTick = Number(ticks[i].tickIdx);
+      let upperTick = Number(ticks[i + 1].tickIdx);
 
-      if (lowerPrice <= currentPrice && currentPrice <= upperPrice) {
+      if (lowerTick <= currentTick && currentTick <= upperTick) {
         break;
       }
     }
@@ -89,7 +81,15 @@ const EstimatedFees = () => {
     amount1,
     Number(state.token0?.decimals || 18)
   );
-  const L = calculateLiquidity(state.poolTicks || [], P);
+
+  let currentTick = getTickFromPrice(
+    P,
+    state.token0?.decimals || "18",
+    state.token1?.decimals || "18"
+  );
+  if (state.isSwap) currentTick = -currentTick;
+
+  const L = calculateLiquidity(state.poolTicks || [], currentTick);
   const volume24H = state.volume24H;
   const feeTier = state.pool?.feeTier || "";
 
