@@ -105,7 +105,6 @@ const EstimatedFees = () => {
     state.token1?.decimals || "18"
   );
 
-  console.log({ currentTick });
   if (state.isSwap) currentTick = -currentTick;
 
   const L = calculateLiquidity(state.poolTicks || [], currentTick);
