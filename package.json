@@ -44,6 +44,7 @@
     "generate": "yarn generate-token-image-uri-mapping && yarn generate-contract-address-mapping",
     "start": "yarn generate && react-scripts start",
     "build": "yarn generate && react-scripts build",
+    "deploy": "react-scripts build && firebase deploy",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
