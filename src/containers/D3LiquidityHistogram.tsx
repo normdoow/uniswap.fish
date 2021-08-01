@@ -46,7 +46,7 @@ class D3LiquidityHistogram {
     // add x axis
     const x = d3
       .scaleLinear()
-      .domain([props.currentTick - 7500, this.props.currentTick + 7500])
+      .domain([props.minTick, this.props.maxTick])
       .range([0, props.width]);
     this.xAxis = this.svg
       .append("g")

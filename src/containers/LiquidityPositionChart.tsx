@@ -5,7 +5,7 @@ import { PriceChart } from "../repos/coingecko";
 import D3LiquidityHistogram, { Bin } from "./D3LiquidityHistogram";
 import { useAppContext } from "../context/app/appContext";
 import { Tick } from "../repos/uniswap";
-import { getTickFromPrice } from "../utils/math";
+import { divideArray, findMax, findMin, getTickFromPrice } from "../utils/math";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -53,7 +53,14 @@ const LiquidityPositionChart = () => {
   };
 
   useEffect(() => {
-    if (!state.poolTicks || !state.pool || !state.token0 || !state.token1)
+    if (
+      !state.poolTicks ||
+      !state.pool ||
+      !state.token0 ||
+      !state.token1 ||
+      !state.token0PriceChart ||
+      !state.token1PriceChart
+    )
       return;
 
     let width = 500;
@@ -64,14 +71,32 @@ const LiquidityPositionChart = () => {
 
     if (d3Chart) d3Chart.destroy();
 
+    const prices = divideArray(
+      (state.token1PriceChart?.prices || []).map((p) => p.value),
+      (state.token0PriceChart?.prices || []).map((p) => p.value)
+    );
+    const _min = findMin(prices);
+    const _max = findMax(prices);
+    const margin = (_max - _min) * 1.5;
+    const minPrice = _min - margin <= 0 ? _min : _min - margin;
+    const maxPrice = _max + margin;
     const currentPrice = Number(state.pool.token0Price);
+
     let currentTick;
+    let minTick;
+    let maxTick;
 
     if (state.isSwap) {
       currentTick = getTickFromPrice(currentPrice).toNumber();
+      minTick = getTickFromPrice(minPrice).toNumber();
+      maxTick = getTickFromPrice(maxPrice).toNumber();
     } else {
       currentTick = -getTickFromPrice(currentPrice).toNumber();
+      minTick = -getTickFromPrice(minPrice).toNumber();
+      maxTick = -getTickFromPrice(maxPrice).toNumber();
     }
+
+    const ticks = [minTick, maxTick].sort((a, b) => a - b);
 
     let token0Symbol;
     let token1Symbol;
@@ -86,14 +111,22 @@ const LiquidityPositionChart = () => {
     d3Chart = new D3LiquidityHistogram(refElement.current, {
       width,
       height,
-      minTick: 0,
-      maxTick: 0,
+      minTick: ticks[0],
+      maxTick: ticks[1],
       currentTick,
       token0Symbol,
       token1Symbol,
       data: processData(state.poolTicks),
     });
-  }, [refElement, state.poolTicks, state.pool, state.token0, state.token1]);
+  }, [
+    refElement,
+    state.poolTicks,
+    state.pool,
+    state.token0,
+    state.token1,
+    state.token0PriceChart,
+    state.token1PriceChart,
+  ]);
 
   useEffect(() => {
     if (!d3Chart) return;

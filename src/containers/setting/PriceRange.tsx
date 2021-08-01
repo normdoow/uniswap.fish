@@ -59,8 +59,8 @@ const PriceRange = () => {
   const _max = findMax(prices);
   const margin = _max - _min;
 
-  const min = Math.max(0, findMin(prices) - margin);
-  const max = findMax(prices) + margin;
+  const min = Math.max(0, _min - margin);
+  const max = _max + margin;
   const step = (max - min) / 10000000;
 
   useEffect(() => {
