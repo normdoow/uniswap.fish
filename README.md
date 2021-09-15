@@ -26,7 +26,7 @@ Uniswap V3 Fee Calculator created with React & Typescript, Visit: [uniswapv3.the
   - `deltaY * priceUSDY + deltaX * priceUSDX = targetAmounts`
 - So we can write a equation like this:
   - `deltaL * (sqrt(P) - sqrt(Pl)) * priceUSDY + deltaL * (1 / sqrt(P) - 1 / sqrt(Pu)) * priceUSDX = targetAmounts`
-  - Then: `deltaL = targetAmounts / (sqrt(P) - sqrt(Pl)) * priceUSDY + (1 / sqrt(P) - 1 / sqrt(Pu)) * priceUSD`
+  - Then: `deltaL = targetAmounts / (sqrt(P) - sqrt(Pl)) * priceUSDY + (1 / sqrt(P) - 1 / sqrt(Pu)) * priceUSDX`
 - After we've calculated `deltaL`, we can calculate `deltaX` and `deltaY` using these formulas mentioned in Uniswap v3 Whitepaper
   - `deltaY = deltaL * (sqrt(P) - sqrt(Pl))` (Formula: 6.29, P.8)
   - `deltaX = deltaL * (1 / sqrt(P) - 1 / sqrt(Pu))` (Formula: 6.30, P.8)
