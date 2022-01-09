@@ -114,7 +114,7 @@ function App() {
       {(isEnter || screenWidth > 960) && (
         <>
           <SelectPairModal />
-          <DonateModal />
+          {/* <DonateModal /> */}
           <Navbar />
           <BodyContainer>
             <Header />

@@ -77,16 +77,21 @@ const Navbar = () => {
         <a href="mailto:hello@thechun.dev">
           <FontAwesomeIcon icon={faEnvelope} />
         </a>
-        <DangerButton
-          onClick={() => {
-            dispatch({
-              type: ModalActionType.SET_DONATE_MODAL_STATE,
-              payload: true,
-            });
-          }}
+        <a
+          href="https://gitcoin.co/grants/4203/uniswap-calculator-v3"
+          target="_blank"
         >
-          Donate
-        </DangerButton>
+          <DangerButton
+          // onClick={() => {
+          //   dispatch({
+          //     type: ModalActionType.SET_DONATE_MODAL_STATE,
+          //     payload: true,
+          //   });
+          // }}
+          >
+            Donate
+          </DangerButton>
+        </a>
       </Menubar>
     </NavbarContainer>
   );
