@@ -70,6 +70,7 @@ const DepositAmounts = () => {
   return (
     <div>
       <Heading>Deposit Amounts</Heading>
+      {targetAmounts}
       <InputGroup>
         <span className="dollar">$</span>
         <DepositInput

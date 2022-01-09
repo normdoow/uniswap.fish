@@ -17,6 +17,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import DonateModal from "./containers/DonateModal";
+import { useAppContext } from "./context/app/appContext";
 
 const BodyContainer = styled.div`
   width: 900px;

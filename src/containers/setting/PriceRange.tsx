@@ -55,8 +55,14 @@ const PriceRange = () => {
     (state.token0PriceChart?.prices || []).map((p) => p.value)
   );
 
-  const _min = findMin(prices);
-  const _max = findMax(prices);
+  const currentPrice = Number(state.pool?.token0Price || NaN);
+
+  let _min = findMin(prices);
+  let _max = findMax(prices);
+  if (state.token0PriceChart === null || state.token1PriceChart === null) {
+    _min = currentPrice - currentPrice * 0.3;
+    _max = currentPrice + currentPrice * 0.3;
+  }
   const margin = _max - _min;
 
   const min = Math.max(0, _min - margin);
@@ -64,8 +70,6 @@ const PriceRange = () => {
   const step = (max - min) / 10000000;
 
   useEffect(() => {
-    const currentPrice = Number(state.pool?.token0Price || NaN);
-
     if (Number.isNaN(currentPrice)) return;
 
     dispatch({

@@ -25,8 +25,8 @@ export type AppAction =
         poolTicks: Tick[];
         token0: V3Token;
         token1: V3Token;
-        token0PriceChart: PriceChart;
-        token1PriceChart: PriceChart;
+        token0PriceChart: PriceChart | null;
+        token1PriceChart: PriceChart | null;
         volume24H: number;
       };
     }

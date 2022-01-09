@@ -125,6 +125,10 @@ const CorrelationChart = () => {
     );
   }, [state.priceRangeValue]);
 
+  if (state.token0PriceChart === null || state.token1PriceChart === null) {
+    return <></>;
+  }
+
   return (
     <Container>
       <Padding>
