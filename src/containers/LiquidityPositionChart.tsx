@@ -62,14 +62,7 @@ const LiquidityPositionChart = () => {
   };
 
   useEffect(() => {
-    if (
-      !state.poolTicks ||
-      !state.pool ||
-      !state.token0 ||
-      !state.token1 ||
-      !state.token0PriceChart ||
-      !state.token1PriceChart
-    )
+    if (!state.poolTicks || !state.pool || !state.token0 || !state.token1)
       return;
 
     let width = 500;
@@ -84,12 +77,17 @@ const LiquidityPositionChart = () => {
       (state.token1PriceChart?.prices || []).map((p) => p.value),
       (state.token0PriceChart?.prices || []).map((p) => p.value)
     );
-    const _min = findMin(prices);
-    const _max = findMax(prices);
+    let _min = findMin(prices);
+    let _max = findMax(prices);
+    const currentPrice = Number(state.pool.token0Price);
+
+    if (state.token0PriceChart === null || state.token1PriceChart === null) {
+      _min = currentPrice - currentPrice * 0.95;
+      _max = currentPrice + currentPrice * 2;
+    }
     const margin = (_max - _min) * 1.25;
     const minPrice = _min - margin <= 0 ? _min : _min - margin;
     const maxPrice = _max + margin;
-    const currentPrice = Number(state.pool.token0Price);
 
     let currentTick;
     let minTick;
