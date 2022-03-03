@@ -25,6 +25,7 @@ import {
   ModalActionType,
   modalContextReducer,
 } from "../../context/modal/modalReducer";
+import { faTwitter } from "@fortawesome/free-brands-svg-icons";
 
 const ModalStyle = {
   overlay: {
@@ -161,6 +162,35 @@ const FEE_TIER_STYLES = {
     background: "rgba(38, 109, 221, 0.25)",
   },
 };
+const Promote = styled.a`
+  margin: 15px;
+  padding: 12px 18px;
+  border-radius: 16px;
+  text-decoration: none;
+  position: relative;
+  display: block;
+  color: #6a26e0;
+  background: radial-gradient(
+      182.71% 205.59% at 2.81% 7.69%,
+      rgba(130, 71, 229, 0.2) 0%,
+      rgba(167, 202, 255, 0.2) 100%
+    ),
+    white;
+
+  & div {
+    position: absolute;
+    right: 18px;
+    font-size: 1rem;
+  }
+  & h2 {
+    margin: 0;
+    font-size: 1rem;
+  }
+  & p {
+    margin: 0;
+    font-size: 0.8rem;
+  }
+`;
 
 const SelectPairModal = () => {
   const appContext = useAppContext();
@@ -331,6 +361,13 @@ const SelectPairModal = () => {
             <Logo>
               <span>🦄</span> UniswapCalculator
             </Logo>
+            <Promote href="https://twitter.com/chunza2542" target="_href">
+              <div>
+                <FontAwesomeIcon icon={faTwitter}></FontAwesomeIcon>
+              </div>
+              <h2>L2 & Polygon support is coming</h2>
+              <p>Click to follow updates on Twitter</p>
+            </Promote>
             <Container>
               <Heading>Select Pair</Heading>
               <SelectPairContainer>
