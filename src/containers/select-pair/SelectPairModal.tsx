@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import Modal from "react-modal";
 import ReactLoading from "react-loading";
 import { useModalContext } from "../../context/modal/modalContext";
@@ -46,7 +46,7 @@ const ModalStyle = {
   },
 };
 const Container = styled.div`
-  width: 400px;
+  width: 370px;
   padding: 15px;
 `;
 const SelectPairContainer = styled.div`
@@ -116,7 +116,7 @@ const Tier = styled.div`
 const FeeTiersContainer = styled.div`
   display: grid;
   grid-gap: 7px;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   margin-bottom: 20px;
 `;
 const GoBack = styled.h1`
@@ -422,6 +422,21 @@ const SelectPairModal = () => {
               <Heading>Select Fee Tier</Heading>
               <FeeTiersContainer>
                 <Tier
+                  style={getFeeTierStyle("100")}
+                  onClick={() => {
+                    if (!isSubmitLoading) {
+                      const tier = getFeeTier("100");
+                      tier && setSelectedPool(tier);
+                    }
+                  }}
+                >
+                  <h4 style={!getFeeTier("100") ? { color: "#999" } : {}}>
+                    0.01%
+                  </h4>
+                  <span>Best for very stable pairs.</span>
+                  <div>{getFeeTierPercentage("100")}</div>
+                </Tier>
+                <Tier
                   style={getFeeTierStyle("500")}
                   onClick={() => {
                     if (!isSubmitLoading) {
@@ -431,7 +446,7 @@ const SelectPairModal = () => {
                   }}
                 >
                   <h4 style={!getFeeTier("500") ? { color: "#999" } : {}}>
-                    0.05% fee
+                    0.05%
                   </h4>
                   <span>Best for stable pairs.</span>
                   <div>{getFeeTierPercentage("500")}</div>
@@ -446,7 +461,7 @@ const SelectPairModal = () => {
                   }}
                 >
                   <h4 style={!getFeeTier("3000") ? { color: "#999" } : {}}>
-                    0.3% fee
+                    0.3%
                   </h4>
                   <span>Best for most pairs.</span>
                   <div>{getFeeTierPercentage("3000")}</div>
@@ -461,7 +476,7 @@ const SelectPairModal = () => {
                   }}
                 >
                   <h4 style={!getFeeTier("10000") ? { color: "#999" } : {}}>
-                    1% fee
+                    1%
                   </h4>
                   <span>Best for exotic pairs.</span>
                   <div>{getFeeTierPercentage("10000")}</div>

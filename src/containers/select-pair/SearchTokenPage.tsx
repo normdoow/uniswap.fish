@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import Fuse from "fuse.js";
 
 const Container = styled.div`
-  width: 400px;
+  width: 370px;
   padding: 15px;
 `;
 const SearchInput = styled.input`
