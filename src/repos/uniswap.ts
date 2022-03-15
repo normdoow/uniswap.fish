@@ -1,11 +1,16 @@
 import axios from "axios";
+import { NETWORKS } from "../common/types";
 import { getTokenLogoURL, sortToken } from "../utils/helper";
 
-const MAINNET = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3";
+let subgraphEndpoint = NETWORKS[0].subgraphEndpoint;
+
+export const updateSubgraphEndpoint = (newEndpoint: string) => {
+  subgraphEndpoint = newEndpoint;
+};
 
 const queryUniswap = async (query: string): Promise<any> => {
   const { data } = await axios({
-    url: MAINNET,
+    url: subgraphEndpoint,
     method: "post",
     data: {
       query,

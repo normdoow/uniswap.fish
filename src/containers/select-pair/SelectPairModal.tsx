@@ -14,6 +14,7 @@ import {
   getTokenList,
   getVolumn24H,
   Pool,
+  updateSubgraphEndpoint,
   V3Token,
 } from "../../repos/uniswap";
 import SearchTokenPage from "./SearchTokenPage";
@@ -21,10 +22,7 @@ import { useAppContext } from "../../context/app/appContext";
 import { AppActionType } from "../../context/app/appReducer";
 import { sortToken } from "../../utils/helper";
 import { getPriceChart } from "../../repos/coingecko";
-import {
-  ModalActionType,
-  modalContextReducer,
-} from "../../context/modal/modalReducer";
+import { ModalActionType } from "../../context/modal/modalReducer";
 import { Network, NETWORKS } from "../../common/types";
 
 const ModalStyle = {
@@ -326,6 +324,11 @@ const SelectPairModal = () => {
   };
 
   const fetchTokens = async () => {
+    appContext.dispatch({
+      type: AppActionType.RESET_TOKEN_LIST,
+      payload: { tokenList: [] },
+    });
+
     const tokenList = await getTokenList();
     appContext.dispatch({
       type: AppActionType.RESET_TOKEN_LIST,
@@ -368,6 +371,9 @@ const SelectPairModal = () => {
               return (
                 <NetworkItem
                   onClick={() => {
+                    updateSubgraphEndpoint(network.subgraphEndpoint);
+                    fetchTokens();
+
                     setSelectedNetwork(network);
                     setSelectedTokens([null, null]);
                     setShowSelectNetworkPage(false);
