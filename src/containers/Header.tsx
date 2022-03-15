@@ -75,6 +75,7 @@ const Header = () => {
             {appContext.state.token1?.symbol}
           </span>
           <FeePercentage>
+            {appContext.state.pool?.feeTier === "100" && <span>0.01%</span>}
             {appContext.state.pool?.feeTier === "500" && <span>0.05%</span>}
             {appContext.state.pool?.feeTier === "3000" && <span>0.3%</span>}
             {appContext.state.pool?.feeTier === "10000" && <span>1%</span>}
