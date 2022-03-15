@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 const ButtonStyle = styled.button`
   border: 0;
-  color: #ccc;
   font-size: 1rem;
   font-weight: 600;
   border-radius: 12px;
@@ -11,50 +10,28 @@ const ButtonStyle = styled.button`
 `;
 
 export const Button = styled(ButtonStyle)`
-  background: linear-gradient(
-    -30deg,
-    rgba(34, 36, 41, 0.5),
-    rgba(34, 36, 41, 0.7)
-  );
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
   &:hover {
-    background: linear-gradient(
-      -30deg,
-      rgba(34, 36, 41, 0.65),
-      rgba(34, 36, 41, 0.9)
-    );
-    color: white;
+    background: rgba(255, 255, 255, 0.15);
   }
 `;
 
 export const DangerButton = styled(ButtonStyle)`
-  background: linear-gradient(
-    -30deg,
-    rgba(247, 2, 119, 0.5),
-    rgb(247, 2, 119, 0.7)
-  );
-  &:hover {
-    background: linear-gradient(
-      -30deg,
-      rgba(247, 2, 119, 0.65),
-      rgba(247, 2, 119, 0.9)
-    );
-    color: white;
-  }
+  background: radial-gradient(
+      174.47% 188.91% at 1.84% 0%,
+      rgb(255, 0, 122) 0%,
+      rgb(33, 114, 229) 100%
+    ),
+    rgb(237, 238, 242);
+  color: white;
 `;
 
 export const PrimaryButton = styled(ButtonStyle)`
-  background: linear-gradient(
-    -30deg,
-    rgba(34, 114, 229, 0.5),
-    rgba(34, 114, 229, 0.7)
-  );
+  background: #1470f1;
+  color: white;
   &:hover {
-    background: linear-gradient(
-      -30deg,
-      rgba(34, 114, 229, 0.65),
-      rgba(34, 114, 229, 0.9)
-    );
-    color: white;
+    background: #2a77fd;
   }
 `;
 export const PrimaryBlockButton = styled(PrimaryButton)`
@@ -68,16 +45,8 @@ export const PrimaryBlockButton = styled(PrimaryButton)`
     transform: scale(1.5);
   }
 
-  background: linear-gradient(
-    -30deg,
-    rgba(34, 114, 229, 0.65),
-    rgba(34, 114, 229, 0.9)
-  );
+  background: #1470f1;
   &:hover {
-    background: linear-gradient(
-      -30deg,
-      rgba(34, 114, 229, 0.85),
-      rgba(34, 114, 229, 1)
-    );
+    background: #2a77fd;
   }
 `;
