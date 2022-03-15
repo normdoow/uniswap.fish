@@ -25,7 +25,7 @@ import {
   ModalActionType,
   modalContextReducer,
 } from "../../context/modal/modalReducer";
-import { faTwitter } from "@fortawesome/free-brands-svg-icons";
+import { Network, NETWORKS } from "../../common/types";
 
 const ModalStyle = {
   overlay: {
@@ -48,6 +48,9 @@ const ModalStyle = {
 const Container = styled.div`
   width: 370px;
   padding: 15px;
+`;
+const SelectNetworkContainer = styled.div`
+  margin-bottom: 15px;
 `;
 const SelectPairContainer = styled.div`
   display: grid;
@@ -136,6 +139,43 @@ const GoBack = styled.h1`
     left: 15px;
   }
 `;
+const NetworkItem = styled.div`
+  cursor: pointer;
+  color: white;
+  display: flex;
+  align-items: center;
+  transition: 0.3s;
+  width: calc(370px - 10px * 2);
+  margin: 10px;
+  border: 1px solid #333;
+  border-radius: 15px;
+  padding: 10px 15px;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  & > img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 15px;
+  }
+
+  & > div {
+    & h5 {
+      margin: 0;
+      font-weight: normal;
+      font-size: 1rem;
+      color: white;
+    }
+    & span {
+      font-size: 0.8rem;
+      color: #999;
+      display: block;
+    }
+  }
+`;
 const Logo = styled.h1`
   color: white;
   margin: 0;
@@ -162,44 +202,19 @@ const FEE_TIER_STYLES = {
     background: "rgba(38, 109, 221, 0.25)",
   },
 };
-const Promote = styled.a`
-  margin: 15px;
-  padding: 12px 18px;
-  border-radius: 16px;
-  text-decoration: none;
-  position: relative;
-  display: block;
-  color: #6a26e0;
-  background: radial-gradient(
-      182.71% 205.59% at 2.81% 7.69%,
-      rgba(130, 71, 229, 0.2) 0%,
-      rgba(167, 202, 255, 0.2) 100%
-    ),
-    white;
-
-  & div {
-    position: absolute;
-    right: 18px;
-    font-size: 1rem;
-  }
-  & h2 {
-    margin: 0;
-    font-size: 1rem;
-  }
-  & p {
-    margin: 0;
-    font-size: 0.8rem;
-  }
-`;
-
 const SelectPairModal = () => {
   const appContext = useAppContext();
   const modalContext = useModalContext();
 
+  const [selectedNetwork, setSelectedNetwork] = useState<Network | null>(
+    NETWORKS[0]
+  );
   const [selectedTokens, setSelectedTokens] = useState<V3Token[] | null[]>([
     null,
     null,
   ]);
+  const [showSelectNetworkPage, setShowSelectNetworkPage] =
+    useState<boolean>(false);
   const [showSelectTokenPage, setShowSelectTokenPage] =
     useState<boolean>(false);
   const [selectedTokenIndex, setSelectedTokenIndex] = useState<number | null>(
@@ -337,6 +352,39 @@ const SelectPairModal = () => {
         isOpen={modalContext.state.isSelectPairModalOpen}
         contentLabel="Example Modal"
       >
+        {showSelectNetworkPage && (
+          <>
+            <GoBack>
+              <div
+                onClick={() => {
+                  setShowSelectNetworkPage(false);
+                }}
+              >
+                <FontAwesomeIcon icon={faArrowLeft} />
+              </div>
+              <span>Select Network</span>
+            </GoBack>
+            {NETWORKS.map((network, i) => {
+              return (
+                <NetworkItem
+                  onClick={() => {
+                    setSelectedNetwork(network);
+                    setSelectedTokens([null, null]);
+                    setShowSelectNetworkPage(false);
+                    setPools([]);
+                  }}
+                  id={`${network.name}_${i}`}
+                >
+                  <img src={network.logoURI} alt={network.name} />
+                  <div>
+                    <h5>{network.name}</h5>
+                    <span>{network.desc}</span>
+                  </div>
+                </NetworkItem>
+              );
+            })}
+          </>
+        )}
         {showSelectTokenPage && (
           <>
             <GoBack>
@@ -356,19 +404,38 @@ const SelectPairModal = () => {
             />
           </>
         )}
-        {!showSelectTokenPage && (
+        {!showSelectTokenPage && !showSelectNetworkPage && (
           <>
             <Logo>
               <span>🦄</span> UniswapCalculator
             </Logo>
-            <Promote href="https://twitter.com/chunza2542" target="_href">
-              <div>
-                <FontAwesomeIcon icon={faTwitter}></FontAwesomeIcon>
-              </div>
-              <h2>L2 & Polygon support is coming</h2>
-              <p>Click to follow updates on Twitter</p>
-            </Promote>
             <Container>
+              <Heading>Select Network</Heading>
+              <SelectNetworkContainer>
+                <TokenSelect
+                  onClick={() => {
+                    if (!isSubmitLoading) {
+                      setSelectedPool(null);
+                      setShowSelectNetworkPage(true);
+                    }
+                  }}
+                >
+                  {!selectedNetwork && <span>Select a network</span>}
+                  {selectedNetwork !== null && (
+                    <span>
+                      <img
+                        src={selectedNetwork.logoURI}
+                        alt={selectedNetwork.name}
+                      />
+                      {selectedNetwork.name}
+                    </span>
+                  )}
+                  <span>
+                    <FontAwesomeIcon icon={faChevronDown}></FontAwesomeIcon>
+                  </span>
+                </TokenSelect>
+              </SelectNetworkContainer>
+
               <Heading>Select Pair</Heading>
               <SelectPairContainer>
                 <TokenSelect
