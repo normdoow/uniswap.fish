@@ -6,7 +6,8 @@ Uniswap V3 Fee Calculator, Visit: [uniswapv3.thechun.dev](https://uniswapv3.thec
 ![Screenshot](https://uniswapv3.thechun.dev/cover.jpeg)
 
 [Report a bug or request a feature](https://github.com/chunza2542/uniswapv3-calculator/issues)
-[Donate on Gitcoin Grant](https://gitcoin.co/grants/4203/uniswap-calculator-v3)
+
+[Donate this project on Gitcoin Grant](https://gitcoin.co/grants/4203/uniswap-calculator-v3)
 
 ## Features
 - Fee calculation: select pair and pool, input deposit amounts, and adjust your lower and upper price
