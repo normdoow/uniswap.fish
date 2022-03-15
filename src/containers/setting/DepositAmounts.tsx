@@ -10,7 +10,7 @@ const InputGroup = styled.div`
   display: flex;
   align-items: center;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 6px 8px;
 
   & > span {

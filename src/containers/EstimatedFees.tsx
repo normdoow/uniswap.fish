@@ -14,7 +14,7 @@ import {
 } from "../utils/liquidityMath";
 
 const SettingContainer = styled.div`
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   padding: 16px;
 `;

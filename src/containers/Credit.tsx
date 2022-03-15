@@ -5,9 +5,8 @@ import styled from "styled-components";
 
 const CreditContainer = styled.div`
   padding: 50px 15px;
-  color: white;
   text-align: center;
-  color: #999;
+  color: #bbb;
   font-size: 0.8rem;
 
   & svg {

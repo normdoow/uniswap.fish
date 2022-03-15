@@ -179,7 +179,6 @@ const Logo = styled.h1`
   margin: 0;
   font-weight: bold;
   font-size: 1.2rem;
-  color: #ddd;
   font-weight: 500;
   display: flex;
   padding: 15px;
