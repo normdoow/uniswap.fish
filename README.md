@@ -1,21 +1,19 @@
 # 🦄 UniswapCalculator
 
-Uniswap V3 Fee Calculator created with React & Typescript, Visit: [uniswapv3.thechun.dev](https://uniswapv3.thechun.dev/)
+Uniswap V3 Fee Calculator, Visit: [uniswapv3.thechun.dev](https://uniswapv3.thechun.dev/)
 > Disclaimer: please do your own research, this website is intended to be used and must be used for informational purpose only. It is very important to do your own analysis before making any investment based on your personal circumstances.
 
 ![Screenshot](https://uniswapv3.thechun.dev/cover.jpeg)
 
 [Report a bug or request a feature](https://github.com/chunza2542/uniswapv3-calculator/issues)
+[Donate on Gitcoin Grant](https://gitcoin.co/grants/4203/uniswap-calculator-v3)
 
 ## Features
 - Fee calculation: select pair and pool, input deposit amounts, and adjust your lower and upper price
 - Liquidity position histogram and correlation chart to help you plan your strategy better
 - It's 100% open source! hope that Uniswap community will bring a lot more ideas and features to this project
 
-
 ## Calculation Breakdown
-
-> Please correct me if I'm wrong 
 
 ### 1. Calculate deposit amounts of token0 and token1
 
