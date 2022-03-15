@@ -99,6 +99,10 @@ export const getTokenList = async (): Promise<V3Token[]> => {
         token.logoURI =
           "https://cdn.iconscout.com/icon/free/png-128/ethereum-2752194-2285011.png";
       }
+      if (token.name === "Wrapped Matic") {
+        token.name = "Polygon Native Token";
+        token.symbol = "MATIC";
+      }
       return token;
     })
     .filter((token) => token.symbol.length < 30)
