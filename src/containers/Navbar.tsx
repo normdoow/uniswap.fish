@@ -41,12 +41,12 @@ const Menubar = styled.a`
   align-items: center;
 
   & a {
-    color: #888;
+    color: rgba(255, 255, 255, 0.6);
     font-size: 1.2rem;
     margin-right: 15px;
 
     &:hover {
-      color: #bbb;
+      color: rgba(255, 255, 255, 0.8);
     }
   }
 `;

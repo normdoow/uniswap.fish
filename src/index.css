@@ -1,3 +1,6 @@
+html {
+  background: black;
+}
 body {
   margin: 0;
   font-family: "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -5,17 +8,19 @@ body {
     "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  height: 100vh;
   width: 100vw;
-  background-image: linear-gradient(
-      217deg,
-      rgba(32, 22, 31, 0.8),
-      rgba(0, 0, 0, 0) 70.71%
+  min-height: 100vh;
+
+  background: radial-gradient(
+      circle closest-corner at -15% 60vh,
+      rgba(40, 72, 122, 0.85),
+      transparent
     ),
-    linear-gradient(127deg, rgb(36, 12, 30, 0.8), rgba(0, 0, 0, 0) 70.71%),
-    linear-gradient(336deg, rgba(1, 21, 48, 0.8), rgba(0, 0, 0, 0) 70.71%);
-  background-color: #000;
-  background-attachment: fixed;
+    radial-gradient(
+      circle closest-corner at 115% 60vh,
+      rgba(138, 41, 129, 0.7),
+      transparent
+    );
 }
 
 * {
