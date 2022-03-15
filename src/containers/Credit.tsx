@@ -33,7 +33,11 @@ const Credit = () => {
   return (
     <CreditContainer>
       <div>
-        Crafted with <FontAwesomeIcon icon={faHeart} /> by{" "}
+        Sponsored by{" "}
+        <a target="_blank" href="https://unigrants.org">
+          Unigrant
+        </a>{" "}
+        (Wave 7). Crafted with <FontAwesomeIcon icon={faHeart} /> by{" "}
         <a href="https://twitter.com/chunza2542" target="_blank">
           @chunza2542
         </a>
