@@ -93,7 +93,7 @@ export const getTokenList = async (): Promise<V3Token[]> => {
       return token;
     })
     .map((token) => {
-      if (token.name === "Wrapped Ether") {
+      if (token.name === "Wrapped Ether" || token.name === "Wrapped Ethereum") {
         token.name = "Ethereum";
         token.symbol = "ETH";
         token.logoURI =

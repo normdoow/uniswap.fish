@@ -1,4 +1,5 @@
 export interface Network {
+  id: string;
   name: string;
   desc: string;
   logoURI: string;
@@ -6,6 +7,7 @@ export interface Network {
 }
 export const NETWORKS: Network[] = [
   {
+    id: "ethereum",
     name: "Ethereum",
     desc: "Ethereum Mainnet",
     logoURI:
@@ -14,6 +16,7 @@ export const NETWORKS: Network[] = [
       "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
   },
   {
+    id: "polygon",
     name: "Polygon",
     desc: "Polygon Mainnet",
     logoURI:
@@ -22,6 +25,7 @@ export const NETWORKS: Network[] = [
       "https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon",
   },
   {
+    id: "optimism",
     name: "Optimism",
     desc: "Optimism Mainnet (L2)",
     logoURI: "https://optimistic.etherscan.io/images/brandassets/optimism.svg",
@@ -29,6 +33,7 @@ export const NETWORKS: Network[] = [
       "https://api.thegraph.com/subgraphs/name/ianlapham/optimism-post-regenesis",
   },
   {
+    id: "arbitrum",
     name: "Arbitrum",
     desc: "Arbitrum Mainnet (L2)",
     logoURI:

@@ -80,7 +80,7 @@ const Header = () => {
             {appContext.state.pool?.feeTier === "10000" && <span>1%</span>}
           </FeePercentage>
           <a
-            href={`https://info.uniswap.org/#/pools/${appContext.state.pool?.id}`}
+            href={`https://info.uniswap.org/#/${appContext.state.network.id}/pools/${appContext.state.pool?.id}`}
             target="_blank"
             rel="noreferrer"
             aria-label="Open in Uniswap"

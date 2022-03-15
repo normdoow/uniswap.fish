@@ -239,7 +239,8 @@ const SelectPairModal = () => {
   const handleSubmit = async () => {
     if (
       isSubmitLoading ||
-      !(selectedTokens[0] && selectedTokens[1] && selectedPool)
+      !(selectedTokens[0] && selectedTokens[1] && selectedPool) ||
+      !selectedNetwork
     ) {
       return;
     }
@@ -255,6 +256,7 @@ const SelectPairModal = () => {
     appContext.dispatch({
       type: AppActionType.RESET_PAIR,
       payload: {
+        network: selectedNetwork,
         pool,
         poolTicks,
         token0,

@@ -1,9 +1,11 @@
 import React from "react";
+import { Network, NETWORKS } from "../../common/types";
 import { PriceChart } from "../../repos/coingecko";
 import { Pool, Tick, V3Token } from "../../repos/uniswap";
 import { AppAction, appReducer } from "./appReducer";
 
 export interface AppContextState {
+  network: Network;
   tokenList: V3Token[];
   isSwap: boolean;
 
@@ -21,6 +23,7 @@ export interface AppContextState {
   outOfRangePercentageValue: number;
 }
 const initialState: AppContextState = {
+  network: NETWORKS[0],
   tokenList: [],
   isSwap: false,
 
