@@ -9,17 +9,13 @@ const options = {
 };
 
 const process = (data) => {
-  return data
-    .filter(
-      (d) => d.platforms.ethereum !== undefined && d.platforms.ethereum !== ""
-    )
-    .reduce((result, curr) => {
-      const { id, name } = curr;
-      Object.keys(curr.platforms).map((key) => {
-        result[curr.platforms[key]] = { id, name };
-      });
-      return result;
-    }, {});
+  return data.reduce((result, curr) => {
+    const { id, name } = curr;
+    Object.keys(curr.platforms).map((key) => {
+      result[curr.platforms[key]] = { id, name };
+    });
+    return result;
+  }, {});
 };
 
 const req = https.request(options, (res) => {

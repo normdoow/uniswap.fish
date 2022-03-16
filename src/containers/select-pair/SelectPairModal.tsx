@@ -252,6 +252,8 @@ const SelectPairModal = () => {
     const token1PriceChart = await getPriceChart(token1.id);
     const volume24H = await getVolumn24H(pool.id);
 
+    console.log(token0.id, token1.id);
+
     appContext.dispatch({
       type: AppActionType.RESET_PAIR,
       payload: {
