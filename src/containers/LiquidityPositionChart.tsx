@@ -4,7 +4,9 @@ import { Heading } from "../common/atomic";
 import D3LiquidityHistogram, { Bin } from "./D3LiquidityHistogram";
 import { useAppContext } from "../context/app/appContext";
 import { Tick } from "../repos/uniswap";
-import { getTickFromPrice } from "../utils/liquidityMath";
+import { getPriceFromTick, getTickFromPrice } from "../utils/liquidityMath";
+import { AppActionType } from "../context/app/appReducer";
+import { divideArray, findMax, findMin } from "../utils/math";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -34,7 +36,7 @@ const WrappedHeader = styled.div`
 
 let d3Chart: D3LiquidityHistogram | null = null;
 const LiquidityPositionChart = () => {
-  const { state } = useAppContext();
+  const { state, dispatch } = useAppContext();
   const refElement = useRef<HTMLDivElement>(null);
 
   const processData = (
@@ -79,10 +81,7 @@ const LiquidityPositionChart = () => {
     const avg = liquidity.reduce((a, b) => a + b.y, 0) / liquidity.length;
     const result = liquidity.filter(
       (b) =>
-        avg / b.y <= 100 &&
-        b.y > 0 &&
-        b.x0 >= minimumTick &&
-        b.x0 <= maximumTick
+        avg / b.y <= 15 && b.y > 0 && b.x0 >= minimumTick && b.x0 <= maximumTick
     );
     return { minTick: result[0].x0, maxTick: result[result.length - 1].x0 };
   };
@@ -123,6 +122,7 @@ const LiquidityPositionChart = () => {
       minimumTick = -minimumTick;
       maximumTick = -maximumTick;
     }
+
     let _ticks = [minimumTick, maximumTick].sort((a, b) => a - b);
     let { minTick, maxTick } = calculateInitialMinMaxTick(
       state.poolTicks,
@@ -153,6 +153,31 @@ const LiquidityPositionChart = () => {
       token0Decimal: state.token0.decimals,
       token1Decimal: state.token1.decimals,
       data: processData(state.poolTicks, ticks[0], ticks[1]),
+    });
+
+    // update range
+    const minPrice = getPriceFromTick(
+      ticks[0],
+      state.token0.decimals,
+      state.token1.decimals
+    );
+    const maxPrice = getPriceFromTick(
+      ticks[1],
+      state.token0.decimals,
+      state.token1.decimals
+    );
+    const prices = [minPrice, maxPrice].sort((a, b) => a - b);
+    const _p = divideArray(
+      (state.token1PriceChart?.prices || []).map((p) => p.value),
+      (state.token0PriceChart?.prices || []).map((p) => p.value)
+    );
+    let _min = findMin(_p);
+    let _max = findMax(_p);
+    const min = Math.max(_min, prices[0]);
+    const max = Math.min(_max, prices[1]);
+    dispatch({
+      type: AppActionType.UPDATE_PRICE_RANGE,
+      payload: [min, max],
     });
   }, [
     refElement,
