@@ -135,8 +135,8 @@ const CorrelationChart = () => {
       <Padding>
         <WrappedHeader>
           <Heading>
-            {state.token0?.symbol} / {state.token1?.symbol} Correlation Chart{" "}
-            <Tag>(1mth)</Tag>
+            {state.token0?.symbol} / {state.token1?.symbol} Correlation{" "}
+            <Tag>(1 month)</Tag>
           </Heading>
 
           <div>
