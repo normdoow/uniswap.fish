@@ -15,10 +15,9 @@ const process = (data) => {
     )
     .reduce((result, curr) => {
       const { id, name } = curr;
-      result[curr.platforms.ethereum] = {
-        id,
-        name,
-      };
+      Object.keys(curr.platforms).map((key) => {
+        result[curr.platforms[key]] = { id, name };
+      });
       return result;
     }, {});
 };
