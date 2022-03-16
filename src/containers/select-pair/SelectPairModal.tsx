@@ -252,8 +252,6 @@ const SelectPairModal = () => {
     const token1PriceChart = await getPriceChart(token1.id);
     const volume24H = await getVolumn24H(pool.id);
 
-    console.log(token0.id, token1.id);
-
     appContext.dispatch({
       type: AppActionType.RESET_PAIR,
       payload: {
@@ -293,11 +291,16 @@ const SelectPairModal = () => {
         maxLiquidity = Number(pool.liquidity);
       }
     });
-    setSelectedPool(maxPool);
+    if (maxLiquidity != 0) {
+      setSelectedPool(maxPool);
+    }
   };
 
   const getFeeTier = (feeTier: string) => {
-    return pools.find((pool) => pool.feeTier === feeTier) || null;
+    const pool = pools.find((pool) => pool.feeTier === feeTier);
+    if (!pool) return null;
+    if (+pool.liquidity === 0) return null;
+    return pool;
   };
 
   const getFeeTierPercentage = (feeTier: string) => {
@@ -309,18 +312,19 @@ const SelectPairModal = () => {
       (result, curr) => result + Number(curr.liquidity),
       0
     );
+    if (totalLiquidity === 0) return "Not Available";
     return `${Math.round(
       (100 * Number(tier.liquidity)) / totalLiquidity
     )}% select`;
   };
 
   const getFeeTierStyle = (feeTier: string) => {
-    if (selectedPool?.feeTier === feeTier) {
-      return FEE_TIER_STYLES.ACTIVE;
-    }
-
     if (getFeeTier(feeTier) === null) {
       return FEE_TIER_STYLES.DISABLE;
+    }
+
+    if (selectedPool?.feeTier === feeTier) {
+      return FEE_TIER_STYLES.ACTIVE;
     }
 
     return {};
