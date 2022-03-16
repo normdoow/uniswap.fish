@@ -156,16 +156,28 @@ const LiquidityPositionChart = () => {
     });
 
     // update range
-    const minPrice = getPriceFromTick(
+    let minPrice = getPriceFromTick(
       ticks[0],
       state.token0.decimals,
       state.token1.decimals
     );
-    const maxPrice = getPriceFromTick(
+    let maxPrice = getPriceFromTick(
       ticks[1],
       state.token0.decimals,
       state.token1.decimals
     );
+    if (state.isSwap) {
+      minPrice = getPriceFromTick(
+        -ticks[0],
+        state.token0.decimals,
+        state.token1.decimals
+      );
+      maxPrice = getPriceFromTick(
+        -ticks[1],
+        state.token0.decimals,
+        state.token1.decimals
+      );
+    }
     const prices = [minPrice, maxPrice].sort((a, b) => a - b);
     const _p = divideArray(
       (state.token1PriceChart?.prices || []).map((p) => p.value),
