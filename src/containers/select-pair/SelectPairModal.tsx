@@ -377,14 +377,25 @@ const SelectPairModal = () => {
             {NETWORKS.map((network, i) => {
               return (
                 <NetworkItem
+                  style={
+                    network.disabled
+                      ? {
+                          cursor: "not-allowed",
+                          background: "rgba(255, 255, 255, 0.1)",
+                          opacity: "0.4",
+                        }
+                      : {}
+                  }
                   onClick={() => {
-                    updateSubgraphEndpoint(network.subgraphEndpoint);
-                    fetchTokens();
+                    if (!network.disabled) {
+                      updateSubgraphEndpoint(network.subgraphEndpoint);
+                      fetchTokens();
 
-                    setSelectedNetwork(network);
-                    setSelectedTokens([null, null]);
-                    setShowSelectNetworkPage(false);
-                    setPools([]);
+                      setSelectedNetwork(network);
+                      setSelectedTokens([null, null]);
+                      setShowSelectNetworkPage(false);
+                      setPools([]);
+                    }
                   }}
                   id={`${network.name}_${i}`}
                 >

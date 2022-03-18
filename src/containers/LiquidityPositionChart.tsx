@@ -83,6 +83,9 @@ const LiquidityPositionChart = () => {
       (b) =>
         avg / b.y <= 15 && b.y > 0 && b.x0 >= minimumTick && b.x0 <= maximumTick
     );
+    if (result.length === 0) {
+      return { minTick: 0, maxTick: 0 };
+    }
     return { minTick: result[0].x0, maxTick: result[result.length - 1].x0 };
   };
 

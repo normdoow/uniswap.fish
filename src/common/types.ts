@@ -3,6 +3,7 @@ export interface Network {
   name: string;
   desc: string;
   logoURI: string;
+  disabled?: boolean;
   subgraphEndpoint: string;
 }
 export const NETWORKS: Network[] = [
@@ -36,6 +37,7 @@ export const NETWORKS: Network[] = [
     id: "arbitrum",
     name: "Arbitrum",
     desc: "Arbitrum Mainnet (L2)",
+    disabled: true,
     logoURI:
       "https://assets.website-files.com/5f973c970bea5548ad4287ef/60a320b472858ace6700df76_arb-icon.svg",
     subgraphEndpoint:
