@@ -98,7 +98,7 @@ const PriceRange = () => {
 
                 dispatch({
                   type: AppActionType.UPDATE_PRICE_RANGE,
-                  payload: [value, state.priceRangeValue[0]],
+                  payload: [value, state.priceRangeValue[1]],
                 });
               }}
             />
