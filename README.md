@@ -45,4 +45,4 @@ Uniswap V3 Fee Calculator, Visit: [uniswapv3.thechun.dev](https://uniswapv3.thec
 
 ---
 
-Crafted with 🧡 by [@chunza2542](https://twitter.com/chunza2542).
+Crafted with 🧡 by [@chunza2542](https://twitter.com/chunza2542)
