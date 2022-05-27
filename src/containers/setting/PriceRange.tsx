@@ -16,12 +16,44 @@ const InputGroup = styled.div`
   padding: 6px 8px;
   border-radius: 12px;
   margin-top: 2px;
+  position: relative;
   & > span {
     font-size: 0.8rem;
     text-align: center;
     color: #999;
     display: block;
     text-align: center;
+  }
+  & .btn {
+    position: absolute;
+    color: black;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    font-weight: bold;
+    &:hover {
+      background: white;
+    }
+  }
+  & .btn-left {
+    & span {
+      transform: translate(0, -2px);
+    }
+  }
+  & .btn-right {
+    right: 8px;
+    & span {
+      transform: translate(0.2px, -1px);
+    }
   }
 `;
 const Input = styled.input`
@@ -68,6 +100,7 @@ const PriceRange = () => {
   const min = Math.max(0, _min - margin);
   const max = _max + margin;
   const step = (max - min) / 10000000;
+  const btnStep = ((max - min) * 2) / 100; // 2%
 
   useEffect(() => {
     if (Number.isNaN(currentPrice)) return;
@@ -88,6 +121,34 @@ const PriceRange = () => {
       <Group>
         <MinMaxPriceContainer>
           <InputGroup>
+            <div
+              className="btn btn-left"
+              onClick={() => {
+                dispatch({
+                  type: AppActionType.UPDATE_PRICE_RANGE,
+                  payload: [
+                    state.priceRangeValue[0] - btnStep,
+                    state.priceRangeValue[1],
+                  ],
+                });
+              }}
+            >
+              <span>-</span>
+            </div>
+            <div
+              className="btn btn-right"
+              onClick={() => {
+                dispatch({
+                  type: AppActionType.UPDATE_PRICE_RANGE,
+                  payload: [
+                    state.priceRangeValue[0] + btnStep,
+                    state.priceRangeValue[1],
+                  ],
+                });
+              }}
+            >
+              <span>+</span>
+            </div>
             <span>Min Price</span>
             <Input
               value={state.priceRangeValue[0]}
@@ -107,6 +168,34 @@ const PriceRange = () => {
             </span>
           </InputGroup>
           <InputGroup>
+            <div
+              className="btn btn-left"
+              onClick={() => {
+                dispatch({
+                  type: AppActionType.UPDATE_PRICE_RANGE,
+                  payload: [
+                    state.priceRangeValue[0],
+                    state.priceRangeValue[1] - btnStep,
+                  ],
+                });
+              }}
+            >
+              <span>-</span>
+            </div>
+            <div
+              className="btn btn-right"
+              onClick={() => {
+                dispatch({
+                  type: AppActionType.UPDATE_PRICE_RANGE,
+                  payload: [
+                    state.priceRangeValue[0],
+                    state.priceRangeValue[1] + btnStep,
+                  ],
+                });
+              }}
+            >
+              <span>+</span>
+            </div>
             <span>Max Price</span>
             <Input
               value={state.priceRangeValue[1]}
@@ -143,6 +232,28 @@ const PriceRange = () => {
 
       <Group style={{ marginTop: 7 }}>
         <InputGroup>
+          <div
+            className="btn btn-left"
+            onClick={() => {
+              dispatch({
+                type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE,
+                payload: state.priceAssumptionValue - btnStep,
+              });
+            }}
+          >
+            <span>-</span>
+          </div>
+          <div
+            className="btn btn-right"
+            onClick={() => {
+              dispatch({
+                type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE,
+                payload: state.priceAssumptionValue + btnStep,
+              });
+            }}
+          >
+            <span>+</span>
+          </div>
           <span>Most Active Price Assumption</span>
           <Input
             value={state.priceAssumptionValue || 0}
