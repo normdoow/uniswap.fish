@@ -13,7 +13,7 @@ const NavbarContainer = styled.div`
   align-items: center;
   padding: 15px 30px;
   background: rgb(0, 0, 0, 0.9);
-  position: fixed;
+  position: absolute;
   width: 100vw;
   top: 0;
   z-index: 9999;
@@ -49,6 +49,19 @@ const Menubar = styled.a`
     }
   }
 `;
+const Gitcoin = styled.div`
+  position: relative;
+
+  & p {
+    font-size: 0.7em;
+    color: white;
+    margin: 0;
+    position: absolute;
+    width: 250px;
+    right: 0;
+    margin-top: 8px;
+  }
+`;
 
 const Navbar = () => {
   const { dispatch } = useModalContext();
@@ -80,16 +93,19 @@ const Navbar = () => {
           href="https://gitcoin.co/grants/4203/uniswap-calculator-v3"
           target="_blank"
         >
-          <DangerButton
-          // onClick={() => {
-          //   dispatch({
-          //     type: ModalActionType.SET_DONATE_MODAL_STATE,
-          //     payload: true,
-          //   });
-          // }}
-          >
-            <span>Donate</span>
-          </DangerButton>
+          <Gitcoin>
+            <DangerButton
+            // onClick={() => {
+            //   dispatch({
+            //     type: ModalActionType.SET_DONATE_MODAL_STATE,
+            //     payload: true,
+            //   });
+            // }}
+            >
+              <span>Donate</span>
+            </DangerButton>
+            <p>🌱 Support our project on Gitcoin GR14!</p>
+          </Gitcoin>
         </a>
       </Menubar>
     </NavbarContainer>
