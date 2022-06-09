@@ -88,7 +88,7 @@ const Navbar = () => {
           //   });
           // }}
           >
-            Donate
+            <span>Donate</span>
           </DangerButton>
         </a>
       </Menubar>
