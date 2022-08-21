@@ -22,7 +22,7 @@ const queryUniswap = async (query: string): Promise<any> => {
 
 export const getVolumn24H = async (poolAddress: string): Promise<number> => {
   const { poolDayDatas } = await queryUniswap(`{
-    poolDayDatas(skip: 1, first:3, orderBy: date, orderDirection: desc, where:{pool: "${poolAddress}"}) {
+    poolDayDatas(skip: 1, first: 7, orderBy: date, orderDirection: desc, where:{pool: "${poolAddress}"}) {
       volumeUSD
     }
   }`);
