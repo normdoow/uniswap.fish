@@ -43,9 +43,15 @@ export interface Tick {
   price0: string;
   price1: string;
 }
-export const getPoolTicks = async (poolAddress: string): Promise<Tick[]> => {
-  const { ticks } = await queryUniswap(`{
-    ticks(first: 1000, skip: 0, where: { poolAddress: "${poolAddress}" }, orderBy: tickIdx) {
+const _getPoolTicks = async (
+  poolAddress: string,
+  result: Tick[],
+  page: number = 0
+): Promise<Tick[]> => {
+  const res = await queryUniswap(`{
+    ticks(first: 1000, skip: ${
+      page * 1000
+    }, where: { poolAddress: "${poolAddress}" }, orderBy: tickIdx) {
       tickIdx
       liquidityNet
       price0
@@ -53,7 +59,16 @@ export const getPoolTicks = async (poolAddress: string): Promise<Tick[]> => {
     }
   }`);
 
-  return ticks as Tick[];
+  if (res === undefined || res.ticks.length === 0) {
+    return result;
+  }
+
+  result = [...result, ...res.ticks];
+  return await _getPoolTicks(poolAddress, result, page + 1);
+};
+export const getPoolTicks = async (poolAddress: string): Promise<Tick[]> => {
+  const ticks = await _getPoolTicks(poolAddress, []);
+  return ticks;
 };
 
 export interface V3Token {

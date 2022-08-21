@@ -111,8 +111,6 @@ const EstimatedFees = () => {
   const volume24H = state.volume24H;
   const feeTier = state.pool?.feeTier || "";
 
-  console.log(volume24H, feeTier);
-
   let fee = calculateFee(deltaL, L, volume24H, feeTier);
   if (P < Pl || P > Pu) fee = 0;
 
