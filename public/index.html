@@ -60,21 +60,13 @@
       content="Uniswap V3 fee calculator, calculate your trading fees for Uniswap V3, plan your strategy, and see how much fee you could earn!"
     />
     <meta property="og:image" content="%PUBLIC_URL%/cover.jpeg" />
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-BTFYZRK6M2"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-
-      gtag("config", "G-BTFYZRK6M2");
-    </script>
   </head>
+  <!-- Plausible Analytics -->
+  <script
+    defer
+    data-domain="uniswap.fish"
+    src="https://plausible.io/js/plausible.js"
+  ></script>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
