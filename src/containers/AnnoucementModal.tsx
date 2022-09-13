@@ -74,6 +74,14 @@ const Content = styled.div`
 const DonateModal = () => {
   const { state, dispatch } = useModalContext();
 
+  const understand = () => {
+    localStorage.setItem("metamask-phishing-detection", "OK");
+    dispatch({
+      type: ModalActionType.SET_ANNOUCEMENT_MODAL_STATE,
+      payload: false,
+    });
+  };
+
   return (
     <>
       <Modal
@@ -114,7 +122,7 @@ const DonateModal = () => {
                 >
                   making everything open-source
                 </a>{" "}
-                to ensure that you{" "}
+                to ensure that the users{" "}
                 <b style={{ color: "#59eb4f" }}>feel as safe as possible </b>
                 to use our website.
               </p>
@@ -124,7 +132,10 @@ const DonateModal = () => {
                 situation;{" "}
                 <b style={{ color: "#f76ac0" }}>Really appreciate it 💖</b>
               </p>
-              <PrimaryBlockButton style={{ marginTop: 25 }}>
+              <PrimaryBlockButton
+                style={{ marginTop: 25 }}
+                onClick={understand}
+              >
                 I understand, take me to the site!
               </PrimaryBlockButton>
             </Content>

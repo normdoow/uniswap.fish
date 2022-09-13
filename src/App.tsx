@@ -76,7 +76,8 @@ function App() {
   const { state, dispatch } = useModalContext();
 
   useEffect(() => {
-    // check for annoucement localStorage flag
+    if (localStorage.getItem("metamask-phishing-detection") === "OK") return;
+
     dispatch({
       type: ModalActionType.SET_ANNOUCEMENT_MODAL_STATE,
       payload: true,
