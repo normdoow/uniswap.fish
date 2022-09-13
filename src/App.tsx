@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useWindowWidth } from "@react-hook/window-size";
 import { Br } from "./common/atomic";
@@ -10,14 +10,14 @@ import Navbar from "./containers/Navbar";
 import LiquidityPositionChart from "./containers/LiquidityPositionChart";
 import SelectPairModal from "./containers/select-pair/SelectPairModal";
 import Setting from "./containers/setting/Setting";
-import ContextProvider from "./context/ContextProvider";
 import { PrimaryBlockButton } from "./common/buttons";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import DonateModal from "./containers/DonateModal";
-import { useAppContext } from "./context/app/appContext";
+import AnnoucementModal from "./containers/AnnoucementModal";
+import { useModalContext } from "./context/modal/modalContext";
+import { ModalActionType } from "./context/modal/modalReducer";
 
 const BodyContainer = styled.div`
   width: 900px;
@@ -73,9 +73,18 @@ const IconBar = styled.div`
 function App() {
   const screenWidth = useWindowWidth();
   const [isEnter, setIsEnter] = useState(false);
+  const { state, dispatch } = useModalContext();
+
+  useEffect(() => {
+    // check for annoucement localStorage flag
+    dispatch({
+      type: ModalActionType.SET_ANNOUCEMENT_MODAL_STATE,
+      payload: true,
+    });
+  }, []);
 
   return (
-    <ContextProvider>
+    <>
       {!isEnter && screenWidth <= 960 && (
         <MobileNotSupportScreen>
           <Unicorn>🦄</Unicorn>
@@ -114,6 +123,7 @@ function App() {
       {(isEnter || screenWidth > 960) && (
         <>
           <SelectPairModal />
+          <AnnoucementModal />
           {/* <DonateModal /> */}
           <Navbar />
           <BodyContainer>
@@ -135,7 +145,7 @@ function App() {
           </BodyContainer>
         </>
       )}
-    </ContextProvider>
+    </>
   );
 }
 
