@@ -21,7 +21,7 @@ Promise.all(URLS.map((url) => axios.get(url)))
   })
   .then((tokens) => {
     return tokens
-      .filter((t) => t.logoURI)
+      .filter((t) => t !== undefined && t.logoURI)
       .reduce((result, curr) => {
         result[curr.address.toLowerCase()] = curr.logoURI;
         return result;
