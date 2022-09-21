@@ -104,7 +104,7 @@ const Navbar = () => {
             >
               <span>Donate</span>
             </DangerButton>
-            <p>🌱 Support our project on Gitcoin GR14!</p>
+            <p>🔥 Support our project on Gitcoin GR15!</p>
           </Gitcoin>
         </a>
       </Menubar>
