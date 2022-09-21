@@ -75,14 +75,14 @@ function App() {
   const [isEnter, setIsEnter] = useState(false);
   const { state, dispatch } = useModalContext();
 
-  useEffect(() => {
-    if (localStorage.getItem("metamask-phishing-detection") === "OK") return;
+  // useEffect(() => {
+  //   if (localStorage.getItem("metamask-phishing-detection") === "OK") return;
 
-    dispatch({
-      type: ModalActionType.SET_ANNOUCEMENT_MODAL_STATE,
-      payload: true,
-    });
-  }, []);
+  //   dispatch({
+  //     type: ModalActionType.SET_ANNOUCEMENT_MODAL_STATE,
+  //     payload: true,
+  //   });
+  // }, []);
 
   return (
     <>
@@ -124,7 +124,7 @@ function App() {
       {(isEnter || screenWidth > 960) && (
         <>
           <SelectPairModal />
-          <AnnoucementModal />
+          {/* <AnnoucementModal /> */}
           {/* <DonateModal /> */}
           <Navbar />
           <BodyContainer>
