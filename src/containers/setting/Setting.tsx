@@ -2,8 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { Br } from "../../common/atomic";
 import DepositAmounts from "./DepositAmounts";
-import OutOfRangePercentage from "./OutOfRangePercentage";
 import PriceRange from "./PriceRange";
+// import OutOfRangePercentage from "./OutOfRangePercentage";
 
 const SettingContainer = styled.div`
   background: rgba(255, 255, 255, 0.05);

@@ -1,6 +1,5 @@
-import React from "react";
 import * as d3 from "d3";
-import { findMax, findMin } from "../utils/math";
+import { findMax } from "../utils/math";
 import { getPriceFromTick } from "../utils/liquidityMath";
 
 export interface Bin {

@@ -8,11 +8,20 @@ const options = {
   method: "GET",
 };
 
+// TODO: refactor, there some case that can cause id override e.g. WETH
+const SKIP_PLATFORMS = [
+  "ethereumpow",
+  "cosmos",
+  "tron",
+];
+
 const process = (data) => {
   return data.reduce((result, curr) => {
     const { id, name } = curr;
     Object.keys(curr.platforms).map((key) => {
-      result[curr.platforms[key]] = { id, name };
+      if (!SKIP_PLATFORMS.includes(key)) {
+        result[curr.platforms[key]] = { id, name };
+      }
     });
     return result;
   }, {});

@@ -34,11 +34,11 @@ const Credit = () => {
     <CreditContainer>
       <div>
         Sponsored by{" "}
-        <a target="_blank" href="https://unigrants.org">
+        <a target="_blank" rel="noreferrer" href="https://unigrants.org">
           Unigrant
         </a>{" "}
         (Wave 7). Crafted with <FontAwesomeIcon icon={faHeart} /> by{" "}
-        <a href="https://twitter.com/chunza2542" target="_blank">
+        <a rel="noreferrer" href="https://twitter.com/chunza2542" target="_blank">
           @chunza2542
         </a>
         , Happy Uniswapping 🦄!!
@@ -46,12 +46,14 @@ const Credit = () => {
       <div>
         <a
           href="https://github.com/chunza2542/uniswapv3-calculator"
+          rel="noreferrer"
           target="_blank"
         >
           How it works?
         </a>
         <a
           href="https://github.com/chunza2542/uniswapv3-calculator/issues"
+          rel="noreferrer"
           target="_blank"
         >
           Report a bug or request a feature

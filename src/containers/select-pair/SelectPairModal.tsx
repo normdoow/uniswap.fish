@@ -291,7 +291,7 @@ const SelectPairModal = () => {
         maxLiquidity = Number(pool.liquidity);
       }
     });
-    if (maxLiquidity != 0) {
+    if (maxLiquidity !== 0) {
       setSelectedPool(maxPool);
     }
   };

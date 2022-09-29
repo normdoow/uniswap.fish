@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useWindowWidth } from "@react-hook/window-size";
 import { Br } from "./common/atomic";
@@ -15,9 +15,9 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import AnnoucementModal from "./containers/AnnoucementModal";
-import { useModalContext } from "./context/modal/modalContext";
-import { ModalActionType } from "./context/modal/modalReducer";
+// import { useModalContext } from "./context/modal/modalContext";
+// import AnnoucementModal from "./containers/AnnoucementModal";
+// import { ModalActionType } from "./context/modal/modalReducer";
 
 const BodyContainer = styled.div`
   width: 900px;
@@ -73,7 +73,7 @@ const IconBar = styled.div`
 function App() {
   const screenWidth = useWindowWidth();
   const [isEnter, setIsEnter] = useState(false);
-  const { state, dispatch } = useModalContext();
+  // const { state, dispatch } = useModalContext();
 
   // useEffect(() => {
   //   if (localStorage.getItem("metamask-phishing-detection") === "OK") return;

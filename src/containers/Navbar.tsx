@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { DangerButton } from "../common/buttons";
 import { useModalContext } from "../context/modal/modalContext";
-import { ModalActionType } from "../context/modal/modalReducer";
+// import { ModalActionType } from "../context/modal/modalReducer";
 
 const NavbarContainer = styled.div`
   display: flex;
@@ -64,7 +64,7 @@ const Gitcoin = styled.div`
 `;
 
 const Navbar = () => {
-  const { dispatch } = useModalContext();
+  // const { dispatch } = useModalContext();
 
   return (
     <NavbarContainer>
@@ -92,6 +92,7 @@ const Navbar = () => {
         <a
           href="https://gitcoin.co/grants/4203/uniswap-calculator-v3"
           target="_blank"
+          rel="noreferrer"
         >
           <Gitcoin>
             <DangerButton

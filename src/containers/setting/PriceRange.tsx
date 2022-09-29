@@ -109,6 +109,7 @@ const PriceRange = () => {
       type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE,
       payload: currentPrice,
     });
+
     dispatch({
       type: AppActionType.UPDATE_PRICE_RANGE,
       payload: [_min, _max],
