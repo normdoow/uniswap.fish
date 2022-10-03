@@ -42,8 +42,7 @@ class D3CorrelationChart {
     this.svg = d3
       .select(containerEl)
       .append("svg")
-      .attr("width", props.width)
-      .attr("height", props.height);
+      .attr("viewBox", `0 0 ${props.width} ${props.height}`);
 
     this.createLinearGradient("blue-gradient", { r: 38, g: 108, b: 221 });
 

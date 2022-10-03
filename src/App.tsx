@@ -29,6 +29,11 @@ const ContentContainer = styled.div`
   grid-template-columns: 5fr 7fr;
   grid-gap: 25px;
   margin-top: 25px;
+
+  @media only screen and (max-width: 820px) {
+    grid-template-columns: 1fr;
+    grid-gap: 15px;
+  }
 `;
 
 function App() {
