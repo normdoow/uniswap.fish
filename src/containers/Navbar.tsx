@@ -4,7 +4,8 @@ import { faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import styled from "styled-components";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { DangerButton } from "../common/buttons";
-import { useModalContext } from "../context/modal/modalContext";
+import { ScreenWidth } from "../utils/styled";
+// import { useModalContext } from "../context/modal/modalContext";
 // import { ModalActionType } from "../context/modal/modalReducer";
 
 const NavbarContainer = styled.div`
@@ -17,21 +18,35 @@ const NavbarContainer = styled.div`
   width: 100vw;
   top: 0;
   z-index: 9999;
+
+  @media only screen and (max-width: ${ScreenWidth.TABLET}px) {
+    padding: 15px;
+  }
 `;
 
 const Logo = styled.h1`
-  color: white;
   margin: 0;
-  font-weight: bold;
-  font-size: 1.2rem;
-  font-weight: 500;
   cursor: pointer;
   display: flex;
   align-items: center;
 
+  & > h1 {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 500;
+
+    @media only screen and (max-width: ${ScreenWidth.MOBILE}px) {
+      display: none;
+    }
+  }
+
   & > span {
     font-size: 1.4rem;
     margin-right: 7px;
+
+    @media only screen and (max-width: ${ScreenWidth.MOBILE}px) {
+      font-size: 1.8rem;
+    }
   }
 `;
 
@@ -51,6 +66,7 @@ const Menubar = styled.a`
 `;
 const Gitcoin = styled.div`
   position: relative;
+  margin-right: -15px;
 
   & p {
     font-size: 0.7em;
@@ -69,7 +85,7 @@ const Navbar = () => {
   return (
     <NavbarContainer>
       <Logo>
-        <span>🦄</span> UniswapCalculator
+        <span>🦄</span> <h1>UniswapCalculator</h1>
       </Logo>
       <Menubar>
         <a
