@@ -12,11 +12,17 @@ import {
   getTickFromPrice,
   getTokenAmountsFromDepositAmounts,
 } from "../utils/liquidityMath";
+import { ScreenWidth } from "../utils/styled";
 
 const SettingContainer = styled.div`
   background: rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   padding: 16px;
+
+  @media only screen and (max-width: ${ScreenWidth.MOBILE}px) {
+    padding: 12px;
+    border-radius: 12px;
+  }
 `;
 const Fee = styled.span`
   display: block;
