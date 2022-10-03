@@ -1,4 +1,4 @@
 export const ScreenWidth = {
   MOBILE: 576,
-  TABLET: 992,
+  TABLET: 930,
 };

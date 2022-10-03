@@ -9,14 +9,20 @@ import Navbar from "./containers/Navbar";
 import LiquidityPositionChart from "./containers/LiquidityPositionChart";
 import SelectPairModal from "./containers/select-pair/SelectPairModal";
 import Setting from "./containers/setting/Setting";
+import { ScreenWidth } from "./utils/styled";
 // import { useModalContext } from "./context/modal/modalContext";
 // import AnnoucementModal from "./containers/AnnoucementModal";
 // import { ModalActionType } from "./context/modal/modalReducer";
 
 const BodyContainer = styled.div`
-  width: 900px;
-  margin: auto auto;
+  max-width: 900px;
+  margin: auto;
   padding-top: 100px;
+
+  @media only screen and (max-width: ${ScreenWidth.TABLET}px) {
+    margin: auto 15px;
+    padding-top: 85px;
+  }
 `;
 const ContentContainer = styled.div`
   display: grid;
