@@ -1,13 +1,36 @@
-import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import {
+  faExchangeAlt,
+  faExternalLinkAlt,
+  faSocks,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
 import { Button, PrimaryButton } from "../common/buttons";
 import { useAppContext } from "../context/app/appContext";
 import { AppActionType } from "../context/app/appReducer";
 import { useModalContext } from "../context/modal/modalContext";
 import { ModalActionType } from "../context/modal/modalReducer";
+import { ScreenWidth } from "../utils/styled";
 
+const InvisibleMobileSpan = styled.span`
+  @media only screen and (max-width: 430px) {
+    display: none;
+  }
+`;
+const InvisibleTabletSpan = styled.span`
+  @media only screen and (max-width: 610px) {
+    display: none;
+  }
+`;
+const ButtonIcon = styled.span`
+  margin-right: 5px;
+
+  @media only screen and (max-width: 610px) {
+    margin-right: 0;
+    font-size: 1.2rem;
+  }
+`;
 const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -33,9 +56,16 @@ const PairToken = styled.div`
       height: 30px;
       border-radius: 50%;
       transform: translateY(2.5px);
+
+      @media only screen and (max-width: ${ScreenWidth.TABLET}px) {
+        height: 25px;
+      }
     }
     & img:nth-child(2) {
       margin-left: -15px;
+      @media only screen and (max-width: ${ScreenWidth.TABLET}px) {
+        margin-left: calc(-1 * 25px / 2);
+      }
     }
   }
 
@@ -43,6 +73,10 @@ const PairToken = styled.div`
     margin: 0;
     font-size: 1.2rem;
     display: block;
+
+    @media only screen and (max-width: ${ScreenWidth.TABLET}px) {
+      font-size: 1rem;
+    }
 
     & svg {
       color: #999;
@@ -80,7 +114,9 @@ const Header = () => {
             {appContext.state.pool?.feeTier === "3000" && <span>0.3%</span>}
             {appContext.state.pool?.feeTier === "10000" && <span>1%</span>}
           </FeePercentage>
-          <FeePercentage>{appContext.state.network.name}</FeePercentage>
+          <InvisibleMobileSpan>
+            <FeePercentage>{appContext.state.network.name}</FeePercentage>
+          </InvisibleMobileSpan>
           <a
             href={`https://info.uniswap.org/#/${appContext.state.network.id}/pools/${appContext.state.pool?.id}`}
             target="_blank"
@@ -100,7 +136,10 @@ const Header = () => {
             });
           }}
         >
-          Swap Current Pair
+          <ButtonIcon>
+            <FontAwesomeIcon icon={faExchangeAlt} />
+          </ButtonIcon>
+          <InvisibleTabletSpan>Swap Pair</InvisibleTabletSpan>
         </Button>
         <PrimaryButton
           onClick={() => {
@@ -110,7 +149,10 @@ const Header = () => {
             });
           }}
         >
-          Change Pair
+          <ButtonIcon>
+            <FontAwesomeIcon icon={faSocks} />
+          </ButtonIcon>
+          <InvisibleTabletSpan>Change Pair</InvisibleTabletSpan>
         </PrimaryButton>
       </div>
     </HeaderContainer>
