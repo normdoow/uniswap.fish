@@ -8,6 +8,11 @@ import Fuse from "fuse.js";
 const Container = styled.div`
   width: 370px;
   padding: 15px;
+
+  @media only screen and (max-width: 400px) {
+    width: calc(100vw - 30px);
+    padding: 10px;
+  }
 `;
 const SearchInput = styled.input`
   border: 0;
@@ -51,6 +56,10 @@ const TokenItem = styled.div`
   align-items: center;
   transition: 0.3s;
   padding: 5px 15px;
+
+  @media only screen and (max-width: 400px) {
+    padding: 5px 10px;
+  }
 
   &:hover {
     background: rgba(255, 255, 255, 0.1);

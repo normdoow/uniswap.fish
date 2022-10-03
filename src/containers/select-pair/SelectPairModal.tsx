@@ -46,6 +46,10 @@ const ModalStyle = {
 const Container = styled.div`
   max-width: 370px;
   padding: 15px;
+
+  @media only screen and (max-width: 400px) {
+    padding: 10px;
+  }
 `;
 const SelectNetworkContainer = styled.div`
   margin-bottom: 15px;
@@ -131,6 +135,10 @@ const GoBack = styled.h1`
   background: rgb(50, 50, 50);
   font-size: 1rem;
 
+  @media only screen and (max-width: 400px) {
+    padding: 15px 10px;
+  }
+
   & > div {
     cursor: pointer;
     position: absolute;
@@ -148,6 +156,10 @@ const NetworkItem = styled.div`
   border: 1px solid #333;
   border-radius: 15px;
   padding: 10px 15px;
+
+  @media only screen and (max-width: 400px) {
+    width: calc(100vw - 50px);
+  }
 
   &:hover {
     background: rgba(255, 255, 255, 0.1);
@@ -187,6 +199,10 @@ const Logo = styled.h1`
   & > span {
     font-size: 1.4rem;
     margin-right: 7px;
+  }
+
+  @media only screen and (max-width: 400px) {
+    padding: 15px 10px;
   }
 `;
 const FEE_TIER_STYLES = {
