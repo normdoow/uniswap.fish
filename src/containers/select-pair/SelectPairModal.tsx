@@ -44,7 +44,7 @@ const ModalStyle = {
   },
 };
 const Container = styled.div`
-  width: 370px;
+  max-width: 370px;
   padding: 15px;
 `;
 const SelectNetworkContainer = styled.div`
