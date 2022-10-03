@@ -44,8 +44,15 @@ const SKIP_PLATFORMS = [
   "waves",
 ];
 
+const _renameKeys = (obj, newKeys) => {
+  const keyValues = Object.keys(obj).map((key) => {
+    const newKey = newKeys[key] || key;
+    return { [newKey]: obj[key] };
+  });
+  return Object.assign({}, ...keyValues);
+};
 const process = (data) => {
-  return data.reduce((result, curr) => {
+  let result = data.reduce((result, curr) => {
     const { id, name } = curr;
     Object.keys(curr.platforms).map((platform) => {
       if (SKIP_PLATFORMS.includes(platform)) return;
@@ -57,6 +64,14 @@ const process = (data) => {
     });
     return result;
   }, {});
+
+  result = _renameKeys(result, {
+    "polygon-pos": "polygon",
+    "optimistic-ethereum": "optimism",
+    "arbitrum-one": "arbitrum",
+  });
+
+  return result;
 };
 
 const req = https.request(options, (res) => {
