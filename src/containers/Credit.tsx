@@ -33,32 +33,40 @@ const Credit = () => {
   return (
     <CreditContainer>
       <div>
-        Sponsored by{" "}
-        <a target="_blank" rel="noreferrer" href="https://unigrants.org">
-          Unigrant
-        </a>{" "}
-        (Wave 7). Crafted with <FontAwesomeIcon icon={faHeart} /> by{" "}
-        <a rel="noreferrer" href="https://twitter.com/chunza2542" target="_blank">
+        Supported by{" "}
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href="https://mirror.xyz/devi731.eth/Dy705L0V2MufftJ-x4zgAhfILw2yE18RY0lNsVN3mEA"
+        >
+          Uniswap Foudation
+        </a>
+        . Crafted with <FontAwesomeIcon icon={faHeart} /> by{" "}
+        <a
+          rel="noreferrer"
+          href="https://twitter.com/chunza2542"
+          target="_blank"
+        >
           @chunza2542
         </a>
         , Happy Uniswapping 🦄!!
       </div>
       <div>
         <a
-          href="https://github.com/chunza2542/uniswapv3-calculator"
+          href="https://github.com/chunza2542/uniswap.fish"
           rel="noreferrer"
           target="_blank"
         >
           How it works?
         </a>
         <a
-          href="https://github.com/chunza2542/uniswapv3-calculator/issues"
+          href="https://github.com/chunza2542/uniswap.fish/issues"
           rel="noreferrer"
           target="_blank"
         >
           Report a bug or request a feature
         </a>
-        <a href="mailto:hello@thechun.dev">Contact: hello@thechun.dev</a>
+        <a href="mailto:hello@uniswap.fish">Contact: hello@uniswap.fish</a>
       </div>
     </CreditContainer>
   );

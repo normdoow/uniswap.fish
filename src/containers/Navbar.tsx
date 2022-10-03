@@ -73,20 +73,20 @@ const Navbar = () => {
       </Logo>
       <Menubar>
         <a
-          href="https://twitter.com/chunza2542"
+          href="https://twitter.com/uniswapdotfish"
           target="_blank"
           rel="noreferrer"
         >
           <FontAwesomeIcon icon={faTwitter} />
         </a>
         <a
-          href="https://github.com/chunza2542/uniswapv3-calculator"
+          href="https://github.com/chunza2542/uniswap.fish"
           target="_blank"
           rel="noreferrer"
         >
           <FontAwesomeIcon icon={faGithub} />
         </a>
-        <a href="mailto:hello@thechun.dev">
+        <a href="mailto:hello@uniswap.fish">
           <FontAwesomeIcon icon={faEnvelope} />
         </a>
         <a
@@ -105,7 +105,7 @@ const Navbar = () => {
             >
               <span>Donate</span>
             </DangerButton>
-            <p>🔥 Support our project on Gitcoin GR15!</p>
+            {/* <p>🔥 Support our project on Gitcoin GR15!</p> */}
           </Gitcoin>
         </a>
       </Menubar>
