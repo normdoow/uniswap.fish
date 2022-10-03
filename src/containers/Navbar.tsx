@@ -35,7 +35,7 @@ const Logo = styled.h1`
     font-size: 1.2rem;
     font-weight: 500;
 
-    @media only screen and (max-width: ${ScreenWidth.MOBILE}px) {
+    @media only screen and (max-width: 450px) {
       display: none;
     }
   }
@@ -44,7 +44,7 @@ const Logo = styled.h1`
     font-size: 1.4rem;
     margin-right: 7px;
 
-    @media only screen and (max-width: ${ScreenWidth.MOBILE}px) {
+    @media only screen and (max-width: 450px) {
       font-size: 1.8rem;
     }
   }
