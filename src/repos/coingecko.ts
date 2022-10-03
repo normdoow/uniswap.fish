@@ -1,5 +1,6 @@
 import axios from "axios";
 import tokenAddressMapping from "./tokenAddressMapping.json";
+import { currentNetwork } from "./uniswap";
 
 export enum QueryPeriodEnum {
   ONE_DAY = "1",
@@ -14,9 +15,19 @@ export interface Token {
   id: string;
   name: string;
 }
-const getToken = (contractAddress: string): Token => {
-  const mapping = tokenAddressMapping as { [key: string]: any };
-  return mapping[contractAddress];
+const getToken = (contractAddress: string): Token | null => {
+  const mapper = tokenAddressMapping as { [key: string]: any };
+  const currentPlatform = currentNetwork.id;
+  const result = mapper[currentPlatform][contractAddress];
+  if (result) {
+    return result as Token;
+  }
+  const keys = Object.keys(mapper);
+  for (let i = 0; i < keys.length; ++i) {
+    const r = mapper[keys[i]][contractAddress];
+    if (r) return r;
+  }
+  return null;
 };
 
 export interface Price {

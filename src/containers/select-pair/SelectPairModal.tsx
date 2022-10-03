@@ -14,7 +14,7 @@ import {
   getTokenList,
   getVolumn24H,
   Pool,
-  updateSubgraphEndpoint,
+  updateNetwork,
   V3Token,
 } from "../../repos/uniswap";
 import SearchTokenPage from "./SearchTokenPage";
@@ -388,7 +388,7 @@ const SelectPairModal = () => {
                   }
                   onClick={() => {
                     if (!network.disabled) {
-                      updateSubgraphEndpoint(network.subgraphEndpoint);
+                      updateNetwork(network);
                       fetchTokens();
 
                       setSelectedNetwork(network);

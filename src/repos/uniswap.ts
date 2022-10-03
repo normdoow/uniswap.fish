@@ -1,16 +1,16 @@
 import axios from "axios";
-import { NETWORKS } from "../common/types";
+import { Network, NETWORKS } from "../common/types";
 import { getTokenLogoURL, sortToken } from "../utils/helper";
 
-let subgraphEndpoint = NETWORKS[0].subgraphEndpoint;
+export let currentNetwork = NETWORKS[0];
 
-export const updateSubgraphEndpoint = (newEndpoint: string) => {
-  subgraphEndpoint = newEndpoint;
+export const updateNetwork = (network: Network) => {
+  currentNetwork = network;
 };
 
 const queryUniswap = async (query: string): Promise<any> => {
   const { data } = await axios({
-    url: subgraphEndpoint,
+    url: currentNetwork.subgraphEndpoint,
     method: "post",
     data: {
       query,
