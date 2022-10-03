@@ -5,14 +5,26 @@ import { PriceChart } from "../repos/coingecko";
 import D3CorrelationChart, { Point } from "./D3CorrelationChart";
 import { useAppContext } from "../context/app/appContext";
 import { calculateAvg, findMax, findMin } from "../utils/math";
+import { ScreenWidth } from "../utils/styled";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
+  @media only screen and (max-width: ${ScreenWidth.MOBILE}px) {
+    border-radius: 12px;
+  }
 `;
 const Padding = styled.div`
   padding: 16px;
+  @media only screen and (max-width: ${ScreenWidth.MOBILE}px) {
+    padding: 12px;
+  }
+`;
+const CurrentPrice = styled.div`
+  @media only screen and (max-width: ${ScreenWidth.MOBILE}px) {
+    display: none;
+  }
 `;
 const Tag = styled.div`
   display: inline-block;
@@ -23,6 +35,10 @@ const Stat = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 7px;
+
+  @media only screen and (max-width: ${ScreenWidth.MOBILE}px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;
 const StatItem = styled.div`
   display: flex;
@@ -38,6 +54,14 @@ const StatItem = styled.div`
     margin-right: 7px;
     border-radius: 12px;
     background: rgba(255, 255, 255, 0.05);
+  }
+
+  &.mobile {
+    display: none;
+
+    @media only screen and (max-width: ${ScreenWidth.MOBILE}px) {
+      display: flex;
+    }
   }
 `;
 const WrappedHeader = styled.div`
@@ -94,7 +118,7 @@ const CorrelationChart = () => {
     setData(data);
 
     let width = 500;
-    let height = 250;
+    let height = 300;
     if (refElement.current) {
       width = refElement.current.offsetWidth;
     }
@@ -139,10 +163,10 @@ const CorrelationChart = () => {
             <Tag>(1 month)</Tag>
           </Heading>
 
-          <div>
-            Current: {Number(state.pool?.token0Price).toFixed(2)}{" "}
+          <CurrentPrice>
+            Price: {Number(state.pool?.token0Price).toFixed(2)}{" "}
             {state.token0?.symbol} / {state.token1?.symbol}
-          </div>
+          </CurrentPrice>
         </WrappedHeader>
       </Padding>
 
@@ -161,6 +185,13 @@ const CorrelationChart = () => {
           <StatItem>
             <div>AVG</div>{" "}
             <span>{calculateAvg(data.map((d) => d.y)).toFixed(4)}</span>
+          </StatItem>
+          <StatItem className="mobile">
+            <div>$$$</div>{" "}
+            <span>
+              {Number(state.pool?.token0Price).toFixed(2)}{" "}
+              {state.token0?.symbol} / {state.token1?.symbol}
+            </span>
           </StatItem>
         </Stat>
       </Padding>

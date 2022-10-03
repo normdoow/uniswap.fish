@@ -42,8 +42,7 @@ class D3LiquidityHistogram {
     this.svg = d3
       .select(containerEl)
       .append("svg")
-      .attr("width", props.width)
-      .attr("height", props.height);
+      .attr("viewBox", `0 0 ${props.width} ${props.height}`);
 
     // add x axis
     const x = d3
