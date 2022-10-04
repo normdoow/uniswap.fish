@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Network, NETWORKS } from "../common/types";
 import { getTokenLogoURL, sortToken } from "../utils/helper";
+import lscache from "../utils/lscache";
 
 export let currentNetwork = NETWORKS[0];
 
@@ -79,12 +80,13 @@ export interface V3Token {
   logoURI: string;
   decimals: string;
 }
-const _getTokenList = async (
-  result: V3Token[],
-  page: number = 0
-): Promise<V3Token[]> => {
+export const getTopTokenList = async (): Promise<V3Token[]> => {
+  const cacheKey = `${currentNetwork.id}_getTopTokenList`;
+  const cacheData = lscache.get(cacheKey);
+  if (cacheData) return cacheData;
+
   const res = await queryUniswap(`{
-    tokens(skip: ${page * 1000}, first: 1000, orderBy: id) {
+    tokens(skip: 0, first: 100, orderBy: volumeUSD, orderDirection: desc) {
       id
       name
       symbol
@@ -94,15 +96,11 @@ const _getTokenList = async (
   }`);
 
   if (res === undefined || res.tokens.length === 0) {
-    return result;
+    return [];
   }
 
-  result = [...result, ...res.tokens];
-  return await _getTokenList(result, page + 1);
-};
-export const getTokenList = async (): Promise<V3Token[]> => {
-  const tokens = await _getTokenList([]);
-  return tokens
+  const tokens = res.tokens as V3Token[];
+  const result = tokens
     .map((token) => {
       token.logoURI = getTokenLogoURL(token.id);
       return token;
@@ -120,8 +118,10 @@ export const getTokenList = async (): Promise<V3Token[]> => {
       }
       return token;
     })
-    .filter((token) => token.symbol.length < 30)
-    .sort((a, b) => Number(b.volumeUSD) - Number(a.volumeUSD));
+    .filter((token) => token.symbol.length < 30);
+
+  lscache.set(cacheKey, result, 60);
+  return result;
 };
 
 export interface Pool {

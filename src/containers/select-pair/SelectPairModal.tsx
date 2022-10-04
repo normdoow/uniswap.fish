@@ -11,7 +11,7 @@ import { useState } from "react";
 import {
   getPoolFromPair,
   getPoolTicks,
-  getTokenList,
+  getTopTokenList,
   getVolumn24H,
   Pool,
   updateNetwork,
@@ -352,7 +352,7 @@ const SelectPairModal = () => {
       payload: { tokenList: [] },
     });
 
-    const tokenList = await getTokenList();
+    const tokenList = await getTopTokenList();
     appContext.dispatch({
       type: AppActionType.RESET_TOKEN_LIST,
       payload: { tokenList },
