@@ -291,8 +291,11 @@ const SelectPairModal = () => {
 
   const fetchPools = async () => {
     if (!selectedTokens[0] || !selectedTokens[1]) return;
+
+    setIsSubmitLoading(true);
     const pools = await getPoolFromPair(selectedTokens[0], selectedTokens[1]);
     setPools(pools);
+    setIsSubmitLoading(false);
 
     if (pools.length === 0) {
       setSelectedPool(null);
