@@ -136,7 +136,14 @@ const SearchTokenPage = ({ tokens, selectToken }: SearchTokenPageProps) => {
                 data-filter={`${token.id.toLowerCase()} ${token.symbol.toLowerCase()} ${token.name.toLowerCase()}`}
                 className="token-item"
               >
-                <img src={token.logoURI} alt={token.name} />
+                <img
+                  src={token.logoURI}
+                  alt={token.name}
+                  onError={(e: any) => {
+                    e.target.src =
+                      "https://friconix.com/png/fi-cnsuxl-question-mark.png";
+                  }}
+                />
                 <div>
                   <h5>{token.symbol}</h5>
                   <span>
