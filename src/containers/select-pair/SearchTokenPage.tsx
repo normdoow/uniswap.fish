@@ -19,19 +19,19 @@ const SearchInput = styled.input`
   outline: none;
   width: 100%;
   padding: 12px 12px;
-  border-radius: 12px;
+  border-radius: 9px;
   font-size: 1rem;
   color: white;
-  background: rgba(255, 255, 255, 0.1);
-  cursor: pointer;
+  background: rgba(255, 255, 255, 0.075);
+  cursor: pointerk;
   transition: 0.3s;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.1);
   }
 
   &:focus {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.125);
   }
 `;
 const Divider = styled.div`
@@ -87,49 +87,28 @@ const TokenItem = styled.div`
   }
 `;
 
-const MAX_NUMBER_PER_PAGE = 100;
 interface SearchTokenPageProps {
   tokens: V3Token[];
   selectToken: (token: V3Token) => void;
 }
 const SearchTokenPage = ({ tokens, selectToken }: SearchTokenPageProps) => {
-  const [filteredTokens, setFilteredTokens] = useState<V3Token[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
-
-  useEffect(() => {
-    setFilteredTokens(tokens.slice(0, MAX_NUMBER_PER_PAGE));
-  }, [tokens]);
+  const [filterCSSStyle, setFilterCSSStyle] = useState<string>(``);
 
   const handleSearch = (value: string) => {
-    timeoutId && clearTimeout(timeoutId);
-    value = value.trim();
-
-    if (value === "") {
-      setFilteredTokens(tokens.slice(0, MAX_NUMBER_PER_PAGE));
-      setIsLoading(false);
-      return;
+    value = value.trim().toLowerCase();
+    if (!value) {
+      setFilterCSSStyle(``);
+    } else {
+      setFilterCSSStyle(
+        `.token-item:not([data-filter*="${value}"]) { display: none }`
+      );
     }
-
-    setIsLoading(true);
-
-    const _timeoutId = setTimeout(() => {
-      const fuse = new Fuse(tokens, {
-        includeScore: true,
-        keys: ["id", "name", "symbol"],
-      });
-
-      setFilteredTokens(fuse.search(value).map((d) => d.item) as V3Token[]);
-
-      timeoutId && clearTimeout(timeoutId);
-      setIsLoading(false);
-    }, 1000);
-
-    setTimeoutId(_timeoutId);
   };
 
   return (
     <>
+      <style>{filterCSSStyle}</style>
       <Container>
         <SearchInput
           onChange={(e) => handleSearch(e.target.value)}
@@ -149,16 +128,22 @@ const SearchTokenPage = ({ tokens, selectToken }: SearchTokenPageProps) => {
       )}
       {!isLoading && tokens.length > 0 && (
         <Scrollable>
-          {filteredTokens.map((token) => {
+          {tokens.map((token) => {
             return (
               <TokenItem
                 onClick={() => selectToken(token)}
                 id={`${token.symbol}_${token.name}_${token.id}`}
+                data-filter={`${token.id.toLowerCase()} ${token.symbol.toLowerCase()} ${token.name.toLowerCase()}`}
+                className="token-item"
               >
                 <img src={token.logoURI} alt={token.name} />
                 <div>
                   <h5>{token.symbol}</h5>
-                  <span>{token.name}</span>
+                  <span>
+                    {token.name.length >= 40
+                      ? `${token.name.slice(0, 40)}...`
+                      : token.name}
+                  </span>
                 </div>
               </TokenItem>
             );

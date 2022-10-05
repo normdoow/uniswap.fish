@@ -86,7 +86,7 @@ export const getTopTokenList = async (): Promise<V3Token[]> => {
   if (cacheData) return cacheData;
 
   const res = await queryUniswap(`{
-    tokens(skip: 0, first: 100, orderBy: volumeUSD, orderDirection: desc) {
+    tokens(skip: 0, first: 500, orderBy: volumeUSD, orderDirection: desc) {
       id
       name
       symbol
