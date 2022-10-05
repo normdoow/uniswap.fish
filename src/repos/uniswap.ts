@@ -120,7 +120,7 @@ export const getTopTokenList = async (): Promise<V3Token[]> => {
     })
     .filter((token) => token.symbol.length < 30);
 
-  lscache.set(cacheKey, result, 60);
+  lscache.set(cacheKey, result, 10);
   return result;
 };
 
