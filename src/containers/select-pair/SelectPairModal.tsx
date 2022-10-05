@@ -263,10 +263,14 @@ const SelectPairModal = () => {
 
     const [token0, token1] = sortToken(selectedTokens[0], selectedTokens[1]);
     const pool = selectedPool;
-    const poolTicks = await getPoolTicks(pool.id);
-    const token0PriceChart = await getPriceChart(token0.id);
-    const token1PriceChart = await getPriceChart(token1.id);
-    const volume24H = await getVolumn24H(pool.id);
+
+    const [poolTicks, token0PriceChart, token1PriceChart, volume24H] =
+      await Promise.all([
+        getPoolTicks(pool.id),
+        getPriceChart(token0.id),
+        getPriceChart(token1.id),
+        getVolumn24H(pool.id),
+      ]);
 
     appContext.dispatch({
       type: AppActionType.RESET_PAIR,

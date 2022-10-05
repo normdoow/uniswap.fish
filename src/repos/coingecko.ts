@@ -48,12 +48,15 @@ export const getPriceChart = async (
 
   if (!token) return null;
 
-  const marketChartRes = (await axios.get(
-    `https://api.coingecko.com/api/v3/coins/${token.id}/market_chart?vs_currency=usd&days=${queryPeriod}`
-  )) as any;
-  const currentPriceRes = (await axios.get(
-    `https://api.coingecko.com/api/v3/simple/price?ids=${token.id}&vs_currencies=usd`
-  )) as any;
+  const [marketChartRes, currentPriceRes] = await Promise.all([
+    axios.get(
+      `https://api.coingecko.com/api/v3/coins/${token.id}/market_chart?vs_currency=usd&days=${queryPeriod}`
+    ),
+    axios.get(
+      `https://api.coingecko.com/api/v3/simple/price?ids=${token.id}&vs_currencies=usd`
+    ),
+  ]);
+
   const prices = marketChartRes.data.prices.map(
     (d: any) =>
       ({
