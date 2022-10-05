@@ -15,7 +15,7 @@ export const getTokenLogoURL = (address: string): string => {
 
   if (imageURL) return imageURL;
 
-  return `https://via.placeholder.com/30`;
+  return `https://friconix.com/png/fi-cnsuxl-question-mark.png`;
 };
 
 export const sortToken = (token0: V3Token, token1: V3Token): V3Token[] => {
