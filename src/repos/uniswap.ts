@@ -44,10 +44,9 @@ export interface Tick {
   price0: string;
   price1: string;
 }
-const _getPoolTicks = async (
+const _getPoolTicksByPage = async (
   poolAddress: string,
-  result: Tick[],
-  page: number = 0
+  page: number
 ): Promise<Tick[]> => {
   const res = await queryUniswap(`{
     ticks(first: 1000, skip: ${
@@ -60,16 +59,26 @@ const _getPoolTicks = async (
     }
   }`);
 
-  if (res === undefined || res.ticks.length === 0) {
-    return result;
-  }
-
-  result = [...result, ...res.ticks];
-  return await _getPoolTicks(poolAddress, result, page + 1);
+  return res.ticks;
 };
 export const getPoolTicks = async (poolAddress: string): Promise<Tick[]> => {
-  const ticks = await _getPoolTicks(poolAddress, []);
-  return ticks;
+  const PAGE_SIZE = 3;
+  let result: Tick[] = [];
+  let page = 0;
+  while (true) {
+    const [pool1, pool2, pool3] = await Promise.all([
+      _getPoolTicksByPage(poolAddress, page),
+      _getPoolTicksByPage(poolAddress, page + 1),
+      _getPoolTicksByPage(poolAddress, page + 2),
+    ]);
+
+    result = [...pool1, ...pool2, ...pool3];
+    if (pool1.length === 0 || pool2.length === 0 || pool3.length === 0) {
+      break;
+    }
+    page += PAGE_SIZE;
+  }
+  return result;
 };
 
 export interface V3Token {
