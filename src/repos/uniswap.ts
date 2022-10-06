@@ -92,7 +92,15 @@ export interface V3Token {
 export const getTopTokenList = async (): Promise<V3Token[]> => {
   const cacheKey = `${currentNetwork.id}_getTopTokenList`;
   const cacheData = lscache.get(cacheKey);
-  if (cacheData) return cacheData;
+  const searchTokenPageItems = localStorage.getItem(
+    `SearchTokenPage_${currentNetwork.id}_tokens`
+  );
+  if (cacheData) {
+    if (searchTokenPageItems !== null) {
+      return [...cacheData, ...JSON.parse(searchTokenPageItems)];
+    }
+    return cacheData;
+  }
 
   const res = await queryUniswap(`{
     tokens(skip: 0, first: 500, orderBy: volumeUSD, orderDirection: desc) {
@@ -109,7 +117,7 @@ export const getTopTokenList = async (): Promise<V3Token[]> => {
   }
 
   const tokens = res.tokens as V3Token[];
-  const result = tokens
+  let result = tokens
     .map((token) => {
       token.logoURI = getTokenLogoURL(token.id);
       return token;
@@ -130,7 +138,29 @@ export const getTopTokenList = async (): Promise<V3Token[]> => {
     .filter((token) => token.symbol.length < 30);
 
   lscache.set(cacheKey, result, 10);
+  if (searchTokenPageItems !== null) {
+    result = [...result, ...JSON.parse(searchTokenPageItems)];
+  }
+
   return result;
+};
+
+export const getToken = async (id: string): Promise<V3Token> => {
+  const res = await queryUniswap(`{
+    token(id: "${id.toLowerCase()}") {
+      id
+      name
+      symbol
+      volumeUSD
+      decimals
+    }
+  }`);
+
+  if (res.token !== null) {
+    res.token.logoURI = getTokenLogoURL(res.token.id);
+  }
+
+  return res.token;
 };
 
 export interface Pool {

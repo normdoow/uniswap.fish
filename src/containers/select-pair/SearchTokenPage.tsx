@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { V3Token } from "../../repos/uniswap";
+import { currentNetwork, getToken, V3Token } from "../../repos/uniswap";
 import ReactLoading from "react-loading";
 import Web3 from "web3";
+import { getTokenLogoURL } from "../../utils/helper";
 
 const Container = styled.div`
   width: 370px;
@@ -95,13 +96,23 @@ const TokenItem = styled.div`
 interface SearchTokenPageProps {
   tokens: V3Token[];
   selectToken: (token: V3Token) => void;
+  refetchTokens: any;
 }
-const SearchTokenPage = ({ tokens, selectToken }: SearchTokenPageProps) => {
+const SearchTokenPage = ({
+  tokens: _tokens,
+  selectToken,
+  refetchTokens,
+}: SearchTokenPageProps) => {
+  const [tokens, setTokens] = useState<V3Token[]>(_tokens);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isTokenNotFound, setIsTokenNotFound] = useState<boolean>(false);
   const [filterCSSStyle, setFilterCSSStyle] = useState<string>(``);
   const [searchDataFilter, setSearchDataFilter] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
+
+  useEffect(() => {
+    setTokens(_tokens);
+  }, [_tokens]);
 
   useEffect(() => {
     setSearchDataFilter(
@@ -110,10 +121,11 @@ const SearchTokenPage = ({ tokens, selectToken }: SearchTokenPageProps) => {
           `${token.id.toLowerCase()} ${token.symbol.toLowerCase()} ${token.name.toLowerCase()}`
       )
     );
-  }, []);
+  }, [tokens]);
 
-  const handleSearch = (value: string) => {
+  const handleSearch = async (value: string) => {
     setIsTokenNotFound(false);
+    setIsLoading(false);
     setSearchValue(value);
 
     value = value.trim().toLowerCase();
@@ -127,9 +139,38 @@ const SearchTokenPage = ({ tokens, selectToken }: SearchTokenPageProps) => {
       const count = searchDataFilter.filter(
         (x) => x.indexOf(value) !== -1
       ).length;
-      if (count === 0) {
-        setIsTokenNotFound(true);
+      if (count > 0) return;
+
+      if (Web3.utils.isAddress(value)) {
+        setIsLoading(true);
+        const token = await getToken(value);
+        setIsLoading(false);
+
+        if (!token) {
+          setIsTokenNotFound(true);
+          return;
+        }
+
+        setIsTokenNotFound(false);
+        setTokens([...tokens, token]);
+
+        // save token in localStorage for later use
+        const key = `SearchTokenPage_${currentNetwork.id}_tokens`;
+        const items = localStorage.getItem(key);
+        if (items === null) {
+          localStorage.setItem(key, JSON.stringify([token]));
+        } else {
+          localStorage.setItem(
+            key,
+            JSON.stringify([...JSON.parse(items), token])
+          );
+        }
+        refetchTokens();
+
+        return;
       }
+
+      setIsTokenNotFound(true);
     }
   };
 

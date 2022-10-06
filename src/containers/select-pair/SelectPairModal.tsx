@@ -446,6 +446,9 @@ const SelectPairModal = () => {
               <span>Select Token</span>
             </GoBack>
             <SearchTokenPage
+              refetchTokens={() => {
+                fetchTokens();
+              }}
               selectToken={selectToken}
               tokens={appContext.state.tokenList}
             />
