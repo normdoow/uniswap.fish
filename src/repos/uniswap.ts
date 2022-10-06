@@ -72,7 +72,7 @@ export const getPoolTicks = async (poolAddress: string): Promise<Tick[]> => {
       _getPoolTicksByPage(poolAddress, page + 2),
     ]);
 
-    result = [...pool1, ...pool2, ...pool3];
+    result = [...result, ...pool1, ...pool2, ...pool3];
     if (pool1.length === 0 || pool2.length === 0 || pool3.length === 0) {
       break;
     }
