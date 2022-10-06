@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { V3Token } from "../../repos/uniswap";
 import ReactLoading from "react-loading";
-import { useEffect } from "react";
-import Fuse from "fuse.js";
+import Web3 from "web3";
 
 const Container = styled.div`
   width: 370px;
@@ -13,6 +12,12 @@ const Container = styled.div`
     width: calc(100vw - 30px);
     padding: 10px;
   }
+`;
+const NotFound = styled.div`
+  color: #777;
+  font-size: 0.8rem;
+  text-align: center;
+  margin-top: 30px;
 `;
 const SearchInput = styled.input`
   border: 0;
@@ -93,9 +98,24 @@ interface SearchTokenPageProps {
 }
 const SearchTokenPage = ({ tokens, selectToken }: SearchTokenPageProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isTokenNotFound, setIsTokenNotFound] = useState<boolean>(false);
   const [filterCSSStyle, setFilterCSSStyle] = useState<string>(``);
+  const [searchDataFilter, setSearchDataFilter] = useState<string[]>([]);
+  const [searchValue, setSearchValue] = useState<string>("");
+
+  useEffect(() => {
+    setSearchDataFilter(
+      tokens.map(
+        (token) =>
+          `${token.id.toLowerCase()} ${token.symbol.toLowerCase()} ${token.name.toLowerCase()}`
+      )
+    );
+  }, []);
 
   const handleSearch = (value: string) => {
+    setIsTokenNotFound(false);
+    setSearchValue(value);
+
     value = value.trim().toLowerCase();
     if (!value) {
       setFilterCSSStyle(``);
@@ -103,6 +123,13 @@ const SearchTokenPage = ({ tokens, selectToken }: SearchTokenPageProps) => {
       setFilterCSSStyle(
         `.token-item:not([data-filter*="${value}"]) { display: none }`
       );
+
+      const count = searchDataFilter.filter(
+        (x) => x.indexOf(value) !== -1
+      ).length;
+      if (count === 0) {
+        setIsTokenNotFound(true);
+      }
     }
   };
 
@@ -155,6 +182,17 @@ const SearchTokenPage = ({ tokens, selectToken }: SearchTokenPageProps) => {
               </TokenItem>
             );
           })}
+          {isTokenNotFound && (
+            <NotFound>
+              No results found.
+              {!Web3.utils.isAddress(searchValue) && (
+                <>
+                  <br />
+                  Try pasting the token address in the search bar.
+                </>
+              )}
+            </NotFound>
+          )}
         </Scrollable>
       )}
     </>
