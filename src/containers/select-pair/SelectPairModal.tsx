@@ -156,6 +156,7 @@ const NetworkItem = styled.div`
   border: 1px solid #333;
   border-radius: 15px;
   padding: 10px 15px;
+  position: relative;
 
   @media only screen and (max-width: 400px) {
     width: calc(100vw - 50px);
@@ -178,6 +179,18 @@ const NetworkItem = styled.div`
       font-weight: normal;
       font-size: 1rem;
       color: white;
+
+      & > span {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        background: #fd0000;
+        color: white;
+        font-size: 0.6rem;
+        padding: 3px 5px;
+        border-radius: 5px;
+        font-weight: bold;
+      }
     }
     & span {
       font-size: 0.8rem;
@@ -424,7 +437,9 @@ const SelectPairModal = () => {
                 >
                   <img src={network.logoURI} alt={network.name} />
                   <div>
-                    <h5>{network.name}</h5>
+                    <h5>
+                      {network.name} {network.isNew && <span>NEW</span>}
+                    </h5>
                     <span>{network.desc}</span>
                   </div>
                 </NetworkItem>

@@ -4,6 +4,7 @@ export interface Network {
   desc: string;
   logoURI: string;
   disabled?: boolean;
+  isNew?: boolean;
   subgraphEndpoint: string;
 }
 export const NETWORKS: Network[] = [
@@ -39,6 +40,7 @@ export const NETWORKS: Network[] = [
     desc: "Celo Mainnet",
     disabled: false,
     logoURI: "celo.svg",
+    isNew: true,
     subgraphEndpoint:
       "https://api.thegraph.com/subgraphs/name/jesse-sawa/uniswap-celo",
   },
