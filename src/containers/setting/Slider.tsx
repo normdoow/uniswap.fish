@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import ReactSlider from "react-slider";
+import { ScreenWidth } from "../../utils/styled";
 
 const StyledSlider = styled(ReactSlider)`
   width: 100%;
@@ -15,6 +16,14 @@ const StyledThumb = styled.div`
   cursor: grab;
   border-radius: 3px;
   transform: translateY(calc(3px / 2 + -20px / 2));
+
+  @media only screen and (max-width: ${ScreenWidth.TABLET}px) {
+    width: 10px;
+  }
+  @media only screen and (max-width: ${ScreenWidth.MOBILE}px) {
+    width: 20px;
+    border-radius: 50%;
+  }
 `;
 const StyledTrack = styled.div`
   top: 0;
