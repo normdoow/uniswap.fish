@@ -5,7 +5,11 @@ import { useModalContext } from "../../context/modal/modalContext";
 import { Heading } from "../../common/atomic";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowLeft,
+  faChevronDown,
+  faTimes,
+} from "@fortawesome/free-solid-svg-icons";
 import { PrimaryBlockButton } from "../../common/buttons";
 import { useState } from "react";
 import {
@@ -212,6 +216,19 @@ const Logo = styled.h1`
   & > span {
     font-size: 1.4rem;
     margin-right: 7px;
+  }
+  & > div {
+    position: absolute;
+    right: 20px;
+    cursor: pointer;
+    color: #ccc;
+    &:hover {
+      color: white;
+    }
+
+    @media only screen and (max-width: 400px) {
+      right: 15px;
+    }
   }
 
   @media only screen and (max-width: 400px) {
@@ -473,6 +490,18 @@ const SelectPairModal = () => {
           <>
             <Logo>
               <span>🦄</span> UniswapCalculator
+              {appContext.state.token0 && !isSubmitLoading && (
+                <div
+                  onClick={() =>
+                    modalContext.dispatch({
+                      type: ModalActionType.SET_SELECT_PAIR_MODAL_STATE,
+                      payload: false,
+                    })
+                  }
+                >
+                  <FontAwesomeIcon icon={faTimes} />
+                </div>
+              )}
             </Logo>
             <Container>
               <Heading>Select Network</Heading>
