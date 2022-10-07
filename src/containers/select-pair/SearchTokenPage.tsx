@@ -215,10 +215,10 @@ const SearchTokenPage = ({
                 />
                 <div>
                   <h5>
-                    {token.symbol}{" "}
-                    {getCoingeckoToken(token.id) !== null
+                    {token.symbol}
+                    {/* DEBUG: {getCoingeckoToken(token.id) !== null
                       ? getCoingeckoToken(token.id)?.id
-                      : "NOT"}
+                      : "NOT"} */}
                   </h5>
                   <span>
                     {token.name.length >= 35
