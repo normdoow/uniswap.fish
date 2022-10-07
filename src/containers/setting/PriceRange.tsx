@@ -4,6 +4,7 @@ import { Heading } from "../../common/atomic";
 import { useAppContext } from "../../context/app/appContext";
 import { AppActionType } from "../../context/app/appReducer";
 import { divideArray, findMax, findMin } from "../../utils/math";
+import { ScreenWidth } from "../../utils/styled";
 import Slider from "./Slider";
 
 const Group = styled.div`
@@ -42,6 +43,11 @@ const InputGroup = styled.div`
     font-weight: bold;
     &:hover {
       background: white;
+    }
+
+    @media only screen and (max-width: ${ScreenWidth.TABLET}px) {
+      width: 17.5px;
+      height: 17.5px;
     }
   }
   & .btn-left {
