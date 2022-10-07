@@ -26,12 +26,12 @@ body {
 @media only screen and (max-width: 930px) {
   body {
     background: radial-gradient(
-        circle closest-corner at -30% 60vh,
+        circle closest-corner at -20% 60vh,
         rgba(40, 72, 122, 0.85),
         transparent
       ),
       radial-gradient(
-        circle closest-corner at 140% 60vh,
+        circle closest-corner at 135% 60vh,
         rgba(138, 41, 129, 0.7),
         transparent
       );
@@ -41,7 +41,7 @@ body {
 @media only screen and (max-width: 576px) {
   body {
     background: radial-gradient(
-        circle closest-corner at -130% 60vh,
+        circle closest-corner at -120% 60vh,
         rgba(40, 72, 122, 0.85),
         transparent
       ),
