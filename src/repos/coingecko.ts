@@ -15,7 +15,7 @@ export interface Token {
   id: string;
   name: string;
 }
-const getToken = (contractAddress: string): Token | null => {
+export const getCoingeckoToken = (contractAddress: string): Token | null => {
   const mapper = tokenAddressMapping as { [key: string]: any };
   const currentPlatform = currentNetwork.id;
   const result = mapper[currentPlatform][contractAddress];
@@ -44,7 +44,7 @@ export const getPriceChart = async (
   contractAddress: string,
   queryPeriod: QueryPeriodEnum = QueryPeriodEnum.ONE_MONTH
 ): Promise<PriceChart | null> => {
-  const token = getToken(contractAddress);
+  const token = getCoingeckoToken(contractAddress);
 
   if (!token) return null;
 

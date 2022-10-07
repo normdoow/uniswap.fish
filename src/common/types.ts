@@ -34,6 +34,15 @@ export const NETWORKS: Network[] = [
       "https://api.thegraph.com/subgraphs/name/ianlapham/optimism-post-regenesis",
   },
   {
+    id: "celo",
+    name: "Celo",
+    desc: "Celo Mainnet",
+    disabled: false,
+    logoURI: "celo.svg",
+    subgraphEndpoint:
+      "https://api.thegraph.com/subgraphs/name/jesse-sawa/uniswap-celo",
+  },
+  {
     id: "arbitrum",
     name: "Arbitrum",
     desc: "Arbitrum Mainnet (L2)",

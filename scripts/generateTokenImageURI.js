@@ -14,6 +14,7 @@ const URLS = [
   "https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/set.tokenlist.json",
   "https://static.optimism.io/optimism.tokenlist.json",
   "https://bridge.arbitrum.io/token-list-42161.json",
+  "https://celo-org.github.io/celo-token-list/celo.tokenlist.json",
 ];
 
 Promise.all(URLS.map((url) => axios.get(url)))

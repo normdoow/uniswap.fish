@@ -44,6 +44,27 @@ const SKIP_PLATFORMS = [
   "waves",
 ];
 
+const CUSTOM_TOKENS = {
+  celo: {
+    "0x37f750b7cc259a2f741af45294f6a16572cf5cad": {
+      id: "usd-coin-pos-wormhole",
+      name: "USD Coin (PoS) (Wormhole) (USDCPO)",
+    },
+    "0x02de4766c272abc10bc88c220d214a26960a7e92": {
+      id: "toucan-protocol-nature-carbon-tonne",
+      name: "Toucan Protocol: Nature Carbon Tonne (NCT)",
+    },
+    "0x66803fb87abd4aac3cbb3fad7c3aa01f6f3fb207": {
+      id: "wrapped-ether-celer",
+      name: "Wrapped Ether - Celer (CEWETH)",
+    },
+    "0xd71ffd0940c920786ec4dbb5a12306669b5b81ef": {
+      id: "wrapped-bitcoin",
+      name: "Wrapped Bitcoin (WBTC)",
+    },
+  },
+};
+
 const _renameKeys = (obj, newKeys) => {
   const keyValues = Object.keys(obj).map((key) => {
     const newKey = newKeys[key] || key;
@@ -69,6 +90,10 @@ const process = (data) => {
     "polygon-pos": "polygon",
     "optimistic-ethereum": "optimism",
     "arbitrum-one": "arbitrum",
+  });
+
+  Object.keys(CUSTOM_TOKENS).forEach((platform) => {
+    result[platform] = { ...result[platform], ...CUSTOM_TOKENS[platform] };
   });
 
   return result;

@@ -4,6 +4,7 @@ import { currentNetwork, getToken, V3Token } from "../../repos/uniswap";
 import ReactLoading from "react-loading";
 import Web3 from "web3";
 import { getTokenLogoURL } from "../../utils/helper";
+import { getCoingeckoToken } from "../../repos/coingecko";
 
 const Container = styled.div`
   width: 370px;
@@ -213,10 +214,15 @@ const SearchTokenPage = ({
                   }}
                 />
                 <div>
-                  <h5>{token.symbol}</h5>
+                  <h5>
+                    {token.symbol}{" "}
+                    {getCoingeckoToken(token.id) !== null
+                      ? getCoingeckoToken(token.id)?.id
+                      : "NOT"}
+                  </h5>
                   <span>
-                    {token.name.length >= 40
-                      ? `${token.name.slice(0, 40)}...`
+                    {token.name.length >= 35
+                      ? `${token.name.slice(0, 35)}...`
                       : token.name}
                   </span>
                 </div>
