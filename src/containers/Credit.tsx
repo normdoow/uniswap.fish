@@ -60,11 +60,11 @@ const Credit = () => {
           How it works?
         </a>
         <a
-          href="https://github.com/chunza2542/uniswap.fish/issues"
+          href="https://github.com/chunza2542/uniswap.fish"
           rel="noreferrer"
           target="_blank"
         >
-          Report a bug or request a feature
+          Source Code (Github)
         </a>
         <a href="mailto:hello@uniswap.fish">Contact: hello@uniswap.fish</a>
       </div>
