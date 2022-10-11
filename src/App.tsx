@@ -12,12 +12,8 @@ import Setting from "./containers/setting/Setting";
 import { ScreenWidth } from "./utils/styled";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FeedbackButton } from "./common/buttons";
-import {
-  faBug,
-  faCommentDots,
-  faFlag,
-  faSmileWink,
-} from "@fortawesome/free-solid-svg-icons";
+import { useAppContext } from "./context/app/appContext";
+import { faBug } from "@fortawesome/free-solid-svg-icons";
 // import { useModalContext } from "./context/modal/modalContext";
 // import AnnoucementModal from "./containers/AnnoucementModal";
 // import { ModalActionType } from "./context/modal/modalReducer";
@@ -45,6 +41,7 @@ const ContentContainer = styled.div`
 `;
 
 function App() {
+  const { state } = useAppContext();
   // const { state, dispatch } = useModalContext();
 
   // useEffect(() => {
@@ -61,6 +58,18 @@ function App() {
       <SelectPairModal />
       <FeedbackButton
         onClick={() => {
+          window.freddyWidget.setOptions({
+            custom_fields: {
+              app_context: JSON.stringify({
+                token0: state.token0?.id,
+                token1: state.token1?.id,
+                pool: state.pool?.id,
+                depositAmount: state.depositAmountValue,
+                priceRange: state.priceRangeValue,
+                mostActivePrice: state.priceAssumptionValue,
+              }),
+            },
+          });
           window.freddyWidget.show();
         }}
       >
