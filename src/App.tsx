@@ -59,7 +59,11 @@ function App() {
   return (
     <>
       <SelectPairModal />
-      <FeedbackButton>
+      <FeedbackButton
+        onClick={() => {
+          window.freddyWidget.show();
+        }}
+      >
         <FontAwesomeIcon icon={faBug} />
       </FeedbackButton>
       {/* <AnnoucementModal /> */}
