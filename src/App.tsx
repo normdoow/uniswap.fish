@@ -10,6 +10,14 @@ import LiquidityPositionChart from "./containers/LiquidityPositionChart";
 import SelectPairModal from "./containers/select-pair/SelectPairModal";
 import Setting from "./containers/setting/Setting";
 import { ScreenWidth } from "./utils/styled";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FeedbackButton } from "./common/buttons";
+import {
+  faBug,
+  faCommentDots,
+  faFlag,
+  faSmileWink,
+} from "@fortawesome/free-solid-svg-icons";
 // import { useModalContext } from "./context/modal/modalContext";
 // import AnnoucementModal from "./containers/AnnoucementModal";
 // import { ModalActionType } from "./context/modal/modalReducer";
@@ -51,6 +59,9 @@ function App() {
   return (
     <>
       <SelectPairModal />
+      <FeedbackButton>
+        <FontAwesomeIcon icon={faBug} />
+      </FeedbackButton>
       {/* <AnnoucementModal /> */}
       {/* <DonateModal /> */}
       <Navbar />
