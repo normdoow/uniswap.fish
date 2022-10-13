@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FeedbackButton } from "./common/buttons";
 import { useAppContext } from "./context/app/appContext";
 import { faBug } from "@fortawesome/free-solid-svg-icons";
+import { currentNetwork } from "./repos/uniswap";
 // import { useModalContext } from "./context/modal/modalContext";
 // import AnnoucementModal from "./containers/AnnoucementModal";
 // import { ModalActionType } from "./context/modal/modalReducer";
@@ -58,16 +59,21 @@ function App() {
       <SelectPairModal />
       <FeedbackButton
         onClick={() => {
+          const app_context = {
+            token0: state.token0?.id,
+            token1: state.token1?.id,
+            chain: currentNetwork.id,
+            pool: state.pool?.id,
+            depositAmount: state.depositAmountValue,
+            priceRange: state.priceRangeValue,
+            mostActivePrice: state.priceAssumptionValue,
+          };
+          if (process.env.NODE_ENV === "development") {
+            return console.log({ app_context });
+          }
           window.freddyWidget.setOptions({
             custom_fields: {
-              app_context: JSON.stringify({
-                token0: state.token0?.id,
-                token1: state.token1?.id,
-                pool: state.pool?.id,
-                depositAmount: state.depositAmountValue,
-                priceRange: state.priceRangeValue,
-                mostActivePrice: state.priceAssumptionValue,
-              }),
+              app_context: JSON.stringify(app_context),
             },
           });
           window.freddyWidget.show();
