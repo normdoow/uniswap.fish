@@ -3,8 +3,9 @@ import styled from "styled-components";
 import { currentNetwork, getToken, V3Token } from "../../repos/uniswap";
 import ReactLoading from "react-loading";
 import Web3 from "web3";
-import { getTokenLogoURL } from "../../utils/helper";
-import { getCoingeckoToken } from "../../repos/coingecko";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCopy } from "@fortawesome/free-solid-svg-icons";
+import ReactTooltip from "react-tooltip";
 
 const Container = styled.div`
   width: 370px;
@@ -93,6 +94,38 @@ const TokenItem = styled.div`
     }
   }
 `;
+const TokenItemWrapper = styled.div`
+  position: relative;
+
+  & > button {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 35px;
+    height: 35px;
+    background: rgba(255, 255, 255, 0);
+    border-radius: 50%;
+
+    border: 0;
+    color: #777;
+    cursor: pointer;
+    font-size: 1.075rem;
+
+    &:hover {
+      color: #999;
+      background: rgba(255, 255, 255, 0.075);
+    }
+    &:active {
+      color: #ccc;
+      background: rgba(255, 255, 255, 0.125);
+    }
+
+    @media only screen and (max-width: 400px) {
+      right: 10px;
+    }
+  }
+`;
 
 interface SearchTokenPageProps {
   tokens: V3Token[];
@@ -178,6 +211,7 @@ const SearchTokenPage = ({
   return (
     <>
       <style>{filterCSSStyle}</style>
+      <ReactTooltip place="left" />
       <Container>
         <SearchInput
           onChange={(e) => handleSearch(e.target.value)}
@@ -199,34 +233,44 @@ const SearchTokenPage = ({
         <Scrollable>
           {tokens.map((token) => {
             return (
-              <TokenItem
-                onClick={() => selectToken(token)}
-                id={`${token.symbol}_${token.name}_${token.id}`}
-                data-filter={`${token.id.toLowerCase()} ${token.symbol.toLowerCase()} ${token.name.toLowerCase()}`}
-                className="token-item"
-              >
-                <img
-                  src={token.logoURI}
-                  alt={token.name}
-                  onError={(e: any) => {
-                    e.target.src =
-                      "https://friconix.com/png/fi-cnsuxl-question-mark.png";
-                  }}
-                />
-                <div>
-                  <h5>
-                    {token.symbol}
-                    {/* DEBUG: {getCoingeckoToken(token.id) !== null
+              <TokenItemWrapper>
+                <TokenItem
+                  onClick={() => selectToken(token)}
+                  id={`${token.symbol}_${token.name}_${token.id}`}
+                  data-filter={`${token.id.toLowerCase()} ${token.symbol.toLowerCase()} ${token.name.toLowerCase()}`}
+                  className="token-item"
+                >
+                  <img
+                    src={token.logoURI}
+                    alt={token.name}
+                    onError={(e: any) => {
+                      e.target.src =
+                        "https://friconix.com/png/fi-cnsuxl-question-mark.png";
+                    }}
+                  />
+                  <div>
+                    <h5>
+                      {token.symbol}
+                      {/* DEBUG: {getCoingeckoToken(token.id) !== null
                       ? getCoingeckoToken(token.id)?.id
                       : "NOT"} */}
-                  </h5>
-                  <span>
-                    {token.name.length >= 35
-                      ? `${token.name.slice(0, 35)}...`
-                      : token.name}
-                  </span>
-                </div>
-              </TokenItem>
+                    </h5>
+                    <span>
+                      {token.name.length >= 35
+                        ? `${token.name.slice(0, 35)}...`
+                        : token.name}
+                    </span>
+                  </div>
+                </TokenItem>
+                <button
+                  data-tip="Copy token address"
+                  onClick={() => {
+                    navigator.clipboard.writeText(token.id);
+                  }}
+                >
+                  <FontAwesomeIcon icon={faCopy} />
+                </button>
+              </TokenItemWrapper>
             );
           })}
           {isTokenNotFound && (
