@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useEffect } from "react";
 import styled from "styled-components";
 import { Heading } from "../../common/atomic";
@@ -87,6 +88,8 @@ const MinMaxPriceContainer = styled.div`
 
 const PriceRange = () => {
   const { state, dispatch } = useAppContext();
+  const [activePriceAssumptionSlider, setActivePriceAssumptionSlider] =
+    useState(0);
 
   const prices = divideArray(
     (state.token1PriceChart?.prices || []).map((p) => p.value),
@@ -105,7 +108,7 @@ const PriceRange = () => {
 
   const min = Math.max(0, _min - margin);
   const max = _max + margin;
-  const step = (max - min) / 10000000;
+  const step = 0.000001;
   const btnStep = ((max - min) * 2) / 100; // 2%
 
   useEffect(() => {
@@ -121,6 +124,13 @@ const PriceRange = () => {
       payload: [_min, _max],
     });
   }, [state.pool]);
+
+  useEffect(() => {
+    // percent = 100 * (price - min) / (max - min)
+    setActivePriceAssumptionSlider(
+      (100 * (state.priceAssumptionValue - min)) / (max - min)
+    );
+  }, [state.priceAssumptionValue]);
 
   return (
     <div>
@@ -261,6 +271,7 @@ const PriceRange = () => {
           >
             <span>+</span>
           </div>
+
           <span>Most Active Price Assumption</span>
           <Input
             value={state.priceAssumptionValue || 0}
@@ -281,14 +292,16 @@ const PriceRange = () => {
         </InputGroup>
         <Slider
           thumbClassName="thumb-red"
-          value={state.priceAssumptionValue}
-          min={min}
-          max={max}
+          value={activePriceAssumptionSlider}
+          min={0}
+          max={100}
           step={step}
           onChange={(value, _) => {
+            setActivePriceAssumptionSlider(value);
+
             dispatch({
               type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE,
-              payload: value,
+              payload: min + ((max - min) * value) / 100,
             });
           }}
         />
