@@ -85,10 +85,8 @@ const LiquidityPositionChart = () => {
           Number(ticks[i].liquidityNet),
       });
     }
-    const avg = liquidity.reduce((a, b) => a + b.y, 0) / liquidity.length;
     const result = liquidity.filter(
-      (b) =>
-        avg / b.y <= 15 && b.y > 0 && b.x0 >= minimumTick && b.x0 <= maximumTick
+      (b) => b.y > 0 && b.x0 >= minimumTick && b.x0 <= maximumTick
     );
     if (result.length === 0) {
       return { minTick: 0, maxTick: 0 };
