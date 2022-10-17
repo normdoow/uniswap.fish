@@ -233,13 +233,12 @@ const SearchTokenPage = ({
         <Scrollable>
           {tokens.map((token) => {
             return (
-              <TokenItemWrapper>
-                <TokenItem
-                  onClick={() => selectToken(token)}
-                  id={`${token.symbol}_${token.name}_${token.id}`}
-                  data-filter={`${token.id.toLowerCase()} ${token.symbol.toLowerCase()} ${token.name.toLowerCase()}`}
-                  className="token-item"
-                >
+              <TokenItemWrapper
+                id={`${token.symbol}_${token.name}_${token.id}`}
+                data-filter={`${token.id.toLowerCase()} ${token.symbol.toLowerCase()} ${token.name.toLowerCase()}`}
+                className="token-item"
+              >
+                <TokenItem onClick={() => selectToken(token)}>
                   <img
                     src={token.logoURI}
                     alt={token.name}
