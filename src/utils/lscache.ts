@@ -175,7 +175,7 @@ function calculateMaxDate(expiryMilliseconds: number) {
   return Math.floor(8.64e15 / expiryMilliseconds);
 }
 
-export default {
+const lscacheModule = {
   /**
    * Stores the value in localStorage. Expires after specified number of minutes.
    * @param {string} key
@@ -384,3 +384,5 @@ export default {
     warnings = enabled;
   },
 };
+
+export default lscacheModule;

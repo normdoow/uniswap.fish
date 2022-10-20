@@ -124,20 +124,20 @@ const PriceRange = () => {
       type: AppActionType.UPDATE_PRICE_RANGE,
       payload: [_min, _max],
     });
-  }, [state.pool]);
+  }, [state.pool, _min, _max, currentPrice, dispatch]);
 
   useEffect(() => {
     // percent = 100 * (price - min) / (max - min)
     setActivePriceAssumptionSlider(
       (100 * (state.priceAssumptionValue - min)) / (max - min)
     );
-  }, [state.priceAssumptionValue]);
+  }, [state.priceAssumptionValue, min, max]);
   useEffect(() => {
     setPriceRangeSlider([
       (100 * (state.priceRangeValue[0] - min)) / (max - min),
       (100 * (state.priceRangeValue[1] - min)) / (max - min),
     ]);
-  }, [state.priceRangeValue]);
+  }, [state.priceRangeValue, min, max]);
 
   return (
     <div>
