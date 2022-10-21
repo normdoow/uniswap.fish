@@ -147,7 +147,7 @@ export const calculateFee = (
   return feeTier * volume24H * liquidityPercentage;
 };
 
-// Private functions
+// private helper functions
 const encodePriceSqrt = (price: number | string | bn): bn => {
   return new bn(price).sqrt().multipliedBy(new bn(2).pow(96)).integerValue(3);
 };

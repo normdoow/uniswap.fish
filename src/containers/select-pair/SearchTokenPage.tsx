@@ -131,7 +131,7 @@ const TokenItemWrapper = styled.div`
 interface SearchTokenPageProps {
   tokens: Token[];
   selectToken: (token: Token) => void;
-  refetchTokens: any;
+  refetchTokens: () => void;
 }
 const SearchTokenPage = ({
   tokens: _tokens,

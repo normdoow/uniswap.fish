@@ -16,7 +16,7 @@ import {
   getPoolFromPair,
   getPoolTicks,
   getTopTokenList,
-  getVolumn24H,
+  getAvgTradingVolume,
   updateNetwork,
 } from "../../repos/uniswap";
 import SearchTokenPage from "./SearchTokenPage";
@@ -238,6 +238,7 @@ const Logo = styled.h1`
     padding: 15px 10px;
   }
 `;
+
 const FEE_TIER_STYLES = {
   DISABLE: {
     cursor: "not-allowed",
@@ -248,6 +249,7 @@ const FEE_TIER_STYLES = {
     background: "rgba(38, 109, 221, 0.25)",
   },
 };
+
 const SelectPairModal = () => {
   const appContext = useAppContext();
   const modalContext = useModalContext();
@@ -302,7 +304,7 @@ const SelectPairModal = () => {
         getPoolTicks(pool.id),
         getPriceChart(token0.id),
         getPriceChart(token1.id),
-        getVolumn24H(pool.id),
+        getAvgTradingVolume(pool.id),
       ]);
 
     appContext.dispatch({

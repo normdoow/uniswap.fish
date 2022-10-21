@@ -8,6 +8,7 @@ import {
   Tick,
   Token,
 } from "../common/interfaces/uniswap.interface";
+import { averageArray } from "../utils/math";
 
 // TODO: Refactor this
 export let currentNetwork = NETWORKS[0];
@@ -16,40 +17,28 @@ export const updateNetwork = (network: Network) => {
   currentNetwork = network;
 };
 
-const queryUniswap = async (query: string): Promise<any> => {
-  const { data } = await axios({
-    url: currentNetwork.subgraphEndpoint,
-    method: "post",
-    data: {
-      query,
-    },
-  });
-
-  return data.data;
-};
-
-export const getVolumn24H = async (poolAddress: string): Promise<number> => {
-  const { poolDayDatas } = await queryUniswap(`{
-    poolDayDatas(skip: 1, first: 7, orderBy: date, orderDirection: desc, where:{pool: "${poolAddress}"}) {
+export const getAvgTradingVolume = async (
+  poolAddress: string,
+  numberOfDays: number = 7
+): Promise<number> => {
+  const { poolDayDatas } = await _queryUniswap(`{
+    poolDayDatas(skip: 1, first: ${numberOfDays}, orderBy: date, orderDirection: desc, where:{pool: "${poolAddress}"}) {
       volumeUSD
     }
   }`);
 
-  const data = poolDayDatas.map((d: { volumeUSD: string }) =>
+  const volumes = poolDayDatas.map((d: { volumeUSD: string }) =>
     Number(d.volumeUSD)
   );
 
-  return (
-    data.reduce((result: number, curr: number) => result + curr, 0) /
-    data.length
-  );
+  return averageArray(volumes);
 };
 
 const _getPoolTicksByPage = async (
   poolAddress: string,
   page: number
 ): Promise<Tick[]> => {
-  const res = await queryUniswap(`{
+  const res = await _queryUniswap(`{
     ticks(first: 1000, skip: ${
       page * 1000
     }, where: { poolAddress: "${poolAddress}" }, orderBy: tickIdx) {
@@ -95,7 +84,7 @@ export const getTopTokenList = async (): Promise<Token[]> => {
     return cacheData;
   }
 
-  const res = await queryUniswap(`{
+  const res = await _queryUniswap(`{
     tokens(skip: 0, first: 500, orderBy: volumeUSD, orderDirection: desc) {
       id
       name
@@ -110,6 +99,7 @@ export const getTopTokenList = async (): Promise<Token[]> => {
   }
 
   const tokens = res.tokens as Token[];
+  // TODO: Refactor this with getToken
   let result = tokens
     .map((token) => {
       token.logoURI = getTokenLogoURL(token.id);
@@ -130,7 +120,7 @@ export const getTopTokenList = async (): Promise<Token[]> => {
     })
     .filter((token) => token.symbol.length < 30);
 
-  lscache.set(cacheKey, result, 10);
+  lscache.set(cacheKey, result, 10); // 10 mins
   if (searchTokenPageItems !== null) {
     result = [...result, ...JSON.parse(searchTokenPageItems)];
   }
@@ -138,9 +128,9 @@ export const getTopTokenList = async (): Promise<Token[]> => {
   return result;
 };
 
-export const getToken = async (id: string): Promise<Token> => {
-  const res = await queryUniswap(`{
-    token(id: "${id.toLowerCase()}") {
+export const getToken = async (tokenAddress: string): Promise<Token> => {
+  const res = await _queryUniswap(`{
+    token(id: "${tokenAddress.toLowerCase()}") {
       id
       name
       symbol
@@ -162,7 +152,7 @@ export const getPoolFromPair = async (
 ): Promise<Pool[]> => {
   const sortedTokens = sortTokens(token0, token1);
 
-  const { pools } = await queryUniswap(`{
+  const { pools } = await _queryUniswap(`{
     pools(orderBy: feeTier, where: {
         token0: "${sortedTokens[0].id}",
         token1: "${sortedTokens[1].id}"}) {
@@ -177,4 +167,17 @@ export const getPoolFromPair = async (
   }`);
 
   return pools as Pool[];
+};
+
+// private helper functions
+const _queryUniswap = async (query: string): Promise<any> => {
+  const { data } = await axios({
+    url: currentNetwork.subgraphEndpoint,
+    method: "post",
+    data: {
+      query,
+    },
+  });
+
+  return data.data;
 };
