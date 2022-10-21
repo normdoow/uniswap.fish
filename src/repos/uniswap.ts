@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Network, NETWORKS } from "../common/types";
+import { Network, NETWORKS } from "../common/network";
 import { getTokenLogoURL, sortToken } from "../utils/helper";
 import lscache from "../utils/lscache";
 

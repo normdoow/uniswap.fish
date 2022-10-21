@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { Heading } from "../common/atomic";
+import { Heading } from "../common/components";
 import { PriceChart } from "../repos/coingecko";
 import D3CorrelationChart, { Point } from "./D3CorrelationChart";
 import { useAppContext } from "../context/app/appContext";

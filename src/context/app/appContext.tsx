@@ -1,5 +1,5 @@
 import React from "react";
-import { Network, NETWORKS } from "../../common/types";
+import { Network, NETWORKS } from "../../common/network";
 import { PriceChart } from "../../repos/coingecko";
 import { Pool, Tick, V3Token } from "../../repos/uniswap";
 import { AppAction, appReducer } from "./appReducer";

@@ -1,6 +1,22 @@
 import styled from "styled-components";
 
-const Table = styled.div`
+export const Heading = styled.h3`
+  color: white;
+  margin: 0;
+  font-size: 1rem;
+  margin-bottom: 12px;
+  font-weight: 500;
+`;
+
+export const Br = styled.div`
+  height: 20px;
+`;
+
+export const Dollar = styled.span`
+  font-family: "Gowun Batang", serif;
+`;
+
+export const Table = styled.div`
   width: 100%;
   display: grid;
   grid-template-columns: 7rem 1fr 5rem;
@@ -24,5 +40,3 @@ const Table = styled.div`
     text-align: center;
   }
 `;
-
-export default Table;

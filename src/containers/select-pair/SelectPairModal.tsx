@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import Modal from "react-modal";
 import ReactLoading from "react-loading";
 import { useModalContext } from "../../context/modal/modalContext";
-import { Heading } from "../../common/atomic";
+import { Heading } from "../../common/components";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -27,7 +27,7 @@ import { AppActionType } from "../../context/app/appReducer";
 import { sortToken } from "../../utils/helper";
 import { getPriceChart } from "../../repos/coingecko";
 import { ModalActionType } from "../../context/modal/modalReducer";
-import { Network, NETWORKS } from "../../common/types";
+import { Network, NETWORKS } from "../../common/network";
 
 const ModalStyle = {
   overlay: {

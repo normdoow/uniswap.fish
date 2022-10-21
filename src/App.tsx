@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Br } from "./common/atomic";
+import { Br } from "./common/components";
 import CorrelationChart from "./containers/CorrelationChart";
 import Footer from "./containers/Footer";
 import EstimatedFees from "./containers/EstimatedFees";
@@ -57,6 +57,9 @@ function App() {
   return (
     <>
       <SelectPairModal />
+      {/* <AnnoucementModal /> */}
+      {/* <DonateModal /> */}
+
       <FeedbackButton
         onClick={() => {
           const app_context = {
@@ -81,8 +84,7 @@ function App() {
       >
         <FontAwesomeIcon icon={faBug} />
       </FeedbackButton>
-      {/* <AnnoucementModal /> */}
-      {/* <DonateModal /> */}
+
       <Navbar />
       <BodyContainer>
         <Header />

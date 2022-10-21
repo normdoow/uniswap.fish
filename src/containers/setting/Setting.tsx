@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Br } from "../../common/atomic";
+import { Br } from "../../common/components";
 import { ScreenWidth } from "../../utils/styled";
 import DepositAmounts from "./DepositAmounts";
 import PriceRange from "./PriceRange";

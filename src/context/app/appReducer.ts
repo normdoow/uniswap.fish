@@ -1,4 +1,4 @@
-import { Network } from "../../common/types";
+import { Network } from "../../common/network";
 import { PriceChart } from "../../repos/coingecko";
 import { Pool, Tick, V3Token } from "../../repos/uniswap";
 import { AppContextState } from "./appContext";

@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Dollar, Heading } from "../common/atomic";
-import Table from "../common/Table";
+import { Dollar, Heading, Table } from "../common/components";
 import { useAppContext } from "../context/app/appContext";
 import { Tick } from "../repos/uniswap";
 import bn from "bignumber.js";
