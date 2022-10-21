@@ -4,7 +4,7 @@ import { Heading } from "../common/components";
 import D3LiquidityHistogram, { Bin } from "./D3LiquidityHistogram";
 import { useAppContext } from "../context/app/appContext";
 import { Tick } from "../repos/uniswap";
-import { getPriceFromTick, getTickFromPrice } from "../utils/liquidityMath";
+import { getPriceFromTick, getTickFromPrice } from "../utils/uniswapv3/math";
 import { AppActionType } from "../context/app/appReducer";
 import { divideArray, findMax, findMin } from "../utils/math";
 import { ScreenWidth } from "../utils/styled";

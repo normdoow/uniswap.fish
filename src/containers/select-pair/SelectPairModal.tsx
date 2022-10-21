@@ -24,10 +24,10 @@ import {
 import SearchTokenPage from "./SearchTokenPage";
 import { useAppContext } from "../../context/app/appContext";
 import { AppActionType } from "../../context/app/appReducer";
-import { sortToken } from "../../utils/helper";
 import { getPriceChart } from "../../repos/coingecko";
 import { ModalActionType } from "../../context/modal/modalReducer";
 import { Network, NETWORKS } from "../../common/network";
+import { sortTokens } from "../../utils/uniswapv3/helper";
 
 const ModalStyle = {
   overlay: {
@@ -291,7 +291,7 @@ const SelectPairModal = () => {
     }
     setIsSubmitLoading(true);
 
-    const [token0, token1] = sortToken(selectedTokens[0], selectedTokens[1]);
+    const [token0, token1] = sortTokens(selectedTokens[0], selectedTokens[1]);
     const pool = selectedPool;
 
     const [poolTicks, token0PriceChart, token1PriceChart, volume24H] =

@@ -1,4 +1,4 @@
-import { V3Token } from "../repos/uniswap";
+import { V3Token } from "../../repos/uniswap";
 import TokenImageURI from "./tokenImageURI.json";
 
 export const getFeeTierPercentage = (tier: string): number => {
@@ -18,7 +18,7 @@ export const getTokenLogoURL = (address: string): string => {
   return `https://friconix.com/png/fi-cnsuxl-question-mark.png`;
 };
 
-export const sortToken = (token0: V3Token, token1: V3Token): V3Token[] => {
+export const sortTokens = (token0: V3Token, token1: V3Token): V3Token[] => {
   if (token0.id < token1.id) {
     return [token0, token1];
   }

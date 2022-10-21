@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Dollar, Heading, Table } from "../../common/components";
 import { useAppContext } from "../../context/app/appContext";
 import { AppActionType } from "../../context/app/appReducer";
-import { getTokenAmountsFromDepositAmounts } from "../../utils/liquidityMath";
+import { getTokenAmountsFromDepositAmounts } from "../../utils/uniswapv3/math";
 
 const InputGroup = styled.div`
   display: flex;

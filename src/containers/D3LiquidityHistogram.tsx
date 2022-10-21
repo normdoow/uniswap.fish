@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { findMax } from "../utils/math";
-import { getPriceFromTick } from "../utils/liquidityMath";
+import { getPriceFromTick } from "../utils/uniswapv3/math";
 
 export interface Bin {
   x0: number;

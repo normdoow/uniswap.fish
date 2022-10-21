@@ -1,13 +1,9 @@
 import bn from "bignumber.js";
 import { getFeeTierPercentage } from "./helper";
-import { encodePriceSqrt, expandDecimals } from "./math";
 
 bn.config({ EXPONENTIAL_AT: 999999, DECIMAL_PLACES: 40 });
 
 const Q96 = new bn(2).pow(96);
-const mulDiv = (a: bn, b: bn, multiplier: bn) => {
-  return a.multipliedBy(b).div(multiplier);
-};
 
 export const getTickFromPrice = (
   price: number,
@@ -149,4 +145,17 @@ export const calculateFee = (
     .toNumber();
 
   return feeTier * volume24H * liquidityPercentage;
+};
+
+// Private functions
+const encodePriceSqrt = (price: number | string | bn): bn => {
+  return new bn(price).sqrt().multipliedBy(new bn(2).pow(96)).integerValue(3);
+};
+
+const expandDecimals = (n: number | string | bn, exp: number): bn => {
+  return new bn(n).multipliedBy(new bn(10).pow(exp));
+};
+
+const mulDiv = (a: bn, b: bn, multiplier: bn) => {
+  return a.multipliedBy(b).div(multiplier);
 };

@@ -1,14 +1,3 @@
-import bn from "bignumber.js";
-bn.config({ EXPONENTIAL_AT: 999999, DECIMAL_PLACES: 40 });
-
-export const encodePriceSqrt = (price: number | string | bn): bn => {
-  return new bn(price).sqrt().multipliedBy(new bn(2).pow(96)).integerValue(3);
-};
-
-export function expandDecimals(n: number | string | bn, exp: number): bn {
-  return new bn(n).multipliedBy(new bn(10).pow(exp));
-}
-
 export const calculateAvg = (data: number[]): number => {
   return data.reduce((result, val) => result + val, 0) / data.length;
 };

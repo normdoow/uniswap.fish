@@ -10,7 +10,7 @@ import {
   getSqrtPriceX96,
   getTickFromPrice,
   getTokenAmountsFromDepositAmounts,
-} from "../utils/liquidityMath";
+} from "../utils/uniswapv3/math";
 import { ScreenWidth } from "../utils/styled";
 
 const SettingContainer = styled.div`

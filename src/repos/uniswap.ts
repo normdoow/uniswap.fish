@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Network, NETWORKS } from "../common/network";
-import { getTokenLogoURL, sortToken } from "../utils/helper";
+import { getTokenLogoURL, sortTokens } from "../utils/uniswapv3/helper";
 import lscache from "../utils/lscache";
 
 export let currentNetwork = NETWORKS[0];
@@ -176,7 +176,7 @@ export const getPoolFromPair = async (
   token0: V3Token,
   token1: V3Token
 ): Promise<Pool[]> => {
-  const sortedTokens = sortToken(token0, token1);
+  const sortedTokens = sortTokens(token0, token1);
 
   const { pools } = await queryUniswap(`{
     pools(orderBy: feeTier, where: {
