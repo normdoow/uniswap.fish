@@ -1,13 +1,6 @@
 const https = require("https");
 const fs = require("fs");
 
-const options = {
-  hostname: "api.coingecko.com",
-  port: 443,
-  path: "/api/v3/coins/list?include_platform=true",
-  method: "GET",
-};
-
 const SKIP_PLATFORMS = [
   "tron",
   "sora",
@@ -65,6 +58,13 @@ const CUSTOM_TOKENS = {
   },
 };
 
+const options = {
+  hostname: "api.coingecko.com",
+  port: 443,
+  path: "/api/v3/coins/list?include_platform=true",
+  method: "GET",
+};
+
 const _renameKeys = (obj, newKeys) => {
   const keyValues = Object.keys(obj).map((key) => {
     const newKey = newKeys[key] || key;
@@ -72,6 +72,7 @@ const _renameKeys = (obj, newKeys) => {
   });
   return Object.assign({}, ...keyValues);
 };
+
 const process = (data) => {
   let result = data.reduce((result, curr) => {
     const { id, name } = curr;
