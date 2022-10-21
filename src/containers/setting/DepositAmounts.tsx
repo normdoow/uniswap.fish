@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Heading } from "../../common/atomic";
+import { Dollar, Heading } from "../../common/atomic";
 import Table from "../../common/Table";
 import { useAppContext } from "../../context/app/appContext";
 import { AppActionType } from "../../context/app/appReducer";
@@ -71,7 +71,7 @@ const DepositAmounts = () => {
     <div>
       <Heading>Deposit Amounts</Heading>
       <InputGroup>
-        <span className="dollar">$</span>
+        <Dollar>$</Dollar>
         <DepositInput
           defaultValue={1000}
           type="number"

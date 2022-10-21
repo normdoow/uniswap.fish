@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
+import { Metric } from "web-vitals";
 import App from "./App";
 import ContextProvider from "./context/ContextProvider";
 import reportWebVitals from "./reportWebVitals";
-import { Metric } from "web-vitals";
+
+import "./index.css";
 
 ReactDOM.render(
   <React.StrictMode>

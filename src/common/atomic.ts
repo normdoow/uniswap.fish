@@ -12,6 +12,10 @@ export const Br = styled.div`
   height: 20px;
 `;
 
+export const Dollar = styled.span`
+  font-family: "Gowun Batang", serif;
+`;
+
 // const Input = styled.input`
 //   display: block;
 //   width: 100%;

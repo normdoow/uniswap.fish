@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Heading } from "../common/atomic";
+import { Dollar, Heading } from "../common/atomic";
 import Table from "../common/Table";
 import { useAppContext } from "../context/app/appContext";
 import { Tick } from "../repos/uniswap";
@@ -126,7 +126,7 @@ const EstimatedFees = () => {
         Estimated Fees <Tag>(24h)</Tag>
       </Heading>
       <Fee>
-        <span className="dollar">$</span>
+        <Dollar>$</Dollar>
         {fee.toFixed(2)}
       </Fee>
 
