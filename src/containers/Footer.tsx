@@ -3,7 +3,7 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
 
-const CreditContainer = styled.div`
+const FooterContainer = styled.div`
   padding: 50px 15px;
   text-align: center;
   color: #bbb;
@@ -29,9 +29,9 @@ const CreditContainer = styled.div`
   }
 `;
 
-const Credit = () => {
+const Footer = () => {
   return (
-    <CreditContainer>
+    <FooterContainer>
       <div>
         Supported by{" "}
         <a
@@ -68,8 +68,8 @@ const Credit = () => {
         </a>
         <a href="mailto:hello@uniswap.fish">Contact: hello@uniswap.fish</a>
       </div>
-    </CreditContainer>
+    </FooterContainer>
   );
 };
 
-export default Credit;
+export default Footer;
