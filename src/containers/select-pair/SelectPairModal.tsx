@@ -26,8 +26,9 @@ import { useAppContext } from "../../context/app/appContext";
 import { AppActionType } from "../../context/app/appReducer";
 import { getPriceChart } from "../../repos/coingecko";
 import { ModalActionType } from "../../context/modal/modalReducer";
-import { Network, NETWORKS } from "../../common/network";
+import { NETWORKS } from "../../common/network";
 import { sortTokens } from "../../utils/uniswapv3/helper";
+import { Network } from "../../common/interfaces/uniswap.interface";
 
 const ModalStyle = {
   overlay: {

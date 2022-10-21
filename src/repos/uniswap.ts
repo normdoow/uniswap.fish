@@ -1,8 +1,10 @@
 import axios from "axios";
-import { Network, NETWORKS } from "../common/network";
+import { NETWORKS } from "../common/network";
 import { getTokenLogoURL, sortTokens } from "../utils/uniswapv3/helper";
 import lscache from "../utils/lscache";
+import { Network } from "../common/interfaces/uniswap.interface";
 
+// TODO: Refactor this
 export let currentNetwork = NETWORKS[0];
 
 export const updateNetwork = (network: Network) => {

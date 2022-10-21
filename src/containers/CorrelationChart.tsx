@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Heading } from "../common/components";
-import { PriceChart } from "../repos/coingecko";
 import D3CorrelationChart, { Point } from "./D3CorrelationChart";
 import { useAppContext } from "../context/app/appContext";
 import { calculateAvg, findMax, findMin } from "../utils/math";
 import { ScreenWidth } from "../utils/styled";
+import { PriceChart } from "../common/interfaces/coingecko.interface";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);

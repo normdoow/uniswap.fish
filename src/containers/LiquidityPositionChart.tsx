@@ -8,6 +8,7 @@ import { getPriceFromTick, getTickFromPrice } from "../utils/uniswapv3/math";
 import { AppActionType } from "../context/app/appReducer";
 import { divideArray, findMax, findMin } from "../utils/math";
 import { ScreenWidth } from "../utils/styled";
+import { Price } from "../common/interfaces/coingecko.interface";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -188,8 +189,8 @@ const LiquidityPositionChart = () => {
     }
     const prices = [minPrice, maxPrice].sort((a, b) => a - b);
     const _p = divideArray(
-      (state.token1PriceChart?.prices || []).map((p) => p.value),
-      (state.token0PriceChart?.prices || []).map((p) => p.value)
+      (state.token1PriceChart?.prices || []).map((p: Price) => p.value),
+      (state.token0PriceChart?.prices || []).map((p: Price) => p.value)
     );
     let _min = findMin(_p);
     let _max = findMax(_p);

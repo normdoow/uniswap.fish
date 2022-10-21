@@ -1,5 +1,5 @@
-import { Network } from "../../common/network";
-import { PriceChart } from "../../repos/coingecko";
+import { PriceChart } from "../../common/interfaces/coingecko.interface";
+import { Network } from "../../common/interfaces/uniswap.interface";
 import { Pool, Tick, V3Token } from "../../repos/uniswap";
 import { AppContextState } from "./appContext";
 

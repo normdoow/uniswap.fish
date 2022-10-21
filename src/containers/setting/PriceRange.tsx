@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import styled from "styled-components";
 import { Heading } from "../../common/components";
+import { Price } from "../../common/interfaces/coingecko.interface";
 import { useAppContext } from "../../context/app/appContext";
 import { AppActionType } from "../../context/app/appReducer";
 import { divideArray, findMax, findMin } from "../../utils/math";
@@ -93,8 +94,8 @@ const PriceRange = () => {
   const [priceRangeSlider, setPriceRangeSlider] = useState([0, 0]);
 
   const prices = divideArray(
-    (state.token1PriceChart?.prices || []).map((p) => p.value),
-    (state.token0PriceChart?.prices || []).map((p) => p.value)
+    (state.token1PriceChart?.prices || []).map((p: Price) => p.value),
+    (state.token0PriceChart?.prices || []).map((p: Price) => p.value)
   );
 
   const currentPrice = Number(state.pool?.token0Price || NaN);
