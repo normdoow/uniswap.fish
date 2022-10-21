@@ -1,6 +1,10 @@
 import { PriceChart } from "../../common/interfaces/coingecko.interface";
-import { Network } from "../../common/interfaces/uniswap.interface";
-import { Pool, Tick, V3Token } from "../../repos/uniswap";
+import {
+  Network,
+  Pool,
+  Tick,
+  Token,
+} from "../../common/interfaces/uniswap.interface";
 import { AppContextState } from "./appContext";
 
 export enum AppActionType {
@@ -16,7 +20,7 @@ export type AppAction =
   | {
       type: AppActionType.RESET_TOKEN_LIST;
       payload: {
-        tokenList: V3Token[];
+        tokenList: Token[];
       };
     }
   | {
@@ -25,8 +29,8 @@ export type AppAction =
         network: Network;
         pool: Pool;
         poolTicks: Tick[];
-        token0: V3Token;
-        token1: V3Token;
+        token0: Token;
+        token1: Token;
         token0PriceChart: PriceChart | null;
         token1PriceChart: PriceChart | null;
         volume24H: number;

@@ -3,12 +3,12 @@ import styled from "styled-components";
 import { Heading } from "../common/components";
 import D3LiquidityHistogram, { Bin } from "./D3LiquidityHistogram";
 import { useAppContext } from "../context/app/appContext";
-import { Tick } from "../repos/uniswap";
 import { getPriceFromTick, getTickFromPrice } from "../utils/uniswapv3/math";
 import { AppActionType } from "../context/app/appReducer";
 import { divideArray, findMax, findMin } from "../utils/math";
 import { ScreenWidth } from "../utils/styled";
 import { Price } from "../common/interfaces/coingecko.interface";
+import { Tick } from "../common/interfaces/uniswap.interface";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);

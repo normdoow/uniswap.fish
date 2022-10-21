@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import { Dollar, Heading, Table } from "../common/components";
 import { useAppContext } from "../context/app/appContext";
-import { Tick } from "../repos/uniswap";
 import bn from "bignumber.js";
 import {
   calculateFee,
@@ -12,6 +11,7 @@ import {
   getTokenAmountsFromDepositAmounts,
 } from "../utils/uniswapv3/math";
 import { ScreenWidth } from "../utils/styled";
+import { Tick } from "../common/interfaces/uniswap.interface";
 
 const SettingContainer = styled.div`
   background: rgba(255, 255, 255, 0.1);

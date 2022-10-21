@@ -2,7 +2,12 @@ import axios from "axios";
 import { NETWORKS } from "../common/network";
 import { getTokenLogoURL, sortTokens } from "../utils/uniswapv3/helper";
 import lscache from "../utils/lscache";
-import { Network } from "../common/interfaces/uniswap.interface";
+import {
+  Network,
+  Pool,
+  Tick,
+  Token,
+} from "../common/interfaces/uniswap.interface";
 
 // TODO: Refactor this
 export let currentNetwork = NETWORKS[0];
@@ -40,12 +45,6 @@ export const getVolumn24H = async (poolAddress: string): Promise<number> => {
   );
 };
 
-export interface Tick {
-  tickIdx: string;
-  liquidityNet: string;
-  price0: string;
-  price1: string;
-}
 const _getPoolTicksByPage = async (
   poolAddress: string,
   page: number
@@ -83,15 +82,7 @@ export const getPoolTicks = async (poolAddress: string): Promise<Tick[]> => {
   return result;
 };
 
-export interface V3Token {
-  id: string;
-  name: string;
-  symbol: string;
-  volumeUSD: string;
-  logoURI: string;
-  decimals: string;
-}
-export const getTopTokenList = async (): Promise<V3Token[]> => {
+export const getTopTokenList = async (): Promise<Token[]> => {
   const cacheKey = `${currentNetwork.id}_getTopTokenList`;
   const cacheData = lscache.get(cacheKey);
   const searchTokenPageItems = localStorage.getItem(
@@ -118,7 +109,7 @@ export const getTopTokenList = async (): Promise<V3Token[]> => {
     return [];
   }
 
-  const tokens = res.tokens as V3Token[];
+  const tokens = res.tokens as Token[];
   let result = tokens
     .map((token) => {
       token.logoURI = getTokenLogoURL(token.id);
@@ -147,7 +138,7 @@ export const getTopTokenList = async (): Promise<V3Token[]> => {
   return result;
 };
 
-export const getToken = async (id: string): Promise<V3Token> => {
+export const getToken = async (id: string): Promise<Token> => {
   const res = await queryUniswap(`{
     token(id: "${id.toLowerCase()}") {
       id
@@ -165,18 +156,9 @@ export const getToken = async (id: string): Promise<V3Token> => {
   return res.token;
 };
 
-export interface Pool {
-  id: string;
-  feeTier: string;
-  liquidity: string;
-  tick: string;
-  sqrtPrice: string;
-  token0Price: string;
-  token1Price: string;
-}
 export const getPoolFromPair = async (
-  token0: V3Token,
-  token1: V3Token
+  token0: Token,
+  token1: Token
 ): Promise<Pool[]> => {
   const sortedTokens = sortTokens(token0, token1);
 

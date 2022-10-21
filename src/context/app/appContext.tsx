@@ -1,19 +1,23 @@
 import React from "react";
 import { PriceChart } from "../../common/interfaces/coingecko.interface";
-import { Network } from "../../common/interfaces/uniswap.interface";
+import {
+  Network,
+  Pool,
+  Tick,
+  Token,
+} from "../../common/interfaces/uniswap.interface";
 import { NETWORKS } from "../../common/network";
-import { Pool, Tick, V3Token } from "../../repos/uniswap";
 import { AppAction, appReducer } from "./appReducer";
 
 export interface AppContextState {
   network: Network;
-  tokenList: V3Token[];
+  tokenList: Token[];
   isSwap: boolean;
 
   pool: Pool | null;
   poolTicks: Tick[] | null;
-  token0: V3Token | null;
-  token1: V3Token | null;
+  token0: Token | null;
+  token1: Token | null;
   token0PriceChart: PriceChart | null;
   token1PriceChart: PriceChart | null;
   volume24H: number;

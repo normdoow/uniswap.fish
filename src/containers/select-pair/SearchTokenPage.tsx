@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { currentNetwork, getToken, V3Token } from "../../repos/uniswap";
+import { currentNetwork, getToken } from "../../repos/uniswap";
 import ReactLoading from "react-loading";
 import Web3 from "web3";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from "@fortawesome/free-solid-svg-icons";
 import ReactTooltip from "react-tooltip";
+import { Token } from "../../common/interfaces/uniswap.interface";
 
 const Container = styled.div`
   width: 370px;
@@ -128,8 +129,8 @@ const TokenItemWrapper = styled.div`
 `;
 
 interface SearchTokenPageProps {
-  tokens: V3Token[];
-  selectToken: (token: V3Token) => void;
+  tokens: Token[];
+  selectToken: (token: Token) => void;
   refetchTokens: any;
 }
 const SearchTokenPage = ({
@@ -137,7 +138,7 @@ const SearchTokenPage = ({
   selectToken,
   refetchTokens,
 }: SearchTokenPageProps) => {
-  const [tokens, setTokens] = useState<V3Token[]>(_tokens);
+  const [tokens, setTokens] = useState<Token[]>(_tokens);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isTokenNotFound, setIsTokenNotFound] = useState<boolean>(false);
   const [filterCSSStyle, setFilterCSSStyle] = useState<string>(``);

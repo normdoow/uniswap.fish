@@ -17,9 +17,7 @@ import {
   getPoolTicks,
   getTopTokenList,
   getVolumn24H,
-  Pool,
   updateNetwork,
-  V3Token,
 } from "../../repos/uniswap";
 import SearchTokenPage from "./SearchTokenPage";
 import { useAppContext } from "../../context/app/appContext";
@@ -28,7 +26,11 @@ import { getPriceChart } from "../../repos/coingecko";
 import { ModalActionType } from "../../context/modal/modalReducer";
 import { NETWORKS } from "../../common/network";
 import { sortTokens } from "../../utils/uniswapv3/helper";
-import { Network } from "../../common/interfaces/uniswap.interface";
+import {
+  Network,
+  Pool,
+  Token,
+} from "../../common/interfaces/uniswap.interface";
 
 const ModalStyle = {
   overlay: {
@@ -253,7 +255,7 @@ const SelectPairModal = () => {
   const [selectedNetwork, setSelectedNetwork] = useState<Network | null>(
     NETWORKS[0]
   );
-  const [selectedTokens, setSelectedTokens] = useState<V3Token[] | null[]>([
+  const [selectedTokens, setSelectedTokens] = useState<Token[] | null[]>([
     null,
     null,
   ]);
@@ -397,7 +399,7 @@ const SelectPairModal = () => {
     });
   };
 
-  const selectToken = (token: V3Token) => {
+  const selectToken = (token: Token) => {
     const _selectedTokens = JSON.parse(JSON.stringify(selectedTokens));
 
     if (selectedTokenIndex !== null) {
