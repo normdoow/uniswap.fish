@@ -213,7 +213,7 @@ const lscacheModule = {
           if (expiration) {
             expiration = parseInt(expiration, EXPIRY_RADIX);
           } else {
-            // TODO: Store date added for non-expiring items for smarter removal
+            // Task: Store date added for non-expiring items for smarter removal
             expiration = maxDate;
           }
           storedKeys.push({

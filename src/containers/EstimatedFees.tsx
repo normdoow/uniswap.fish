@@ -6,9 +6,10 @@ import bn from "bignumber.js";
 import {
   calculateFee,
   getLiquidityForAmounts,
+  getLiquidityFromTick,
   getSqrtPriceX96,
   getTickFromPrice,
-  getTokenAmountsFromDepositAmounts,
+  getTokensAmountFromDepositAmountUSD,
 } from "../utils/uniswapv3/math";
 import { ScreenWidth } from "../utils/styled";
 import { Tick } from "../common/interfaces/uniswap.interface";
@@ -45,39 +46,23 @@ const Tag = styled.div`
 const EstimatedFees = () => {
   const { state } = useAppContext();
 
-  const calculateLiquidity = (ticks: Tick[], currentTick: number): bn => {
-    if (ticks.length <= 1) return new bn(0);
-    let liquidity: bn = new bn(0);
-    for (let i = 0; i < ticks.length - 1; ++i) {
-      liquidity = liquidity.plus(new bn(ticks[i].liquidityNet));
-
-      let lowerTick = Number(ticks[i].tickIdx);
-      let upperTick = Number(ticks[i + 1].tickIdx);
-
-      if (lowerTick <= currentTick && currentTick <= upperTick) {
-        break;
-      }
-    }
-
-    return liquidity;
-  };
-
   const P = state.priceAssumptionValue;
   const Pl = state.priceRangeValue[0];
   const Pu = state.priceRangeValue[1];
   const priceUSDX = state.token1PriceChart?.currentPriceUSD || 1;
   const priceUSDY = state.token0PriceChart?.currentPriceUSD || 1;
-  const targetAmounts = state.depositAmountValue;
+  const depositAmountUSD = state.depositAmountValue;
 
-  const { amount0, amount1 } = getTokenAmountsFromDepositAmounts(
+  const { amount0, amount1 } = getTokensAmountFromDepositAmountUSD(
     P,
     Pl,
     Pu,
     priceUSDX,
     priceUSDY,
-    targetAmounts
+    depositAmountUSD
   );
 
+  // TODO: refactor this section
   const sqrtRatioX96 = getSqrtPriceX96(
     P,
     state.token0?.decimals || "18",
@@ -112,7 +97,7 @@ const EstimatedFees = () => {
 
   if (state.isSwap) currentTick = -currentTick;
 
-  const L = calculateLiquidity(state.poolTicks || [], currentTick);
+  const L = getLiquidityFromTick(state.poolTicks || [], currentTick);
   const volume24H = state.volume24H;
   const feeTier = state.pool?.feeTier || "";
 
@@ -132,12 +117,12 @@ const EstimatedFees = () => {
       <Table>
         <div>MONTHLY</div>
         <div>${(fee * 30).toFixed(2)}</div>
-        <div>{((100 * (fee * 30)) / targetAmounts).toFixed(2)}%</div>
+        <div>{((100 * (fee * 30)) / depositAmountUSD).toFixed(2)}%</div>
       </Table>
       <Table>
         <div>YEARLY (APR)</div>
         <div>${(fee * 365).toFixed(2)}</div>
-        <div>{((100 * (fee * 365)) / targetAmounts).toFixed(2)}%</div>
+        <div>{((100 * (fee * 365)) / depositAmountUSD).toFixed(2)}%</div>
       </Table>
     </SettingContainer>
   );

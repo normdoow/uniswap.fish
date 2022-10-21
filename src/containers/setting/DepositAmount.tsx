@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Dollar, Heading, Table } from "../../common/components";
 import { useAppContext } from "../../context/app/appContext";
 import { AppActionType } from "../../context/app/appReducer";
-import { getTokenAmountsFromDepositAmounts } from "../../utils/uniswapv3/math";
+import { getTokensAmountFromDepositAmountUSD } from "../../utils/uniswapv3/math";
 
 const InputGroup = styled.div`
   display: flex;
@@ -47,7 +47,7 @@ const Token = styled.div`
   }
 `;
 
-const DepositAmounts = () => {
+const DepositAmount = () => {
   const { state, dispatch } = useAppContext();
 
   const P = state.priceAssumptionValue;
@@ -57,7 +57,7 @@ const DepositAmounts = () => {
   const priceUSDY = state.token0PriceChart?.currentPriceUSD || 1;
   const targetAmounts = state.depositAmountValue;
 
-  const { amount0, amount1 } = getTokenAmountsFromDepositAmounts(
+  const { amount0, amount1 } = getTokensAmountFromDepositAmountUSD(
     P,
     Pl,
     Pu,
@@ -68,7 +68,7 @@ const DepositAmounts = () => {
 
   return (
     <div>
-      <Heading>Deposit Amounts</Heading>
+      <Heading>Deposit Amount</Heading>
       <InputGroup>
         <Dollar>$</Dollar>
         <DepositInput
@@ -107,4 +107,4 @@ const DepositAmounts = () => {
   );
 };
 
-export default DepositAmounts;
+export default DepositAmount;

@@ -1,4 +1,5 @@
 import bn from "bignumber.js";
+import { Tick } from "../../common/interfaces/uniswap.interface";
 import { getFeeTierPercentage } from "./helper";
 
 bn.config({ EXPONENTIAL_AT: 999999, DECIMAL_PLACES: 40 });
@@ -41,26 +42,32 @@ export const getPriceFromTick = (
 };
 
 // for calculation detail, please visit README.md (Section: Calculation Breakdown, No. 1)
-export const getTokenAmountsFromDepositAmounts = (
+interface TokensAmount {
+  amount0: number;
+  amount1: number;
+}
+export const getTokensAmountFromDepositAmountUSD = (
   P: number,
   Pl: number,
   Pu: number,
   priceUSDX: number,
   priceUSDY: number,
-  targetAmounts: number
-) => {
+  depositAmountUSD: number
+): TokensAmount => {
   const deltaL =
-    targetAmounts /
+    depositAmountUSD /
     ((Math.sqrt(P) - Math.sqrt(Pl)) * priceUSDY +
       (1 / Math.sqrt(P) - 1 / Math.sqrt(Pu)) * priceUSDX);
 
   let deltaY = deltaL * (Math.sqrt(P) - Math.sqrt(Pl));
   if (deltaY * priceUSDY < 0) deltaY = 0;
-  if (deltaY * priceUSDY > targetAmounts) deltaY = targetAmounts / priceUSDY;
+  if (deltaY * priceUSDY > depositAmountUSD)
+    deltaY = depositAmountUSD / priceUSDY;
 
   let deltaX = deltaL * (1 / Math.sqrt(P) - 1 / Math.sqrt(Pu));
   if (deltaX * priceUSDX < 0) deltaX = 0;
-  if (deltaX * priceUSDX > targetAmounts) deltaX = targetAmounts / priceUSDX;
+  if (deltaX * priceUSDX > depositAmountUSD)
+    deltaX = depositAmountUSD / priceUSDX;
 
   return { amount0: deltaX, amount1: deltaY };
 };
@@ -92,10 +99,8 @@ export const getSqrtPriceX96 = (
 ): bn => {
   const token0 = expandDecimals(price, Number(token0Decimal));
   const token1 = expandDecimals(1, Number(token1Decimal));
-  // return mulDiv(encodePriceSqrt(token1), Q96, encodePriceSqrt(token0)).div(
-  //   new bn(2).pow(96)
-  // );
-  return token0.div(token1).sqrt().multipliedBy(new bn(2).pow(96));
+
+  return token0.div(token1).sqrt().multipliedBy(Q96);
 };
 
 export const getLiquidityForAmounts = (
@@ -145,6 +150,23 @@ export const calculateFee = (
     .toNumber();
 
   return feeTier * volume24H * liquidityPercentage;
+};
+
+export const getLiquidityFromTick = (poolTicks: Tick[], tick: number): bn => {
+  // calculate a cumulative of liquidityNet from all ticks that poolTicks[i] <= tick
+  let liquidity: bn = new bn(0);
+  for (let i = 0; i < poolTicks.length - 1; ++i) {
+    liquidity = liquidity.plus(new bn(poolTicks[i].liquidityNet));
+
+    const lowerTick = Number(poolTicks[i].tickIdx);
+    const upperTick = Number(poolTicks[i + 1]?.tickIdx);
+
+    if (lowerTick <= tick && tick <= upperTick) {
+      break;
+    }
+  }
+
+  return liquidity;
 };
 
 // private helper functions
