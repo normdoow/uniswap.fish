@@ -30,7 +30,16 @@ const Logo = styled.h1`
   display: flex;
   align-items: center;
 
-  & > h1 {
+  & > span:nth-child(1) {
+    font-size: 1.4rem;
+    margin-right: 7px;
+
+    @media only screen and (max-width: 450px) {
+      font-size: 1.8rem;
+    }
+  }
+
+  & > span:nth-child(2) {
     color: white;
     font-size: 1.2rem;
     font-weight: 500;
@@ -39,18 +48,9 @@ const Logo = styled.h1`
       display: none;
     }
   }
-
-  & > span {
-    font-size: 1.4rem;
-    margin-right: 7px;
-
-    @media only screen and (max-width: 450px) {
-      font-size: 1.8rem;
-    }
-  }
 `;
 
-const Menubar = styled.a`
+const Menubar = styled.div`
   display: flex;
   align-items: center;
 
@@ -85,7 +85,7 @@ const Navbar = () => {
   return (
     <NavbarContainer>
       <Logo>
-        <span>🦄</span> <h1>UniswapCalculator</h1>
+        <span>🦄</span> <span>UniswapCalculator</span>
       </Logo>
       <Menubar>
         <a
