@@ -17,14 +17,13 @@ import {
   getPoolTicks,
   getTopTokenList,
   getAvgTradingVolume,
-  updateNetwork,
 } from "../../repos/uniswap";
 import SearchTokenPage from "./SearchTokenPage";
 import { useAppContext } from "../../context/app/appContext";
 import { AppActionType } from "../../context/app/appReducer";
 import { getPriceChart } from "../../repos/coingecko";
 import { ModalActionType } from "../../context/modal/modalReducer";
-import { NETWORKS } from "../../common/network";
+import { NETWORKS, setCurrentNetwork } from "../../common/network";
 import { sortTokens } from "../../utils/uniswapv3/helper";
 import {
   Network,
@@ -446,7 +445,7 @@ const SelectPairModal = () => {
                   }
                   onClick={() => {
                     if (!network.disabled) {
-                      updateNetwork(network);
+                      setCurrentNetwork(network);
                       fetchTokens();
 
                       setSelectedNetwork(network);

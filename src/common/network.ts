@@ -48,3 +48,13 @@ export const NETWORKS: Network[] = [
       "https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-dev",
   },
 ];
+
+let currentNetwork = NETWORKS[0];
+
+export const getCurrentNetwork = (): Network => {
+  return currentNetwork;
+};
+
+export const setCurrentNetwork = (network: Network) => {
+  currentNetwork = network;
+};

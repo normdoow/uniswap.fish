@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Price, PriceChart } from "../common/interfaces/coingecko.interface";
+import { getCurrentNetwork } from "../common/network";
 import tokenAddressMapping from "./tokenAddressMapping.json";
-import { currentNetwork } from "./uniswap";
 
 interface Token {
   id: string;
@@ -9,7 +9,7 @@ interface Token {
 }
 export const getCoingeckoToken = (contractAddress: string): Token | null => {
   const mapper = tokenAddressMapping as { [key: string]: any };
-  const currentPlatform = currentNetwork.id;
+  const currentPlatform = getCurrentNetwork().id;
   const result = mapper[currentPlatform][contractAddress];
   if (result) {
     return result as Token;

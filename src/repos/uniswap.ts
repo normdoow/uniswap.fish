@@ -1,5 +1,5 @@
 import axios from "axios";
-import { NETWORKS } from "../common/network";
+import { getCurrentNetwork } from "../common/network";
 import { getTokenLogoURL, sortTokens } from "../utils/uniswapv3/helper";
 import lscache from "../utils/lscache";
 import {
@@ -9,13 +9,6 @@ import {
   Token,
 } from "../common/interfaces/uniswap.interface";
 import { averageArray } from "../utils/math";
-
-// TODO: Refactor this
-export let currentNetwork = NETWORKS[0];
-
-export const updateNetwork = (network: Network) => {
-  currentNetwork = network;
-};
 
 export const getAvgTradingVolume = async (
   poolAddress: string,
@@ -88,10 +81,10 @@ const _processTokenInfo = (token: Token) => {
   return token;
 };
 export const getTopTokenList = async (): Promise<Token[]> => {
-  const cacheKey = `${currentNetwork.id}_getTopTokenList`;
+  const cacheKey = `${getCurrentNetwork().id}_getTopTokenList`;
   const cacheData = lscache.get(cacheKey);
   const searchTokenPageItems = localStorage.getItem(
-    `SearchTokenPage_${currentNetwork.id}_tokens`
+    `SearchTokenPage_${getCurrentNetwork().id}_tokens`
   );
   if (cacheData) {
     if (searchTokenPageItems !== null) {
@@ -171,7 +164,7 @@ export const getPoolFromPair = async (
 // private helper functions
 const _queryUniswap = async (query: string): Promise<any> => {
   const { data } = await axios({
-    url: currentNetwork.subgraphEndpoint,
+    url: getCurrentNetwork().subgraphEndpoint,
     method: "post",
     data: {
       query,

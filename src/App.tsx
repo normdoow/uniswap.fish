@@ -14,7 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FeedbackButton } from "./common/buttons";
 import { useAppContext } from "./context/app/appContext";
 import { faBug } from "@fortawesome/free-solid-svg-icons";
-import { currentNetwork } from "./repos/uniswap";
+import { getCurrentNetwork } from "./common/network";
 // import { useModalContext } from "./context/modal/modalContext";
 // import AnnoucementModal from "./containers/AnnoucementModal";
 // import { ModalActionType } from "./context/modal/modalReducer";
@@ -65,7 +65,7 @@ function App() {
           const app_context = {
             token0: state.token0?.id,
             token1: state.token1?.id,
-            chain: currentNetwork.id,
+            chain: getCurrentNetwork().id,
             pool: state.pool?.id,
             depositAmount: state.depositAmountValue,
             priceRange: state.priceRangeValue,

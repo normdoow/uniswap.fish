@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { currentNetwork, getToken } from "../../repos/uniswap";
+import { getToken } from "../../repos/uniswap";
 import ReactLoading from "react-loading";
 import Web3 from "web3";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from "@fortawesome/free-solid-svg-icons";
 import ReactTooltip from "react-tooltip";
 import { Token } from "../../common/interfaces/uniswap.interface";
+import { getCurrentNetwork } from "../../common/network";
 
 const Container = styled.div`
   width: 370px;
@@ -190,7 +191,7 @@ const SearchTokenPage = ({
         setTokens([...tokens, token]);
 
         // save token in localStorage for later use
-        const key = `SearchTokenPage_${currentNetwork.id}_tokens`;
+        const key = `SearchTokenPage_${getCurrentNetwork().id}_tokens`;
         const items = localStorage.getItem(key);
         if (items === null) {
           localStorage.setItem(key, JSON.stringify([token]));
