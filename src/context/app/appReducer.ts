@@ -7,11 +7,10 @@ import {
 } from "../../common/interfaces/uniswap.interface";
 import { AppContextState } from "./appContext";
 
-// TODO: rename action name to SET
 export enum AppActionType {
   RESET_TOKEN_LIST = "RESET_TOKEN_LIST",
   RESET_PAIR = "RESET_PAIR",
-  TOGGLE_CURRENT_PAIR = "TOGGLE_CURRENT_PAIR", // TODO: SWAP -> TOGGLE
+  TOGGLE_CURRENT_PAIR = "TOGGLE_CURRENT_PAIR",
   UPDATE_OUT_OF_RANGE_PERCENTAGE = "UPDATE_OUT_OF_RANGE_PERCENTAGE",
   UPDATE_PRICE_RANGE = "UPDATE_PRICE_RANGE",
   UPDATE_DEPOSIT_AMOUNT = "UPDATE_DEPOSIT_AMOUNT",
