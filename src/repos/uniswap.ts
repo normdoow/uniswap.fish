@@ -2,12 +2,7 @@ import axios from "axios";
 import { getCurrentNetwork } from "../common/network";
 import { getTokenLogoURL, sortTokens } from "../utils/uniswapv3/helper";
 import lscache from "../utils/lscache";
-import {
-  Network,
-  Pool,
-  Tick,
-  Token,
-} from "../common/interfaces/uniswap.interface";
+import { Pool, Tick, Token } from "../common/interfaces/uniswap.interface";
 import { averageArray } from "../utils/math";
 
 export const getAvgTradingVolume = async (
