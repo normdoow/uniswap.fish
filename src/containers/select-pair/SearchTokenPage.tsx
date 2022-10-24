@@ -236,7 +236,7 @@ const SearchTokenPage = ({
           {tokens.map((token) => {
             return (
               <TokenItemWrapper
-                id={`${token.symbol}_${token.name}_${token.id}`}
+                key={`${token.symbol}_${token.name}_${token.id}`}
                 data-filter={`${token.id.toLowerCase()} ${token.symbol.toLowerCase()} ${token.name.toLowerCase()}`}
                 className="token-item"
               >
