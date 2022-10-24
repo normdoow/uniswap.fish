@@ -71,6 +71,22 @@ export const getPoolTicks = async (poolAddress: string): Promise<Tick[]> => {
   return result;
 };
 
+const processTokenInfo = (token: Token) => {
+  token.logoURI = getTokenLogoURL(token.id);
+
+  if (token.name === "Wrapped Ether" || token.name === "Wrapped Ethereum") {
+    token.name = "Ethereum";
+    token.symbol = "ETH";
+    token.logoURI =
+      "https://cdn.iconscout.com/icon/free/png-128/ethereum-2752194-2285011.png";
+  }
+  if (token.name === "Wrapped Matic") {
+    token.name = "Polygon Native Token";
+    token.symbol = "MATIC";
+  }
+
+  return token;
+};
 export const getTopTokenList = async (): Promise<Token[]> => {
   const cacheKey = `${currentNetwork.id}_getTopTokenList`;
   const cacheData = lscache.get(cacheKey);
@@ -99,25 +115,8 @@ export const getTopTokenList = async (): Promise<Token[]> => {
   }
 
   const tokens = res.tokens as Token[];
-  // TODO: Refactor this with getToken
   let result = tokens
-    .map((token) => {
-      token.logoURI = getTokenLogoURL(token.id);
-      return token;
-    })
-    .map((token) => {
-      if (token.name === "Wrapped Ether" || token.name === "Wrapped Ethereum") {
-        token.name = "Ethereum";
-        token.symbol = "ETH";
-        token.logoURI =
-          "https://cdn.iconscout.com/icon/free/png-128/ethereum-2752194-2285011.png";
-      }
-      if (token.name === "Wrapped Matic") {
-        token.name = "Polygon Native Token";
-        token.symbol = "MATIC";
-      }
-      return token;
-    })
+    .map(processTokenInfo)
     .filter((token) => token.symbol.length < 30);
 
   lscache.set(cacheKey, result, 10); // 10 mins
@@ -140,7 +139,7 @@ export const getToken = async (tokenAddress: string): Promise<Token> => {
   }`);
 
   if (res.token !== null) {
-    res.token.logoURI = getTokenLogoURL(res.token.id);
+    res.token = processTokenInfo(res.token);
   }
 
   return res.token;
