@@ -1,6 +1,7 @@
 # 🦄 UniswapCalculator
 
 Uniswap V3 Fee Calculator, Visit: [uniswapv3.thechun.dev](https://uniswapv3.thechun.dev/)
+
 > Disclaimer: please do your own research, this website is intended to be used and must be used for informational purpose only. It is very important to do your own analysis before making any investment based on your personal circumstances.
 
 ![Screenshot](https://uniswapv3.thechun.dev/cover.jpeg)
@@ -10,22 +11,23 @@ Uniswap V3 Fee Calculator, Visit: [uniswapv3.thechun.dev](https://uniswapv3.thec
 [Donate this project on Gitcoin Grant](https://gitcoin.co/grants/4203/uniswap-calculator-v3)
 
 ## Features
-- Fee calculation: select pair and pool, input deposit amounts, and adjust your lower and upper price
+
+- Fee calculation: select pair and pool, input deposit amount (USD), and adjust your lower and upper price
 - Liquidity position histogram and correlation chart to help you plan your strategy better
 - It's 100% open source! hope that Uniswap community will bring a lot more ideas and features to this project
 
 ## Calculation Breakdown
 
-### 1. Calculate deposit amounts of token0 and token1
+### 1. Calculate deposit amount of token0 and token1
 
-- Refer to [Uniswap V3 Whitepaper](https://uniswap.org/whitepaper-v3.pdf) (Formula: 6.29, 6.30, P.8), we can calculate total amounts of each token by using these formulas: (if `il <= ic < iu`; where `il` = lowerTickId, `ic` = currentTickId, `iu` = upperTickId)
+- Refer to [Uniswap V3 Whitepaper](https://uniswap.org/whitepaper-v3.pdf) (Formula: 6.29, 6.30, P.8), we can calculate total amount of each token by using these formulas: (if `il <= ic < iu`; where `il` = lowerTickId, `ic` = currentTickId, `iu` = upperTickId, `Pl` = lower price, `Pu` = upper price)
   - `deltaY = deltaL * (sqrt(P) - sqrt(Pl))`
   - `deltaX = deltaL * (1 / sqrt(P) - 1 / sqrt(Pu))`
-- For estimation of the amounts of token0 (`deltaX`) and token1 (`deltaY`) we need to know `deltaL` that make:
-  - `deltaY * priceUSDY + deltaX * priceUSDX = targetAmounts`
+- For estimation of the amount of token0 (`deltaX`) and token1 (`deltaY`) we need to know `deltaL` that make:
+  - `deltaY * priceUSDY + deltaX * priceUSDX = depositAmountUSD`
 - So we can write a equation like this:
-  - `deltaL * (sqrt(P) - sqrt(Pl)) * priceUSDY + deltaL * (1 / sqrt(P) - 1 / sqrt(Pu)) * priceUSDX = targetAmounts`
-  - Then: `deltaL = targetAmounts / (sqrt(P) - sqrt(Pl)) * priceUSDY + (1 / sqrt(P) - 1 / sqrt(Pu)) * priceUSDX`
+  - `deltaL * (sqrt(P) - sqrt(Pl)) * priceUSDY + deltaL * (1 / sqrt(P) - 1 / sqrt(Pu)) * priceUSDX = depositAmountUSD`
+  - Then: `deltaL = depositAmountUSD / (sqrt(P) - sqrt(Pl)) * priceUSDY + (1 / sqrt(P) - 1 / sqrt(Pu)) * priceUSDX`
 - After we've calculated `deltaL`, we can calculate `deltaX` and `deltaY` using these formulas mentioned in Uniswap v3 Whitepaper
   - `deltaY = deltaL * (sqrt(P) - sqrt(Pl))` (Formula: 6.29, P.8)
   - `deltaX = deltaL * (1 / sqrt(P) - 1 / sqrt(Pu))` (Formula: 6.30, P.8)

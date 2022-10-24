@@ -45,14 +45,27 @@ interface SliderProps {
   onChange: (value: any, index: number) => void;
 }
 const Slider = (props: SliderProps) => {
+  const min = isNaN(props.min) ? 0 : props.min;
+  const max = isNaN(props.max) ? 0 : props.max;
+
+  let value;
+  if (typeof props.value === "object") {
+    const valueArray = [];
+    valueArray[0] = isNaN(props.value[0]) ? 0 : props.value[0];
+    valueArray[1] = isNaN(props.value[1]) ? 0 : props.value[1];
+    value = valueArray;
+  } else {
+    value = isNaN(props.value) ? 0 : props.value;
+  }
+
   return (
     <StyledSlider
       renderTrack={Track}
       renderThumb={Thumb}
-      min={props.min}
-      max={props.max}
+      min={min}
+      max={max}
       onChange={props.onChange}
-      value={props.value}
+      value={value}
       step={props.step || 1}
       thumbClassName={props.thumbClassName}
     />

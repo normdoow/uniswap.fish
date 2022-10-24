@@ -1,12 +1,16 @@
-import { Network } from "../../common/types";
-import { PriceChart } from "../../repos/coingecko";
-import { Pool, Tick, V3Token } from "../../repos/uniswap";
+import { PriceChart } from "../../common/interfaces/coingecko.interface";
+import {
+  Network,
+  Pool,
+  Tick,
+  Token,
+} from "../../common/interfaces/uniswap.interface";
 import { AppContextState } from "./appContext";
 
 export enum AppActionType {
   RESET_TOKEN_LIST = "RESET_TOKEN_LIST",
   RESET_PAIR = "RESET_PAIR",
-  SWAP_CURRENT_PAIR = "SWAP_CURRENT_PAIR",
+  TOGGLE_CURRENT_PAIR = "TOGGLE_CURRENT_PAIR",
   UPDATE_OUT_OF_RANGE_PERCENTAGE = "UPDATE_OUT_OF_RANGE_PERCENTAGE",
   UPDATE_PRICE_RANGE = "UPDATE_PRICE_RANGE",
   UPDATE_DEPOSIT_AMOUNT = "UPDATE_DEPOSIT_AMOUNT",
@@ -16,7 +20,7 @@ export type AppAction =
   | {
       type: AppActionType.RESET_TOKEN_LIST;
       payload: {
-        tokenList: V3Token[];
+        tokenList: Token[];
       };
     }
   | {
@@ -25,14 +29,14 @@ export type AppAction =
         network: Network;
         pool: Pool;
         poolTicks: Tick[];
-        token0: V3Token;
-        token1: V3Token;
+        token0: Token;
+        token1: Token;
         token0PriceChart: PriceChart | null;
         token1PriceChart: PriceChart | null;
         volume24H: number;
       };
     }
-  | { type: AppActionType.SWAP_CURRENT_PAIR }
+  | { type: AppActionType.TOGGLE_CURRENT_PAIR }
   | { type: AppActionType.UPDATE_OUT_OF_RANGE_PERCENTAGE; payload: number }
   | { type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE; payload: number }
   | { type: AppActionType.UPDATE_PRICE_RANGE; payload: number[] }
@@ -80,10 +84,10 @@ export const appReducer = (
         token0PriceChart,
         token1PriceChart,
         volume24H,
-        isSwap: false,
+        isPairToggled: false,
       };
     }
-    case AppActionType.SWAP_CURRENT_PAIR: {
+    case AppActionType.TOGGLE_CURRENT_PAIR: {
       const token0 = state.token1;
       const token1 = state.token0;
       const pool = {
@@ -96,7 +100,7 @@ export const appReducer = (
 
       return {
         ...state,
-        isSwap: !state.isSwap,
+        isPairToggled: !state.isPairToggled,
         pool,
         token0,
         token1,

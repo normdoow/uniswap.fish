@@ -1,10 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import { Heading } from "../../common/atomic";
-import Table from "../../common/Table";
+import { Dollar, Heading, Table } from "../../common/components";
 import { useAppContext } from "../../context/app/appContext";
 import { AppActionType } from "../../context/app/appReducer";
-import { getTokenAmountsFromDepositAmounts } from "../../utils/liquidityMath";
+import { getTokensAmountFromDepositAmountUSD } from "../../utils/uniswapv3/math";
 
 const InputGroup = styled.div`
   display: flex;
@@ -48,7 +47,7 @@ const Token = styled.div`
   }
 `;
 
-const DepositAmounts = () => {
+const DepositAmount = () => {
   const { state, dispatch } = useAppContext();
 
   const P = state.priceAssumptionValue;
@@ -56,22 +55,22 @@ const DepositAmounts = () => {
   const Pu = state.priceRangeValue[1];
   const priceUSDX = state.token1PriceChart?.currentPriceUSD || 1;
   const priceUSDY = state.token0PriceChart?.currentPriceUSD || 1;
-  const targetAmounts = state.depositAmountValue;
+  const depositAmountUSD = state.depositAmountValue;
 
-  const { amount0, amount1 } = getTokenAmountsFromDepositAmounts(
+  const { amount0, amount1 } = getTokensAmountFromDepositAmountUSD(
     P,
     Pl,
     Pu,
     priceUSDX,
     priceUSDY,
-    targetAmounts
+    depositAmountUSD
   );
 
   return (
     <div>
-      <Heading>Deposit Amounts</Heading>
+      <Heading>Deposit Amount</Heading>
       <InputGroup>
-        <span className="dollar">$</span>
+        <Dollar>$</Dollar>
         <DepositInput
           defaultValue={1000}
           type="number"
@@ -108,4 +107,4 @@ const DepositAmounts = () => {
   );
 };
 
-export default DepositAmounts;
+export default DepositAmount;

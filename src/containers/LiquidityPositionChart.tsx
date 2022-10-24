@@ -1,13 +1,14 @@
 import { useEffect, useRef } from "react";
 import styled from "styled-components";
-import { Heading } from "../common/atomic";
+import { Heading } from "../common/components";
 import D3LiquidityHistogram, { Bin } from "./D3LiquidityHistogram";
 import { useAppContext } from "../context/app/appContext";
-import { Tick } from "../repos/uniswap";
-import { getPriceFromTick, getTickFromPrice } from "../utils/liquidityMath";
+import { getPriceFromTick, getTickFromPrice } from "../utils/uniswapv3/math";
 import { AppActionType } from "../context/app/appReducer";
 import { divideArray, findMax, findMin } from "../utils/math";
 import { ScreenWidth } from "../utils/styled";
+import { Price } from "../common/interfaces/coingecko.interface";
+import { Tick } from "../common/interfaces/uniswap.interface";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -113,7 +114,7 @@ const LiquidityPositionChart = () => {
       state.token0.decimals,
       state.token1.decimals
     );
-    if (state.isSwap) {
+    if (state.isPairToggled) {
       currentTick = -currentTick;
     }
     let minimumTick = getTickFromPrice(
@@ -126,7 +127,7 @@ const LiquidityPositionChart = () => {
       state.token0.decimals,
       state.token1.decimals
     );
-    if (state.isSwap) {
+    if (state.isPairToggled) {
       minimumTick = -minimumTick;
       maximumTick = -maximumTick;
     }
@@ -141,7 +142,7 @@ const LiquidityPositionChart = () => {
 
     let token0Symbol;
     let token1Symbol;
-    if (state.isSwap) {
+    if (state.isPairToggled) {
       token0Symbol = state.token1?.symbol;
       token1Symbol = state.token0?.symbol;
     } else {
@@ -174,7 +175,7 @@ const LiquidityPositionChart = () => {
       state.token0.decimals,
       state.token1.decimals
     );
-    if (state.isSwap) {
+    if (state.isPairToggled) {
       minPrice = getPriceFromTick(
         -ticks[0],
         state.token0.decimals,
@@ -188,8 +189,8 @@ const LiquidityPositionChart = () => {
     }
     const prices = [minPrice, maxPrice].sort((a, b) => a - b);
     const _p = divideArray(
-      (state.token1PriceChart?.prices || []).map((p) => p.value),
-      (state.token0PriceChart?.prices || []).map((p) => p.value)
+      (state.token1PriceChart?.prices || []).map((p: Price) => p.value),
+      (state.token0PriceChart?.prices || []).map((p: Price) => p.value)
     );
     let _min = findMin(_p);
     let _max = findMax(_p);
@@ -214,7 +215,7 @@ const LiquidityPositionChart = () => {
     if (!state.token0 || !state.token1) return;
 
     const currentPrice = Number(state.priceAssumptionValue);
-    if (!state.isSwap) {
+    if (!state.isPairToggled) {
       d3Chart.updateCurrentTick(
         getTickFromPrice(
           currentPrice,
@@ -240,7 +241,7 @@ const LiquidityPositionChart = () => {
     let minTick: number;
     let maxTick: number;
 
-    if (!state.isSwap) {
+    if (!state.isPairToggled) {
       minTick = getTickFromPrice(
         state.priceRangeValue[0],
         state.token0.decimals,

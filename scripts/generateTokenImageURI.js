@@ -34,7 +34,7 @@ Promise.all(URLS.map((url) => axios.get(url)))
       }, {});
   })
   .then((data) => {
-    const filepath = "./src/utils/tokenImageURI.json";
+    const filepath = "./src/utils/uniswapv3/tokenImageURI.json";
 
     fs.writeFileSync(filepath, JSON.stringify(data, 2, 2));
     console.log(`[DONE] Generated token image URI mapping file to ${filepath}`);

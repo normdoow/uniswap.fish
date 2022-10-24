@@ -1,8 +1,6 @@
 import Modal from "react-modal";
 import { useModalContext } from "../context/modal/modalContext";
 import styled from "styled-components";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCopy, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { ModalActionType } from "../context/modal/modalReducer";
 import { PrimaryBlockButton } from "../common/buttons";
 
@@ -88,6 +86,7 @@ const DonateModal = () => {
         style={ModalStyle}
         isOpen={state.isAnnoucementModalOpen}
         contentLabel="Important Annoucement"
+        ariaHideApp={false}
       >
         <>
           <Header>

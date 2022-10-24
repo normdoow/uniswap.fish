@@ -1,12 +1,5 @@
-export interface Network {
-  id: string;
-  name: string;
-  desc: string;
-  logoURI: string;
-  disabled?: boolean;
-  isNew?: boolean;
-  subgraphEndpoint: string;
-}
+import { Network } from "./interfaces/uniswap.interface";
+
 export const NETWORKS: Network[] = [
   {
     id: "ethereum",
@@ -55,3 +48,13 @@ export const NETWORKS: Network[] = [
       "https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-dev",
   },
 ];
+
+let currentNetwork = NETWORKS[0];
+
+export const getCurrentNetwork = (): Network => {
+  return currentNetwork;
+};
+
+export const setCurrentNetwork = (network: Network) => {
+  currentNetwork = network;
+};

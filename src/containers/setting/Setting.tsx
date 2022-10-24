@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import { Br } from "../../common/atomic";
+import { Br } from "../../common/components";
 import { ScreenWidth } from "../../utils/styled";
-import DepositAmounts from "./DepositAmounts";
+import DepositAmount from "./DepositAmount";
 import PriceRange from "./PriceRange";
 // import OutOfRangePercentage from "./OutOfRangePercentage";
 
@@ -21,7 +21,7 @@ const SettingContainer = styled.div`
 const Setting = () => {
   return (
     <SettingContainer>
-      <DepositAmounts />
+      <DepositAmount />
       <Br />
       <PriceRange />
       {/* <Br />

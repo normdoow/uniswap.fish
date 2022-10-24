@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { Heading } from "../common/atomic";
-import { PriceChart } from "../repos/coingecko";
+import { Heading } from "../common/components";
 import D3CorrelationChart, { Point } from "./D3CorrelationChart";
 import { useAppContext } from "../context/app/appContext";
-import { calculateAvg, findMax, findMin } from "../utils/math";
+import { averageArray, findMax, findMin } from "../utils/math";
 import { ScreenWidth } from "../utils/styled";
+import { PriceChart } from "../common/interfaces/coingecko.interface";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -184,7 +184,7 @@ const CorrelationChart = () => {
           </StatItem>
           <StatItem>
             <div>AVG</div>{" "}
-            <span>{calculateAvg(data.map((d) => d.y)).toFixed(4)}</span>
+            <span>{averageArray(data.map((d) => d.y)).toFixed(4)}</span>
           </StatItem>
           <StatItem className="mobile">
             <div>$$$</div>{" "}

@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import { Br } from "./common/atomic";
+import { Br } from "./common/components";
 import CorrelationChart from "./containers/CorrelationChart";
-import Credit from "./containers/Credit";
+import Footer from "./containers/Footer";
 import EstimatedFees from "./containers/EstimatedFees";
 import Header from "./containers/Header";
 import Navbar from "./containers/Navbar";
@@ -14,7 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FeedbackButton } from "./common/buttons";
 import { useAppContext } from "./context/app/appContext";
 import { faBug } from "@fortawesome/free-solid-svg-icons";
-import { currentNetwork } from "./repos/uniswap";
+import { getCurrentNetwork } from "./common/network";
 // import { useModalContext } from "./context/modal/modalContext";
 // import AnnoucementModal from "./containers/AnnoucementModal";
 // import { ModalActionType } from "./context/modal/modalReducer";
@@ -57,12 +57,15 @@ function App() {
   return (
     <>
       <SelectPairModal />
+      {/* <AnnoucementModal /> */}
+      {/* <DonateModal /> */}
+
       <FeedbackButton
         onClick={() => {
           const app_context = {
             token0: state.token0?.id,
             token1: state.token1?.id,
-            chain: currentNetwork.id,
+            chain: getCurrentNetwork().id,
             pool: state.pool?.id,
             depositAmount: state.depositAmountValue,
             priceRange: state.priceRangeValue,
@@ -81,8 +84,7 @@ function App() {
       >
         <FontAwesomeIcon icon={faBug} />
       </FeedbackButton>
-      {/* <AnnoucementModal /> */}
-      {/* <DonateModal /> */}
+
       <Navbar />
       <BodyContainer>
         <Header />
@@ -99,7 +101,7 @@ function App() {
           </div>
         </ContentContainer>
 
-        <Credit />
+        <Footer />
       </BodyContainer>
     </>
   );

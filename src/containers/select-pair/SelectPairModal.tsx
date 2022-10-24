@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import Modal from "react-modal";
 import ReactLoading from "react-loading";
 import { useModalContext } from "../../context/modal/modalContext";
-import { Heading } from "../../common/atomic";
+import { Heading } from "../../common/components";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -16,18 +16,20 @@ import {
   getPoolFromPair,
   getPoolTicks,
   getTopTokenList,
-  getVolumn24H,
-  Pool,
-  updateNetwork,
-  V3Token,
+  getAvgTradingVolume,
 } from "../../repos/uniswap";
 import SearchTokenPage from "./SearchTokenPage";
 import { useAppContext } from "../../context/app/appContext";
 import { AppActionType } from "../../context/app/appReducer";
-import { sortToken } from "../../utils/helper";
 import { getPriceChart } from "../../repos/coingecko";
 import { ModalActionType } from "../../context/modal/modalReducer";
-import { Network, NETWORKS } from "../../common/types";
+import { NETWORKS, setCurrentNetwork } from "../../common/network";
+import { sortTokens } from "../../utils/uniswapv3/helper";
+import {
+  Network,
+  Pool,
+  Token,
+} from "../../common/interfaces/uniswap.interface";
 
 const ModalStyle = {
   overlay: {
@@ -235,6 +237,7 @@ const Logo = styled.h1`
     padding: 15px 10px;
   }
 `;
+
 const FEE_TIER_STYLES = {
   DISABLE: {
     cursor: "not-allowed",
@@ -245,6 +248,7 @@ const FEE_TIER_STYLES = {
     background: "rgba(38, 109, 221, 0.25)",
   },
 };
+
 const SelectPairModal = () => {
   const appContext = useAppContext();
   const modalContext = useModalContext();
@@ -252,7 +256,7 @@ const SelectPairModal = () => {
   const [selectedNetwork, setSelectedNetwork] = useState<Network | null>(
     NETWORKS[0]
   );
-  const [selectedTokens, setSelectedTokens] = useState<V3Token[] | null[]>([
+  const [selectedTokens, setSelectedTokens] = useState<Token[] | null[]>([
     null,
     null,
   ]);
@@ -291,7 +295,7 @@ const SelectPairModal = () => {
     }
     setIsSubmitLoading(true);
 
-    const [token0, token1] = sortToken(selectedTokens[0], selectedTokens[1]);
+    const [token0, token1] = sortTokens(selectedTokens[0], selectedTokens[1]);
     const pool = selectedPool;
 
     const [poolTicks, token0PriceChart, token1PriceChart, volume24H] =
@@ -299,7 +303,7 @@ const SelectPairModal = () => {
         getPoolTicks(pool.id),
         getPriceChart(token0.id),
         getPriceChart(token1.id),
-        getVolumn24H(pool.id),
+        getAvgTradingVolume(pool.id),
       ]);
 
     appContext.dispatch({
@@ -396,7 +400,7 @@ const SelectPairModal = () => {
     });
   };
 
-  const selectToken = (token: V3Token) => {
+  const selectToken = (token: Token) => {
     const _selectedTokens = JSON.parse(JSON.stringify(selectedTokens));
 
     if (selectedTokenIndex !== null) {
@@ -414,6 +418,7 @@ const SelectPairModal = () => {
         style={ModalStyle}
         isOpen={modalContext.state.isSelectPairModalOpen}
         contentLabel="Example Modal"
+        ariaHideApp={false}
       >
         {showSelectNetworkPage && (
           <>
@@ -441,7 +446,7 @@ const SelectPairModal = () => {
                   }
                   onClick={() => {
                     if (!network.disabled) {
-                      updateNetwork(network);
+                      setCurrentNetwork(network);
                       fetchTokens();
 
                       setSelectedNetwork(network);

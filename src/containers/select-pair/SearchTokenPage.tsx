@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { currentNetwork, getToken, V3Token } from "../../repos/uniswap";
+import { getToken } from "../../repos/uniswap";
 import ReactLoading from "react-loading";
 import Web3 from "web3";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from "@fortawesome/free-solid-svg-icons";
 import ReactTooltip from "react-tooltip";
+import { Token } from "../../common/interfaces/uniswap.interface";
+import { getCurrentNetwork } from "../../common/network";
 
 const Container = styled.div`
   width: 370px;
@@ -128,16 +130,16 @@ const TokenItemWrapper = styled.div`
 `;
 
 interface SearchTokenPageProps {
-  tokens: V3Token[];
-  selectToken: (token: V3Token) => void;
-  refetchTokens: any;
+  tokens: Token[];
+  selectToken: (token: Token) => void;
+  refetchTokens: () => void;
 }
 const SearchTokenPage = ({
   tokens: _tokens,
   selectToken,
   refetchTokens,
 }: SearchTokenPageProps) => {
-  const [tokens, setTokens] = useState<V3Token[]>(_tokens);
+  const [tokens, setTokens] = useState<Token[]>(_tokens);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isTokenNotFound, setIsTokenNotFound] = useState<boolean>(false);
   const [filterCSSStyle, setFilterCSSStyle] = useState<string>(``);
@@ -189,7 +191,7 @@ const SearchTokenPage = ({
         setTokens([...tokens, token]);
 
         // save token in localStorage for later use
-        const key = `SearchTokenPage_${currentNetwork.id}_tokens`;
+        const key = `SearchTokenPage_${getCurrentNetwork().id}_tokens`;
         const items = localStorage.getItem(key);
         if (items === null) {
           localStorage.setItem(key, JSON.stringify([token]));
@@ -234,7 +236,7 @@ const SearchTokenPage = ({
           {tokens.map((token) => {
             return (
               <TokenItemWrapper
-                id={`${token.symbol}_${token.name}_${token.id}`}
+                key={`${token.symbol}_${token.name}_${token.id}`}
                 data-filter={`${token.id.toLowerCase()} ${token.symbol.toLowerCase()} ${token.name.toLowerCase()}`}
                 className="token-item"
               >

@@ -1,23 +1,15 @@
 import axios from "axios";
+import { Price, PriceChart } from "../common/interfaces/coingecko.interface";
+import { getCurrentNetwork } from "../common/network";
 import tokenAddressMapping from "./tokenAddressMapping.json";
-import { currentNetwork } from "./uniswap";
 
-export enum QueryPeriodEnum {
-  ONE_DAY = "1",
-  ONE_WEEK = "7",
-  ONE_MONTH = "30",
-  THREE_MONTH = "90",
-  ONE_YEAR = "90",
-  MAX = "max",
-}
-
-export interface Token {
+interface Token {
   id: string;
   name: string;
 }
 export const getCoingeckoToken = (contractAddress: string): Token | null => {
   const mapper = tokenAddressMapping as { [key: string]: any };
-  const currentPlatform = currentNetwork.id;
+  const currentPlatform = getCurrentNetwork().id;
   const result = mapper[currentPlatform][contractAddress];
   if (result) {
     return result as Token;
@@ -30,15 +22,13 @@ export const getCoingeckoToken = (contractAddress: string): Token | null => {
   return null;
 };
 
-export interface Price {
-  timestamp: number;
-  value: number;
-}
-export interface PriceChart {
-  tokenId: string;
-  tokenName: string;
-  currentPriceUSD: number;
-  prices: Price[];
+enum QueryPeriodEnum {
+  ONE_DAY = "1",
+  ONE_WEEK = "7",
+  ONE_MONTH = "30",
+  THREE_MONTH = "90",
+  ONE_YEAR = "90",
+  MAX = "max",
 }
 export const getPriceChart = async (
   contractAddress: string,

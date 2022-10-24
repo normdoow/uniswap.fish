@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Heading } from "../../common/atomic";
+import { Heading } from "../../common/components";
 import { useAppContext } from "../../context/app/appContext";
 import { AppActionType } from "../../context/app/appReducer";
 import Slider from "./Slider";

@@ -1,18 +1,23 @@
 import React from "react";
-import { Network, NETWORKS } from "../../common/types";
-import { PriceChart } from "../../repos/coingecko";
-import { Pool, Tick, V3Token } from "../../repos/uniswap";
+import { PriceChart } from "../../common/interfaces/coingecko.interface";
+import {
+  Network,
+  Pool,
+  Tick,
+  Token,
+} from "../../common/interfaces/uniswap.interface";
+import { NETWORKS } from "../../common/network";
 import { AppAction, appReducer } from "./appReducer";
 
 export interface AppContextState {
   network: Network;
-  tokenList: V3Token[];
-  isSwap: boolean;
+  tokenList: Token[];
+  isPairToggled: boolean;
 
   pool: Pool | null;
   poolTicks: Tick[] | null;
-  token0: V3Token | null;
-  token1: V3Token | null;
+  token0: Token | null;
+  token1: Token | null;
   token0PriceChart: PriceChart | null;
   token1PriceChart: PriceChart | null;
   volume24H: number;
@@ -25,7 +30,7 @@ export interface AppContextState {
 const initialState: AppContextState = {
   network: NETWORKS[0],
   tokenList: [],
-  isSwap: false,
+  isPairToggled: false,
 
   pool: null,
   poolTicks: null,

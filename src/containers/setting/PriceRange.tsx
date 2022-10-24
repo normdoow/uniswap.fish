@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import styled from "styled-components";
-import { Heading } from "../../common/atomic";
+import { Heading } from "../../common/components";
+import { Price } from "../../common/interfaces/coingecko.interface";
 import { useAppContext } from "../../context/app/appContext";
 import { AppActionType } from "../../context/app/appReducer";
 import { divideArray, findMax, findMin } from "../../utils/math";
@@ -93,8 +94,8 @@ const PriceRange = () => {
   const [priceRangeSlider, setPriceRangeSlider] = useState([0, 0]);
 
   const prices = divideArray(
-    (state.token1PriceChart?.prices || []).map((p) => p.value),
-    (state.token0PriceChart?.prices || []).map((p) => p.value)
+    (state.token1PriceChart?.prices || []).map((p: Price) => p.value),
+    (state.token0PriceChart?.prices || []).map((p: Price) => p.value)
   );
 
   const currentPrice = Number(state.pool?.token0Price || NaN);
@@ -124,20 +125,20 @@ const PriceRange = () => {
       type: AppActionType.UPDATE_PRICE_RANGE,
       payload: [_min, _max],
     });
-  }, [state.pool]);
+  }, [state.pool, _min, _max, currentPrice, dispatch]);
 
   useEffect(() => {
     // percent = 100 * (price - min) / (max - min)
     setActivePriceAssumptionSlider(
       (100 * (state.priceAssumptionValue - min)) / (max - min)
     );
-  }, [state.priceAssumptionValue]);
+  }, [state.priceAssumptionValue, min, max]);
   useEffect(() => {
     setPriceRangeSlider([
       (100 * (state.priceRangeValue[0] - min)) / (max - min),
       (100 * (state.priceRangeValue[1] - min)) / (max - min),
     ]);
-  }, [state.priceRangeValue]);
+  }, [state.priceRangeValue, min, max]);
 
   return (
     <div>
