@@ -71,7 +71,7 @@ export const getPoolTicks = async (poolAddress: string): Promise<Tick[]> => {
   return result;
 };
 
-const processTokenInfo = (token: Token) => {
+const _processTokenInfo = (token: Token) => {
   token.logoURI = getTokenLogoURL(token.id);
 
   if (token.name === "Wrapped Ether" || token.name === "Wrapped Ethereum") {
@@ -116,7 +116,7 @@ export const getTopTokenList = async (): Promise<Token[]> => {
 
   const tokens = res.tokens as Token[];
   let result = tokens
-    .map(processTokenInfo)
+    .map(_processTokenInfo)
     .filter((token) => token.symbol.length < 30);
 
   lscache.set(cacheKey, result, 10); // 10 mins
@@ -139,7 +139,7 @@ export const getToken = async (tokenAddress: string): Promise<Token> => {
   }`);
 
   if (res.token !== null) {
-    res.token = processTokenInfo(res.token);
+    res.token = _processTokenInfo(res.token);
   }
 
   return res.token;
