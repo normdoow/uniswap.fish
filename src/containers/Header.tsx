@@ -132,14 +132,14 @@ const Header = () => {
           style={{ marginRight: 7 }}
           onClick={() => {
             appContext.dispatch({
-              type: AppActionType.SWAP_CURRENT_PAIR,
+              type: AppActionType.TOGGLE_CURRENT_PAIR,
             });
           }}
         >
           <ButtonIcon>
             <FontAwesomeIcon icon={faExchangeAlt} />
           </ButtonIcon>
-          <InvisibleTabletSpan>Swap Pair</InvisibleTabletSpan>
+          <InvisibleTabletSpan>Toggle Pair</InvisibleTabletSpan>
         </Button>
         <PrimaryButton
           onClick={() => {

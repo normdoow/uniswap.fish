@@ -114,7 +114,7 @@ const LiquidityPositionChart = () => {
       state.token0.decimals,
       state.token1.decimals
     );
-    if (state.isSwap) {
+    if (state.isPairToggled) {
       currentTick = -currentTick;
     }
     let minimumTick = getTickFromPrice(
@@ -127,7 +127,7 @@ const LiquidityPositionChart = () => {
       state.token0.decimals,
       state.token1.decimals
     );
-    if (state.isSwap) {
+    if (state.isPairToggled) {
       minimumTick = -minimumTick;
       maximumTick = -maximumTick;
     }
@@ -142,7 +142,7 @@ const LiquidityPositionChart = () => {
 
     let token0Symbol;
     let token1Symbol;
-    if (state.isSwap) {
+    if (state.isPairToggled) {
       token0Symbol = state.token1?.symbol;
       token1Symbol = state.token0?.symbol;
     } else {
@@ -175,7 +175,7 @@ const LiquidityPositionChart = () => {
       state.token0.decimals,
       state.token1.decimals
     );
-    if (state.isSwap) {
+    if (state.isPairToggled) {
       minPrice = getPriceFromTick(
         -ticks[0],
         state.token0.decimals,
@@ -215,7 +215,7 @@ const LiquidityPositionChart = () => {
     if (!state.token0 || !state.token1) return;
 
     const currentPrice = Number(state.priceAssumptionValue);
-    if (!state.isSwap) {
+    if (!state.isPairToggled) {
       d3Chart.updateCurrentTick(
         getTickFromPrice(
           currentPrice,
@@ -241,7 +241,7 @@ const LiquidityPositionChart = () => {
     let minTick: number;
     let maxTick: number;
 
-    if (!state.isSwap) {
+    if (!state.isPairToggled) {
       minTick = getTickFromPrice(
         state.priceRangeValue[0],
         state.token0.decimals,

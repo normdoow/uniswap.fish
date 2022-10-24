@@ -75,7 +75,7 @@ const EstimatedFees = () => {
     state.token1?.decimals || "18"
   );
 
-  if (state.isSwap) currentTick = -currentTick;
+  if (state.isPairToggled) currentTick = -currentTick;
 
   const L = useMemo(
     () => getLiquidityFromTick(state.poolTicks || [], currentTick),

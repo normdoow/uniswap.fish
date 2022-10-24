@@ -12,7 +12,7 @@ import { AppAction, appReducer } from "./appReducer";
 export interface AppContextState {
   network: Network;
   tokenList: Token[];
-  isSwap: boolean;
+  isPairToggled: boolean;
 
   pool: Pool | null;
   poolTicks: Tick[] | null;
@@ -30,7 +30,7 @@ export interface AppContextState {
 const initialState: AppContextState = {
   network: NETWORKS[0],
   tokenList: [],
-  isSwap: false,
+  isPairToggled: false,
 
   pool: null,
   poolTicks: null,
