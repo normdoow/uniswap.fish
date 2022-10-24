@@ -55,7 +55,7 @@ const DepositAmount = () => {
   const Pu = state.priceRangeValue[1];
   const priceUSDX = state.token1PriceChart?.currentPriceUSD || 1;
   const priceUSDY = state.token0PriceChart?.currentPriceUSD || 1;
-  const targetAmounts = state.depositAmountValue;
+  const depositAmountUSD = state.depositAmountValue;
 
   const { amount0, amount1 } = getTokensAmountFromDepositAmountUSD(
     P,
@@ -63,7 +63,7 @@ const DepositAmount = () => {
     Pu,
     priceUSDX,
     priceUSDY,
-    targetAmounts
+    depositAmountUSD
   );
 
   return (
