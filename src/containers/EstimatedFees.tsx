@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import styled from "styled-components";
 import { Dollar, Heading, Table } from "../common/components";
 import { useAppContext } from "../context/app/appContext";
@@ -77,7 +77,10 @@ const EstimatedFees = () => {
 
   if (state.isSwap) currentTick = -currentTick;
 
-  const L = getLiquidityFromTick(state.poolTicks || [], currentTick);
+  const L = useMemo(
+    () => getLiquidityFromTick(state.poolTicks || [], currentTick),
+    [state.poolTicks, currentTick]
+  );
   const volume24H = state.volume24H;
   const feeTier = state.pool?.feeTier || "";
 
