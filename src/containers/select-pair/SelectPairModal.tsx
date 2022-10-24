@@ -418,6 +418,7 @@ const SelectPairModal = () => {
         style={ModalStyle}
         isOpen={modalContext.state.isSelectPairModalOpen}
         contentLabel="Example Modal"
+        ariaHideApp={false}
       >
         {showSelectNetworkPage && (
           <>

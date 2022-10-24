@@ -100,6 +100,7 @@ const DonateModal = () => {
         style={ModalStyle}
         isOpen={state.isDonateModalOpen}
         contentLabel="DONATE"
+        ariaHideApp={false}
       >
         <>
           <Header>
