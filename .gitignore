@@ -24,4 +24,4 @@ yarn-debug.log*
 yarn-error.log*
 
 src/repos/tokenAddressMapping.json
-src/utils/tokenImageURI.json
+src/utils/uniswapv3/tokenImageURI.json
