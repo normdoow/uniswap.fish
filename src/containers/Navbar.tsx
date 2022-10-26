@@ -64,6 +64,33 @@ const Twitter = styled.a`
   }
 `;
 
+const bubbleAnimation = keyframes`
+  0% {
+    transform: scale(1);
+  }
+  80% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.75) translateX(2px) translateY(-20px);
+  }
+`;
+const smallBubbleAnimation = keyframes`
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    opacity: 0.5;
+  }
+  65% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.75) translateX(-2px) translateY(-20px);
+  }
+`;
 const insideBubbleAnimation = keyframes`
   0% {
     transform: scale(0);
@@ -74,7 +101,7 @@ const insideBubbleAnimation = keyframes`
     background: rgba(0, 0, 0, 1);
   }
 `;
-const badgeAnimaation = keyframes`
+const badgeAnimation = keyframes`
   0% {
     transform: scale(0);
     background: #f73c01;
@@ -107,6 +134,60 @@ const WhatsNew = styled.a`
     left: -8px;
     z-index: 9999;
   }
+  & > span.bubble {
+    position: absolute;
+    top: -3px;
+    left: -4.5px;
+    z-index: 99999;
+    transform-origin: 2.5px 7px;
+
+    /* Rotation Transform Origin Debug */
+    /* &::before {
+      content: "";
+      position: absolute;
+      background: white;
+      height: 12px;
+      width: 1px;
+      top: -5.5px;
+      left: -18px;
+      transform: translateX(20px);
+    } */
+
+    & > span:nth-child(1) {
+      width: 3px;
+      height: 3px;
+      border-radius: 40%;
+      display: block;
+      position: absolute;
+      background: #f73c01;
+
+      animation-delay: 0.2s;
+      animation-name: ${smallBubbleAnimation};
+      animation-duration: 0.75s;
+      animation-iteration-count: 1;
+      animation-timing-function: ease-out;
+      -webkit-animation-fill-mode: forwards;
+      animation-fill-mode: forwards;
+    }
+
+    & > span:nth-child(2) {
+      width: 5px;
+      height: 5px;
+      border-radius: 40%;
+      display: block;
+      background: #f73c01;
+      position: absolute;
+      transform: translateX(2px) translateY(-1px);
+
+      animation-delay: 0.2s;
+      animation-name: ${bubbleAnimation};
+      animation-duration: 0.75s;
+      animation-iteration-count: 1;
+      animation-timing-function: ease-out;
+      -webkit-animation-fill-mode: forwards;
+      animation-fill-mode: forwards;
+    }
+  }
   & > span.insideBubble::before {
     content: "";
     width: 12px;
@@ -130,7 +211,7 @@ const WhatsNew = styled.a`
     top: -2px;
     left: -8px;
 
-    animation-name: ${badgeAnimaation};
+    animation-name: ${badgeAnimation};
     animation-duration: 1.25s;
     animation-iteration-count: infinite;
     animation-fill-mode: forwards;
@@ -168,6 +249,59 @@ const Navbar = () => {
           }}
         >
           What's New
+          {playSplashAnimation && (
+            <>
+              <span className="bubble">
+                <span />
+                <span />
+              </span>
+              <span
+                className="bubble"
+                style={{
+                  transform: "rotate(60deg)",
+                }}
+              >
+                <span />
+                <span />
+              </span>
+              <span
+                className="bubble"
+                style={{
+                  transform: "rotate(120deg)",
+                }}
+              >
+                <span />
+                <span />
+              </span>
+              <span
+                className="bubble"
+                style={{
+                  transform: "rotate(180deg)",
+                }}
+              >
+                <span />
+                <span />
+              </span>
+              <span
+                className="bubble"
+                style={{
+                  transform: "rotate(240deg)",
+                }}
+              >
+                <span />
+                <span />
+              </span>
+              <span
+                className="bubble"
+                style={{
+                  transform: "rotate(300deg)",
+                }}
+              >
+                <span />
+                <span />
+              </span>
+            </>
+          )}
           <span
             ref={badgeRef}
             className={`badge ${playSplashAnimation ? "insideBubble" : ""}`}
