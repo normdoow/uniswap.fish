@@ -1,7 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTwitter } from "@fortawesome/free-brands-svg-icons";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { ScreenWidth } from "../utils/styled";
 // import { useModalContext } from "../context/modal/modalContext";
 // import { ModalActionType } from "../context/modal/modalReducer";
@@ -56,11 +56,57 @@ const Menubar = styled.div`
 const Twitter = styled.a`
   color: rgba(255, 255, 255, 0.6);
   font-size: 1.2rem;
-  margin-right: 15px;
 
   &:hover {
     color: #1f9cea;
     transform: scale(1.25) rotate(18deg);
+  }
+`;
+
+const badgeAnimaation = keyframes`
+  0% {
+    transform: scale(0);
+    background: #f73c01;
+  }
+  100% {
+    transform: scale(3);
+    background: transparent;
+  }
+`;
+const WhatsNew = styled.a`
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1rem;
+  margin-right: 18px;
+  cursor: pointer;
+  position: relative;
+
+  &:hover {
+    color: white;
+  }
+
+  & > span.badge {
+    background: #f73c01;
+    display: block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    position: absolute;
+    top: -2px;
+    left: -8px;
+    z-index: 9999;
+  }
+  & > span.animatedBadge {
+    display: block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    position: absolute;
+    top: -2px;
+    left: -8px;
+
+    animation-name: ${badgeAnimaation};
+    animation-duration: 1.25s;
+    animation-iteration-count: infinite;
   }
 `;
 
@@ -71,6 +117,11 @@ const Navbar = () => {
         <span>🦄</span> <span>UniswapCalculator</span>
       </Logo>
       <Menubar>
+        <WhatsNew>
+          What's New
+          <span className="badge" />
+          <span className="animatedBadge" />
+        </WhatsNew>
         <Twitter
           href="https://twitter.com/uniswapdotfish"
           target="_blank"
