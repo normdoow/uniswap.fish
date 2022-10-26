@@ -65,20 +65,22 @@ const Twitter = styled.a`
 `;
 
 const bubbleAnimation = keyframes`
-  0% {
-    transform: scale(1);
+  20% {
+    opacity: 1;
+    transform: scale(1) translateX(1px) translateY(-10px);
   }
   80% {
     opacity: 0.5;
   }
   100% {
     opacity: 0;
-    transform: scale(0.75) translateX(2px) translateY(-20px);
+    transform: scale(0.75) translateX(5px) translateY(-20px);
   }
 `;
 const smallBubbleAnimation = keyframes`
-  0% {
-    transform: scale(1);
+  20% {
+    opacity: 1;
+    transform: scale(1) translateX(1px) translateY(-10px);
   }
   45% {
     opacity: 0.5;
@@ -88,7 +90,7 @@ const smallBubbleAnimation = keyframes`
   }
   100% {
     opacity: 0;
-    transform: scale(0.75) translateX(-2px) translateY(-20px);
+    transform: scale(0.75) translateX(-5px) translateY(-20px);
   }
 `;
 const insideBubbleAnimation = keyframes`
@@ -160,10 +162,11 @@ const WhatsNew = styled.a`
       display: block;
       position: absolute;
       background: #f73c01;
+      opacity: 0;
 
       animation-delay: 0.2s;
       animation-name: ${smallBubbleAnimation};
-      animation-duration: 0.75s;
+      animation-duration: 1s;
       animation-iteration-count: 1;
       animation-timing-function: ease-out;
       -webkit-animation-fill-mode: forwards;
@@ -178,10 +181,11 @@ const WhatsNew = styled.a`
       background: #f73c01;
       position: absolute;
       transform: translateX(2px) translateY(-1px);
+      opacity: 0;
 
       animation-delay: 0.2s;
       animation-name: ${bubbleAnimation};
-      animation-duration: 0.75s;
+      animation-duration: 1s;
       animation-iteration-count: 1;
       animation-timing-function: ease-out;
       -webkit-animation-fill-mode: forwards;
@@ -227,11 +231,6 @@ const Navbar = () => {
   const badgeRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    animatedBadgeRef.current?.addEventListener("animationiteration", () => {
-      if (playSplashAnimation) {
-        animatedBadgeRef.current?.classList.add("disabled");
-      }
-    });
     badgeRef.current?.addEventListener("animationend", () => {
       badgeRef.current?.classList.add("disabled");
     });
@@ -306,7 +305,10 @@ const Navbar = () => {
             ref={badgeRef}
             className={`badge ${playSplashAnimation ? "insideBubble" : ""}`}
           />
-          <span ref={animatedBadgeRef} className="animatedBadge" />
+          <span
+            ref={animatedBadgeRef}
+            className={`animatedBadge ${playSplashAnimation ? "disabled" : ""}`}
+          />
         </WhatsNew>
         <Twitter
           href="https://twitter.com/uniswapdotfish"
