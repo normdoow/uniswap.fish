@@ -250,55 +250,20 @@ const Navbar = () => {
           What's New
           {playSplashAnimation && (
             <>
-              <span className="bubble">
-                <span />
-                <span />
-              </span>
-              <span
-                className="bubble"
-                style={{
-                  transform: "rotate(60deg)",
-                }}
-              >
-                <span />
-                <span />
-              </span>
-              <span
-                className="bubble"
-                style={{
-                  transform: "rotate(120deg)",
-                }}
-              >
-                <span />
-                <span />
-              </span>
-              <span
-                className="bubble"
-                style={{
-                  transform: "rotate(180deg)",
-                }}
-              >
-                <span />
-                <span />
-              </span>
-              <span
-                className="bubble"
-                style={{
-                  transform: "rotate(240deg)",
-                }}
-              >
-                <span />
-                <span />
-              </span>
-              <span
-                className="bubble"
-                style={{
-                  transform: "rotate(300deg)",
-                }}
-              >
-                <span />
-                <span />
-              </span>
+              {Array.from(Array(6).keys()).map((_, i) => {
+                return (
+                  <span
+                    key={`bubble_${i}`}
+                    className="bubble"
+                    style={{
+                      transform: `rotate(${i * 60}deg)`,
+                    }}
+                  >
+                    <span />
+                    <span />
+                  </span>
+                );
+              })}
             </>
           )}
           <span
