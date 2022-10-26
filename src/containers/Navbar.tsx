@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTwitter } from "@fortawesome/free-brands-svg-icons";
 import styled, { keyframes } from "styled-components";
@@ -15,7 +15,8 @@ const NavbarContainer = styled.div`
   position: absolute;
   width: 100vw;
   top: 0;
-  z-index: 9999;
+  /* z-index: 9999; */
+  z-index: 9999999999; // TODO: remove this
 
   @media only screen and (max-width: ${ScreenWidth.TABLET}px) {
     padding: 15px;
@@ -74,7 +75,8 @@ const badgeAnimaation = keyframes`
   }
 `;
 const WhatsNew = styled.a`
-  color: rgba(255, 255, 255, 0.6);
+  /* color: rgba(255, 255, 255, 0.6); */
+  color: white;
   font-size: 1rem;
   margin-right: 18px;
   cursor: pointer;
@@ -107,20 +109,39 @@ const WhatsNew = styled.a`
     animation-name: ${badgeAnimaation};
     animation-duration: 1.25s;
     animation-iteration-count: infinite;
+    animation-fill-mode: forwards;
+  }
+  & > span.disabled {
+    display: none;
   }
 `;
 
 const Navbar = () => {
+  const [playSplashAnimation, setPlaySplashAnimation] = useState(false);
+  const animatedBadgeRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    animatedBadgeRef.current?.addEventListener("animationiteration", (ev) => {
+      if (playSplashAnimation) {
+        animatedBadgeRef.current?.classList.add("disabled");
+      }
+    });
+  }, [playSplashAnimation]);
+
   return (
     <NavbarContainer>
       <Logo>
         <span>🦄</span> <span>UniswapCalculator</span>
       </Logo>
       <Menubar>
-        <WhatsNew>
+        <WhatsNew
+          onClick={() => {
+            setPlaySplashAnimation(true);
+          }}
+        >
           What's New
           <span className="badge" />
-          <span className="animatedBadge" />
+          <span ref={animatedBadgeRef} className="animatedBadge" />
         </WhatsNew>
         <Twitter
           href="https://twitter.com/uniswapdotfish"
