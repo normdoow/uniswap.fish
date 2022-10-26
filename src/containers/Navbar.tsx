@@ -64,6 +64,16 @@ const Twitter = styled.a`
   }
 `;
 
+const insideBubbleAnimation = keyframes`
+  0% {
+    transform: scale(0);
+    background: rgba(0, 0, 0, 0);
+  }
+  100% {
+    transform: scale(1);
+    background: rgba(0, 0, 0, 1);
+  }
+`;
 const badgeAnimaation = keyframes`
   0% {
     transform: scale(0);
@@ -97,6 +107,20 @@ const WhatsNew = styled.a`
     left: -8px;
     z-index: 9999;
   }
+  & > span.insideBubble::before {
+    content: "";
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    position: absolute;
+
+    animation-name: ${insideBubbleAnimation};
+    animation-duration: 0.2s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+  }
   & > span.animatedBadge {
     display: block;
     width: 12px;
@@ -119,12 +143,16 @@ const WhatsNew = styled.a`
 const Navbar = () => {
   const [playSplashAnimation, setPlaySplashAnimation] = useState(false);
   const animatedBadgeRef = useRef<HTMLElement>(null);
+  const badgeRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    animatedBadgeRef.current?.addEventListener("animationiteration", (ev) => {
+    animatedBadgeRef.current?.addEventListener("animationiteration", () => {
       if (playSplashAnimation) {
         animatedBadgeRef.current?.classList.add("disabled");
       }
+    });
+    badgeRef.current?.addEventListener("animationend", () => {
+      badgeRef.current?.classList.add("disabled");
     });
   }, [playSplashAnimation]);
 
@@ -140,7 +168,10 @@ const Navbar = () => {
           }}
         >
           What's New
-          <span className="badge" />
+          <span
+            ref={badgeRef}
+            className={`badge ${playSplashAnimation ? "insideBubble" : ""}`}
+          />
           <span ref={animatedBadgeRef} className="animatedBadge" />
         </WhatsNew>
         <Twitter
