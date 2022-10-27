@@ -294,7 +294,15 @@ const AchievementTag = () => (
   <Tag style={{ background: "#ff7900" }}>Achievement</Tag>
 );
 
-const whatsNewValue = `15k unique users/month`;
+const ANNOUNCEMENT_LIST = [
+  {
+    message: "15k unique users/month",
+    tweetId: "1583480226759479296",
+    tag: "achievement",
+  },
+];
+
+const announcementTrackerValue = `${ANNOUNCEMENT_LIST[0].tag}_${ANNOUNCEMENT_LIST[0].tweetId}_${ANNOUNCEMENT_LIST[0].message}`;
 
 const Navbar = () => {
   const [isOpenWhatsNewPopup, setIsOpenWhatsNewPopup] = useState(false);
@@ -304,9 +312,8 @@ const Navbar = () => {
   const animatedBadgeRef = useRef<HTMLElement>(null);
   const badgeRef = useRef<HTMLElement>(null);
 
-  // What's New
   useEffect(() => {
-    if (localStorage.getItem("whats_new") !== whatsNewValue) {
+    if (localStorage.getItem("announcement") !== announcementTrackerValue) {
       setDisplayBadge(true);
     }
   }, [setDisplayBadge]);
@@ -367,7 +374,13 @@ const Navbar = () => {
               setIsOpenWhatsNewPopup(!isOpenWhatsNewPopup);
               setPlayBubbleBurstAnimation(true);
 
-              localStorage.setItem("whats_new", whatsNewValue);
+              localStorage.setItem("announcement", announcementTrackerValue);
+              window.plausible("Announcement", {
+                props: {
+                  key: announcementTrackerValue,
+                  ...ANNOUNCEMENT_LIST[0],
+                },
+              });
             }}
           >
             What's New

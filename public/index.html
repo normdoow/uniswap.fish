@@ -77,6 +77,13 @@
     data-domain="uniswap.fish"
     src="https://plausible.io/js/plausible.js"
   ></script>
+  <script>
+    window.plausible =
+      window.plausible ||
+      function () {
+        (window.plausible.q = window.plausible.q || []).push(arguments);
+      };
+  </script>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
