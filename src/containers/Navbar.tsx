@@ -118,12 +118,15 @@ const WhatsNewContainer = styled.div`
   position: relative;
 `;
 const WhatsNew = styled.a`
-  /* color: rgba(255, 255, 255, 0.6); */
-  color: white;
+  color: rgba(255, 255, 255, 0.75);
   font-size: 1rem;
   margin-right: 18px;
   cursor: pointer;
   position: relative;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 
   &:hover {
     color: white;
@@ -234,14 +237,17 @@ const WhatsNewPopup = styled.div`
   border-radius: 8px;
   width: 300px;
   height: 420px;
-  top: 40px;
   left: calc(-300px + 87.07px);
-  overflow: hidden;
   overflow-y: scroll;
+  top: -500px; // hidden
 
   & > div {
     padding: 0 10px;
     border-bottom: 1px solid #eee;
+  }
+
+  &.openAnimated {
+    top: 40px;
   }
 `;
 const Tag = styled.div`
@@ -276,18 +282,18 @@ const Navbar = () => {
       </Logo>
       <Menubar>
         <WhatsNewContainer>
-          {isOpenWhatsNewPopup && (
-            <WhatsNewPopup>
-              <div className="active">
-                <Tag>Small Win</Tag>
-                <TwitterTweetEmbed tweetId={"1583480226759479296"} />
-              </div>
-              <div>
-                <Tag>Feature Update</Tag>
-                <TwitterTweetEmbed tweetId={"1578323588889071616"} />
-              </div>
-            </WhatsNewPopup>
-          )}
+          <WhatsNewPopup
+            className={`${isOpenWhatsNewPopup ? "openAnimated" : ""}`}
+          >
+            <div className="active">
+              <Tag>Small Win</Tag>
+              <TwitterTweetEmbed tweetId={"1583480226759479296"} />
+            </div>
+            <div>
+              <Tag>Feature Update</Tag>
+              <TwitterTweetEmbed tweetId={"1578323588889071616"} />
+            </div>
+          </WhatsNewPopup>
           <WhatsNew
             onClick={() => {
               setIsOpenWhatsNewPopup(!isOpenWhatsNewPopup);
