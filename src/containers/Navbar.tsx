@@ -16,8 +16,7 @@ const NavbarContainer = styled.div`
   position: absolute;
   width: 100vw;
   top: 0;
-  /* z-index: 9999; */
-  z-index: 9999999999; // TODO: remove this
+  z-index: 9999;
 
   @media only screen and (max-width: ${ScreenWidth.TABLET}px) {
     padding: 15px;
@@ -239,7 +238,7 @@ const animatedContainerAnimation = keyframes`
 `;
 const whatsNewPopupOpenAnimation = keyframes`
   0% {
-    transform: translateY(-60px) rotate3d(1, 0, 0.075, 45deg);
+    transform: translateY(-40px) rotate3d(1, 0, 0.075, 30deg);
     opacity: 0;
   }
 `;
@@ -247,9 +246,9 @@ const WhatsNewPopup = styled.div`
   position: absolute;
   background: white;
   border-radius: 8px;
-  width: 300px;
-  height: 420px;
-  left: calc(-300px + 87.07px);
+  width: 320px;
+  height: 450px;
+  left: calc(-320px + 87.07px);
   overflow-y: scroll;
   top: -500px; // hidden
 
@@ -279,7 +278,6 @@ const WhatsNewPopup = styled.div`
 `;
 const Tag = styled.div`
   font-size: 0.8rem;
-  background: #df255e;
   color: white;
   display: inline-block;
   margin-top: 10px;
@@ -288,6 +286,13 @@ const Tag = styled.div`
   font-weight: bold;
   cursor: pointer;
 `;
+
+const FeatureUpdateTag = () => (
+  <Tag style={{ background: "#7856ff" }}>Feature Update</Tag>
+);
+const AchievementTag = () => (
+  <Tag style={{ background: "#ff7900" }}>Achievement</Tag>
+);
 
 const Navbar = () => {
   const [isOpenWhatsNewPopup, setIsOpenWhatsNewPopup] = useState(false);
@@ -302,7 +307,7 @@ const Navbar = () => {
     });
 
     document.addEventListener("click", ({ target }) => {
-      if (target && !(target as Element).closest("#navbar-container")) {
+      if (target && !(target as Element).closest("#menubar-container")) {
         if (isOpenWhatsNewPopup) {
           setIsOpenWhatsNewPopup(false);
         }
@@ -311,11 +316,11 @@ const Navbar = () => {
   }, [playBubbleBurstAnimation, isOpenWhatsNewPopup]);
 
   return (
-    <NavbarContainer id="navbar-container">
+    <NavbarContainer>
       <Logo>
         <span>🦄</span> <span>UniswapCalculator</span>
       </Logo>
-      <Menubar>
+      <Menubar id="menubar-container">
         <Twitter
           href="https://twitter.com/uniswapdotfish"
           target="_blank"
@@ -328,13 +333,21 @@ const Navbar = () => {
             <div
               className={`${isOpenWhatsNewPopup ? "animatedContainer" : ""}`}
             >
-              <div className="active item">
-                <Tag>Small Win</Tag>
+              <div className="item">
+                <AchievementTag />
                 <TwitterTweetEmbed tweetId={"1583480226759479296"} />
               </div>
               <div className="item">
-                <Tag>Feature Update</Tag>
+                <FeatureUpdateTag />
                 <TwitterTweetEmbed tweetId={"1578323588889071616"} />
+              </div>
+              <div className="item">
+                <FeatureUpdateTag />
+                <TwitterTweetEmbed tweetId={"1577940045301882880"} />
+              </div>
+              <div className="item">
+                <FeatureUpdateTag />
+                <TwitterTweetEmbed tweetId={"1576993697765261312"} />
               </div>
             </div>
           </WhatsNewPopup>
