@@ -80,7 +80,7 @@ const bubbleAnimation = keyframes`
 const smallBubbleAnimation = keyframes`
   20% {
     opacity: 1;
-    transform: scale(1) translateX(1px) translateY(-10px);
+    transform: scale(1) translateX(-2.5px) translateY(-10px);
   }
   45% {
     opacity: 0.5;
