@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTwitter } from "@fortawesome/free-brands-svg-icons";
 import styled, { keyframes } from "styled-components";
 import { ScreenWidth } from "../utils/styled";
+import { TwitterTweetEmbed } from "react-twitter-embed";
 // import { useModalContext } from "../context/modal/modalContext";
 // import { ModalActionType } from "../context/modal/modalReducer";
 
@@ -112,6 +113,9 @@ const badgeAnimation = keyframes`
     transform: scale(3);
     background: transparent;
   }
+`;
+const WhatsNewContainer = styled.div`
+  position: relative;
 `;
 const WhatsNew = styled.a`
   /* color: rgba(255, 255, 255, 0.6); */
@@ -224,9 +228,38 @@ const WhatsNew = styled.a`
     display: none;
   }
 `;
+const WhatsNewPopup = styled.div`
+  position: absolute;
+  background: white;
+  border-radius: 8px;
+  width: 300px;
+  height: 420px;
+  top: 40px;
+  left: calc(-300px + 87.07px);
+  overflow: hidden;
+  overflow-y: scroll;
+
+  & > div {
+    padding: 0 10px;
+    border-bottom: 1px solid #eee;
+  }
+`;
+const Tag = styled.div`
+  font-size: 0.8rem;
+  background: #df255e;
+  color: white;
+  display: inline-block;
+  margin-top: 10px;
+  border-radius: 5rem;
+  padding: 2px 7px;
+  font-weight: bold;
+  cursor: pointer;
+`;
 
 const Navbar = () => {
-  const [playSplashAnimation, setPlaySplashAnimation] = useState(false);
+  const [isOpenWhatsNewPopup, setIsOpenWhatsNewPopup] = useState(false);
+  const [playBubbleBurstAnimation, setPlayBubbleBurstAnimation] =
+    useState(false);
   const animatedBadgeRef = useRef<HTMLElement>(null);
   const badgeRef = useRef<HTMLElement>(null);
 
@@ -234,7 +267,7 @@ const Navbar = () => {
     badgeRef.current?.addEventListener("animationend", () => {
       badgeRef.current?.classList.add("disabled");
     });
-  }, [playSplashAnimation]);
+  }, [playBubbleBurstAnimation]);
 
   return (
     <NavbarContainer>
@@ -242,39 +275,58 @@ const Navbar = () => {
         <span>🦄</span> <span>UniswapCalculator</span>
       </Logo>
       <Menubar>
-        <WhatsNew
-          onClick={() => {
-            setPlaySplashAnimation(true);
-          }}
-        >
-          What's New
-          {playSplashAnimation && (
-            <>
-              {Array.from(Array(6).keys()).map((_, i) => {
-                return (
-                  <span
-                    key={`bubble_${i}`}
-                    className="bubble"
-                    style={{
-                      transform: `rotate(${i * 60}deg)`,
-                    }}
-                  >
-                    <span />
-                    <span />
-                  </span>
-                );
-              })}
-            </>
+        <WhatsNewContainer>
+          {isOpenWhatsNewPopup && (
+            <WhatsNewPopup>
+              <div className="active">
+                <Tag>Small Win</Tag>
+                <TwitterTweetEmbed tweetId={"1583480226759479296"} />
+              </div>
+              <div>
+                <Tag>Feature Update</Tag>
+                <TwitterTweetEmbed tweetId={"1578323588889071616"} />
+              </div>
+            </WhatsNewPopup>
           )}
-          <span
-            ref={badgeRef}
-            className={`badge ${playSplashAnimation ? "insideBubble" : ""}`}
-          />
-          <span
-            ref={animatedBadgeRef}
-            className={`animatedBadge ${playSplashAnimation ? "disabled" : ""}`}
-          />
-        </WhatsNew>
+          <WhatsNew
+            onClick={() => {
+              setIsOpenWhatsNewPopup(!isOpenWhatsNewPopup);
+              setPlayBubbleBurstAnimation(true);
+            }}
+          >
+            What's New
+            {playBubbleBurstAnimation && (
+              <>
+                {Array.from(Array(6).keys()).map((_, i) => {
+                  return (
+                    <span
+                      key={`bubble_${i}`}
+                      className="bubble"
+                      style={{
+                        transform: `rotate(${i * 60}deg)`,
+                      }}
+                    >
+                      <span />
+                      <span />
+                    </span>
+                  );
+                })}
+              </>
+            )}
+            <span
+              ref={badgeRef}
+              className={`badge ${
+                playBubbleBurstAnimation ? "insideBubble" : ""
+              }`}
+            />
+            <span
+              ref={animatedBadgeRef}
+              className={`animatedBadge ${
+                playBubbleBurstAnimation ? "disabled" : ""
+              }`}
+            />
+          </WhatsNew>
+        </WhatsNewContainer>
         <Twitter
           href="https://twitter.com/uniswapdotfish"
           target="_blank"
