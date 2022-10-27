@@ -239,7 +239,7 @@ const animatedContainerAnimation = keyframes`
 `;
 const whatsNewPopupOpenAnimation = keyframes`
   0% {
-    transform: translateY(-60px) rotate3d(1, 0.075, 0.075, 60deg);
+    transform: translateY(-60px) rotate3d(1, 0, 0.075, 45deg);
     opacity: 0;
   }
 `;
@@ -268,11 +268,11 @@ const WhatsNewPopup = styled.div`
     animation-fill-mode: forwards;
   }
 
-  &.openAnimated {
+  &.opened {
     top: 40px;
 
     animation-name: ${whatsNewPopupOpenAnimation};
-    animation-duration: 0.5s;
+    animation-duration: 0.4s;
     animation-iteration-count: 1;
     animation-fill-mode: forwards;
   }
@@ -300,18 +300,24 @@ const Navbar = () => {
     badgeRef.current?.addEventListener("animationend", () => {
       badgeRef.current?.classList.add("disabled");
     });
-  }, [playBubbleBurstAnimation]);
+
+    document.addEventListener("click", ({ target }) => {
+      if (target && !(target as Element).closest("#navbar-container")) {
+        if (isOpenWhatsNewPopup) {
+          setIsOpenWhatsNewPopup(false);
+        }
+      }
+    });
+  }, [playBubbleBurstAnimation, isOpenWhatsNewPopup]);
 
   return (
-    <NavbarContainer>
+    <NavbarContainer id="navbar-container">
       <Logo>
         <span>🦄</span> <span>UniswapCalculator</span>
       </Logo>
       <Menubar>
         <WhatsNewContainer>
-          <WhatsNewPopup
-            className={`${isOpenWhatsNewPopup ? "openAnimated" : ""}`}
-          >
+          <WhatsNewPopup className={`${isOpenWhatsNewPopup ? "opened" : ""}`}>
             <div
               className={`${isOpenWhatsNewPopup ? "animatedContainer" : ""}`}
             >
