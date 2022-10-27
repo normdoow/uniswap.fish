@@ -300,6 +300,21 @@ const ANNOUNCEMENT_LIST = [
     tweetId: "1583480226759479296",
     tag: "achievement",
   },
+  {
+    message: "celo integration",
+    tweetId: "1578323588889071616",
+    tag: "feature-update",
+  },
+  {
+    message: "tokens loading and searching speed optimization",
+    tweetId: "1577940045301882880",
+    tag: "feature-update",
+  },
+  {
+    message: "responsive design",
+    tweetId: "1576993697765261312",
+    tag: "feature-update",
+  },
 ];
 
 const announcementTrackerValue = `${ANNOUNCEMENT_LIST[0].tag}_${ANNOUNCEMENT_LIST[0].tweetId}_${ANNOUNCEMENT_LIST[0].message}`;
@@ -350,22 +365,20 @@ const Navbar = () => {
             <div
               className={`${isOpenWhatsNewPopup ? "animatedContainer" : ""}`}
             >
-              <div className="item">
-                <AchievementTag />
-                <TwitterTweetEmbed tweetId={"1583480226759479296"} />
-              </div>
-              <div className="item">
-                <FeatureUpdateTag />
-                <TwitterTweetEmbed tweetId={"1578323588889071616"} />
-              </div>
-              <div className="item">
-                <FeatureUpdateTag />
-                <TwitterTweetEmbed tweetId={"1577940045301882880"} />
-              </div>
-              <div className="item">
-                <FeatureUpdateTag />
-                <TwitterTweetEmbed tweetId={"1576993697765261312"} />
-              </div>
+              {ANNOUNCEMENT_LIST.map((announcement) => {
+                return (
+                  <div
+                    key={`announcement_${announcement.tweetId}`}
+                    className="item"
+                  >
+                    {announcement.tag === "achievement" && <AchievementTag />}
+                    {announcement.tag === "feature-update" && (
+                      <FeatureUpdateTag />
+                    )}
+                    <TwitterTweetEmbed tweetId={announcement.tweetId} />
+                  </div>
+                );
+              })}
             </div>
           </WhatsNewPopup>
 
