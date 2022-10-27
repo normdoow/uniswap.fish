@@ -231,6 +231,12 @@ const WhatsNew = styled.a`
     display: none;
   }
 `;
+const whatsNewPopupOpenAnimation = keyframes`
+  0% {
+    transform: translateY(-60px) rotate3d(1, 0.075, 0.075, 60deg);
+    opacity: 0;
+  }
+`;
 const WhatsNewPopup = styled.div`
   position: absolute;
   background: white;
@@ -248,6 +254,11 @@ const WhatsNewPopup = styled.div`
 
   &.openAnimated {
     top: 40px;
+
+    animation-name: ${whatsNewPopupOpenAnimation};
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
   }
 `;
 const Tag = styled.div`
