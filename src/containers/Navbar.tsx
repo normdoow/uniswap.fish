@@ -231,6 +231,12 @@ const WhatsNew = styled.a`
     display: none;
   }
 `;
+const animatedContainerAnimation = keyframes`
+  100% {
+    opacity: 1;
+    margin-top: 0;
+  }
+`;
 const whatsNewPopupOpenAnimation = keyframes`
   0% {
     transform: translateY(-60px) rotate3d(1, 0.075, 0.075, 60deg);
@@ -247,9 +253,19 @@ const WhatsNewPopup = styled.div`
   overflow-y: scroll;
   top: -500px; // hidden
 
-  & > div {
+  & div.item {
     padding: 0 10px;
     border-bottom: 1px solid #eee;
+  }
+
+  & > div.animatedContainer {
+    margin-top: 30px;
+    opacity: 0;
+
+    animation-name: ${animatedContainerAnimation};
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
   }
 
   &.openAnimated {
@@ -296,13 +312,17 @@ const Navbar = () => {
           <WhatsNewPopup
             className={`${isOpenWhatsNewPopup ? "openAnimated" : ""}`}
           >
-            <div className="active">
-              <Tag>Small Win</Tag>
-              <TwitterTweetEmbed tweetId={"1583480226759479296"} />
-            </div>
-            <div>
-              <Tag>Feature Update</Tag>
-              <TwitterTweetEmbed tweetId={"1578323588889071616"} />
+            <div
+              className={`${isOpenWhatsNewPopup ? "animatedContainer" : ""}`}
+            >
+              <div className="active item">
+                <Tag>Small Win</Tag>
+                <TwitterTweetEmbed tweetId={"1583480226759479296"} />
+              </div>
+              <div className="item">
+                <Tag>Feature Update</Tag>
+                <TwitterTweetEmbed tweetId={"1578323588889071616"} />
+              </div>
             </div>
           </WhatsNewPopup>
           <WhatsNew
