@@ -294,12 +294,22 @@ const AchievementTag = () => (
   <Tag style={{ background: "#ff7900" }}>Achievement</Tag>
 );
 
+const whatsNewValue = `15k unique users/month`;
+
 const Navbar = () => {
   const [isOpenWhatsNewPopup, setIsOpenWhatsNewPopup] = useState(false);
   const [playBubbleBurstAnimation, setPlayBubbleBurstAnimation] =
     useState(false);
+  const [displayBadge, setDisplayBadge] = useState(false);
   const animatedBadgeRef = useRef<HTMLElement>(null);
   const badgeRef = useRef<HTMLElement>(null);
+
+  // What's New
+  useEffect(() => {
+    if (localStorage.getItem("whats_new") !== whatsNewValue) {
+      setDisplayBadge(true);
+    }
+  }, [setDisplayBadge]);
 
   useEffect(() => {
     badgeRef.current?.addEventListener("animationend", () => {
@@ -356,10 +366,12 @@ const Navbar = () => {
             onClick={() => {
               setIsOpenWhatsNewPopup(!isOpenWhatsNewPopup);
               setPlayBubbleBurstAnimation(true);
+
+              localStorage.setItem("whats_new", whatsNewValue);
             }}
           >
             What's New
-            {playBubbleBurstAnimation && (
+            {displayBadge && playBubbleBurstAnimation && (
               <>
                 {Array.from(Array(6).keys()).map((_, i) => {
                   return (
@@ -377,18 +389,22 @@ const Navbar = () => {
                 })}
               </>
             )}
-            <span
-              ref={badgeRef}
-              className={`badge ${
-                playBubbleBurstAnimation ? "insideBubble" : ""
-              }`}
-            />
-            <span
-              ref={animatedBadgeRef}
-              className={`animatedBadge ${
-                playBubbleBurstAnimation ? "disabled" : ""
-              }`}
-            />
+            {displayBadge && (
+              <>
+                <span
+                  ref={badgeRef}
+                  className={`badge ${
+                    playBubbleBurstAnimation ? "insideBubble" : ""
+                  }`}
+                />
+                <span
+                  ref={animatedBadgeRef}
+                  className={`animatedBadge ${
+                    playBubbleBurstAnimation ? "disabled" : ""
+                  }`}
+                />
+              </>
+            )}
           </WhatsNew>
         </WhatsNewContainer>
       </Menubar>
