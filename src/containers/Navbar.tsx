@@ -58,6 +58,7 @@ const Menubar = styled.div`
 const Twitter = styled.a`
   color: rgba(255, 255, 255, 0.6);
   font-size: 1.2rem;
+  margin-right: 15px;
 
   &:hover {
     color: #1f9cea;
@@ -120,7 +121,6 @@ const WhatsNewContainer = styled.div`
 const WhatsNew = styled.a`
   color: rgba(255, 255, 255, 0.75);
   font-size: 1rem;
-  margin-right: 18px;
   cursor: pointer;
   position: relative;
   user-select: none;
@@ -140,13 +140,13 @@ const WhatsNew = styled.a`
     border-radius: 50%;
     position: absolute;
     top: -2px;
-    left: -8px;
+    right: -8px;
     z-index: 9999;
   }
   & > span.bubble {
     position: absolute;
     top: -3px;
-    left: -4.5px;
+    right: 0.5px;
     z-index: 99999;
     transform-origin: 2.5px 7px;
 
@@ -220,7 +220,7 @@ const WhatsNew = styled.a`
     border-radius: 50%;
     position: absolute;
     top: -2px;
-    left: -8px;
+    right: -8px;
 
     animation-name: ${badgeAnimation};
     animation-duration: 1.25s;
@@ -316,6 +316,13 @@ const Navbar = () => {
         <span>🦄</span> <span>UniswapCalculator</span>
       </Logo>
       <Menubar>
+        <Twitter
+          href="https://twitter.com/uniswapdotfish"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <FontAwesomeIcon icon={faTwitter} />
+        </Twitter>
         <WhatsNewContainer>
           <WhatsNewPopup className={`${isOpenWhatsNewPopup ? "opened" : ""}`}>
             <div
@@ -331,6 +338,7 @@ const Navbar = () => {
               </div>
             </div>
           </WhatsNewPopup>
+
           <WhatsNew
             onClick={() => {
               setIsOpenWhatsNewPopup(!isOpenWhatsNewPopup);
@@ -370,13 +378,6 @@ const Navbar = () => {
             />
           </WhatsNew>
         </WhatsNewContainer>
-        <Twitter
-          href="https://twitter.com/uniswapdotfish"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <FontAwesomeIcon icon={faTwitter} />
-        </Twitter>
       </Menubar>
     </NavbarContainer>
   );
