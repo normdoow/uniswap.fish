@@ -387,13 +387,19 @@ const Navbar = () => {
               setIsOpenWhatsNewPopup(!isOpenWhatsNewPopup);
               setPlayBubbleBurstAnimation(true);
 
-              localStorage.setItem("announcement", announcementTrackerValue);
-              window.plausible("Announcement", {
-                props: {
-                  key: announcementTrackerValue,
+              if (
+                localStorage.getItem("announcement") !==
+                announcementTrackerValue
+              ) {
+                localStorage.setItem("announcement", announcementTrackerValue);
+                const props = {
+                  trackingId: announcementTrackerValue,
                   ...ANNOUNCEMENT_LIST[0],
-                },
-              });
+                };
+                window.plausible("Announcement", {
+                  props,
+                });
+              }
             }}
           >
             What's New
