@@ -191,7 +191,7 @@ const WhatsNewPopup = styled.div`
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 
   // use this instead of display: none to preload iframe
-  top: -500px;
+  top: -1000px;
 
   & div.item {
     padding: 0 10px;
