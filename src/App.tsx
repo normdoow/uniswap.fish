@@ -5,7 +5,7 @@ import CorrelationChart from "./containers/CorrelationChart";
 import Footer from "./containers/Footer";
 import EstimatedFees from "./containers/EstimatedFees";
 import Header from "./containers/Header";
-import Navbar from "./containers/Navbar";
+import Navbar from "./containers/navbar/Navbar";
 import LiquidityPositionChart from "./containers/LiquidityPositionChart";
 import SelectPairModal from "./containers/select-pair/SelectPairModal";
 import Setting from "./containers/setting/Setting";

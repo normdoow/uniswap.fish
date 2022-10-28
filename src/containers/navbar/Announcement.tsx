@@ -1,69 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTwitter } from "@fortawesome/free-brands-svg-icons";
-import styled, { keyframes } from "styled-components";
-import { ScreenWidth } from "../utils/styled";
+import { useEffect, useRef, useState } from "react";
 import { TwitterTweetEmbed } from "react-twitter-embed";
-// import { useModalContext } from "../context/modal/modalContext";
-// import { ModalActionType } from "../context/modal/modalReducer";
-
-const NavbarContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 30px;
-  background: rgb(0, 0, 0, 0.9);
-  position: absolute;
-  width: 100vw;
-  top: 0;
-  z-index: 9999;
-
-  @media only screen and (max-width: ${ScreenWidth.TABLET}px) {
-    padding: 15px;
-  }
-`;
-
-const Logo = styled.h1`
-  margin: 0;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-
-  & > span:nth-child(1) {
-    font-size: 1.4rem;
-    margin-right: 7px;
-
-    @media only screen and (max-width: 450px) {
-      font-size: 1.8rem;
-    }
-  }
-
-  & > span:nth-child(2) {
-    color: white;
-    font-size: 1.2rem;
-    font-weight: 500;
-
-    @media only screen and (max-width: 450px) {
-      display: none;
-    }
-  }
-`;
-
-const Menubar = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const Twitter = styled.a`
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 1.2rem;
-  margin-right: 15px;
-
-  &:hover {
-    color: #1f9cea;
-    transform: scale(1.25) rotate(18deg);
-  }
-`;
+import styled, { keyframes } from "styled-components";
+import { ANNOUNCEMENTS } from "./announcement.setting";
 
 const bubbleAnimation = keyframes`
   20% {
@@ -279,6 +217,7 @@ const WhatsNewPopup = styled.div`
     animation-fill-mode: forwards;
   }
 `;
+
 const Tag = styled.div`
   font-size: 0.8rem;
   color: white;
@@ -289,7 +228,6 @@ const Tag = styled.div`
   font-weight: bold;
   cursor: pointer;
 `;
-
 const FeatureUpdateTag = () => (
   <Tag style={{ background: "#7856ff" }}>Feature Update</Tag>
 );
@@ -297,37 +235,9 @@ const AchievementTag = () => (
   <Tag style={{ background: "#ff7900" }}>Achievement</Tag>
 );
 
-const ANNOUNCEMENT_LIST = [
-  {
-    message: "what's new button",
-    tweetId: "1585874189730582528",
-    tag: "feature-update",
-  },
-  {
-    message: "15k unique users/month",
-    tweetId: "1583480226759479296",
-    tag: "achievement",
-  },
-  {
-    message: "celo integration",
-    tweetId: "1578323588889071616",
-    tag: "feature-update",
-  },
-  {
-    message: "tokens loading and searching speed optimization",
-    tweetId: "1577940045301882880",
-    tag: "feature-update",
-  },
-  {
-    message: "responsive design",
-    tweetId: "1576993697765261312",
-    tag: "feature-update",
-  },
-];
+const announcementTrackerValue = `${ANNOUNCEMENTS[0].tag}_${ANNOUNCEMENTS[0].tweetId}_${ANNOUNCEMENTS[0].message}`;
 
-const announcementTrackerValue = `${ANNOUNCEMENT_LIST[0].tag}_${ANNOUNCEMENT_LIST[0].tweetId}_${ANNOUNCEMENT_LIST[0].message}`;
-
-const Navbar = () => {
+const Announcement = () => {
   const [isOpenWhatsNewPopup, setIsOpenWhatsNewPopup] = useState(false);
   const [playBubbleBurstAnimation, setPlayBubbleBurstAnimation] =
     useState(false);
@@ -356,103 +266,84 @@ const Navbar = () => {
   }, [playBubbleBurstAnimation, isOpenWhatsNewPopup]);
 
   return (
-    <NavbarContainer>
-      <Logo>
-        <span>🦄</span> <span>UniswapCalculator</span>
-      </Logo>
-      <Menubar id="menubar-container">
-        <Twitter
-          href="https://twitter.com/uniswapdotfish"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <FontAwesomeIcon icon={faTwitter} />
-        </Twitter>
-        <WhatsNewContainer>
-          <WhatsNewPopup className={`${isOpenWhatsNewPopup ? "opened" : ""}`}>
-            <div
-              className={`${isOpenWhatsNewPopup ? "animatedContainer" : ""}`}
-            >
-              {ANNOUNCEMENT_LIST.map((announcement) => {
-                return (
-                  <div
-                    key={`announcement_${announcement.tweetId}`}
-                    className="item"
-                  >
-                    {announcement.tag === "achievement" && <AchievementTag />}
-                    {announcement.tag === "feature-update" && (
-                      <FeatureUpdateTag />
-                    )}
-                    <TwitterTweetEmbed tweetId={announcement.tweetId} />
-                  </div>
-                );
-              })}
-            </div>
-          </WhatsNewPopup>
+    <WhatsNewContainer>
+      <WhatsNewPopup className={`${isOpenWhatsNewPopup ? "opened" : ""}`}>
+        <div className={`${isOpenWhatsNewPopup ? "animatedContainer" : ""}`}>
+          {ANNOUNCEMENTS.map((announcement) => {
+            return (
+              <div
+                key={`announcement_${announcement.tweetId}`}
+                className="item"
+              >
+                {announcement.tag === "achievement" && <AchievementTag />}
+                {announcement.tag === "feature-update" && <FeatureUpdateTag />}
+                <TwitterTweetEmbed tweetId={announcement.tweetId} />
+              </div>
+            );
+          })}
+        </div>
+      </WhatsNewPopup>
 
-          <WhatsNew
-            style={{
-              color: displayBadge && !playBubbleBurstAnimation ? "white" : "",
-            }}
-            onClick={() => {
-              setIsOpenWhatsNewPopup(!isOpenWhatsNewPopup);
-              setPlayBubbleBurstAnimation(true);
+      <WhatsNew
+        style={{
+          color: displayBadge && !playBubbleBurstAnimation ? "white" : "",
+        }}
+        onClick={() => {
+          setIsOpenWhatsNewPopup(!isOpenWhatsNewPopup);
+          setPlayBubbleBurstAnimation(true);
 
-              if (
-                localStorage.getItem("announcement") !==
-                announcementTrackerValue
-              ) {
-                localStorage.setItem("announcement", announcementTrackerValue);
-                const props = {
-                  trackingId: announcementTrackerValue,
-                  ...ANNOUNCEMENT_LIST[0],
-                };
-                window.plausible("Announcement", {
-                  props,
-                });
-              }
-            }}
-          >
-            What's New
-            {displayBadge && playBubbleBurstAnimation && (
-              <>
-                {Array.from(Array(6).keys()).map((_, i) => {
-                  return (
-                    <span
-                      key={`bubble_${i}`}
-                      className="bubble"
-                      style={{
-                        transform: `rotate(${i * 60}deg)`,
-                      }}
-                    >
-                      <span />
-                      <span />
-                    </span>
-                  );
-                })}
-              </>
-            )}
-            {displayBadge && (
-              <>
+          if (
+            localStorage.getItem("announcement") !== announcementTrackerValue
+          ) {
+            localStorage.setItem("announcement", announcementTrackerValue);
+            const props = {
+              trackingId: announcementTrackerValue,
+              ...ANNOUNCEMENTS[0],
+            };
+            window.plausible("Announcement", {
+              props,
+            });
+          }
+        }}
+      >
+        What's New
+        {displayBadge && playBubbleBurstAnimation && (
+          <>
+            {Array.from(Array(6).keys()).map((_, i) => {
+              return (
                 <span
-                  ref={badgeRef}
-                  className={`badge ${
-                    playBubbleBurstAnimation ? "insideBubble" : ""
-                  }`}
-                />
-                <span
-                  ref={animatedBadgeRef}
-                  className={`animatedBadge ${
-                    playBubbleBurstAnimation ? "disabled" : ""
-                  }`}
-                />
-              </>
-            )}
-          </WhatsNew>
-        </WhatsNewContainer>
-      </Menubar>
-    </NavbarContainer>
+                  key={`bubble_${i}`}
+                  className="bubble"
+                  style={{
+                    transform: `rotate(${i * 60}deg)`,
+                  }}
+                >
+                  <span />
+                  <span />
+                </span>
+              );
+            })}
+          </>
+        )}
+        {displayBadge && (
+          <>
+            <span
+              ref={badgeRef}
+              className={`badge ${
+                playBubbleBurstAnimation ? "insideBubble" : ""
+              }`}
+            />
+            <span
+              ref={animatedBadgeRef}
+              className={`animatedBadge ${
+                playBubbleBurstAnimation ? "disabled" : ""
+              }`}
+            />
+          </>
+        )}
+      </WhatsNew>
+    </WhatsNewContainer>
   );
 };
 
-export default Navbar;
+export default Announcement;

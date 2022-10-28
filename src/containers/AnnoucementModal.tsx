@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { ModalActionType } from "../context/modal/modalReducer";
 import { PrimaryBlockButton } from "../common/buttons";
 
+// TODO: rename this modal
 const ModalStyle = {
   overlay: {
     backgroundColor: "rgba(0,0,0,0.9)",
