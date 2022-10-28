@@ -299,6 +299,11 @@ const AchievementTag = () => (
 
 const ANNOUNCEMENT_LIST = [
   {
+    message: "what's new button",
+    tweetId: "1585874189730582528",
+    tag: "feature-update",
+  },
+  {
     message: "15k unique users/month",
     tweetId: "1583480226759479296",
     tag: "achievement",
