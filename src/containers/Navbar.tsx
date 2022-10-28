@@ -250,7 +250,10 @@ const WhatsNewPopup = styled.div`
   height: 450px;
   left: calc(-320px + 87.07px);
   overflow-y: scroll;
-  top: -500px; // hidden
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+
+  // use this instead of display: none to preload iframe
+  top: -500px;
 
   & div.item {
     padding: 0 10px;
@@ -383,6 +386,9 @@ const Navbar = () => {
           </WhatsNewPopup>
 
           <WhatsNew
+            style={{
+              color: displayBadge && !playBubbleBurstAnimation ? "white" : "",
+            }}
             onClick={() => {
               setIsOpenWhatsNewPopup(!isOpenWhatsNewPopup);
               setPlayBubbleBurstAnimation(true);
