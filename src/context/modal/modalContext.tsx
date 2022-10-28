@@ -4,12 +4,12 @@ import { ModalContextAction, modalContextReducer } from "./modalReducer";
 export interface ModalContextState {
   isSelectPairModalOpen: boolean;
   isDonateModalOpen: boolean;
-  isAnnoucementModalOpen: boolean;
+  isImportantMessageModalOpen: boolean;
 }
 const initialState: ModalContextState = {
   isSelectPairModalOpen: true,
   isDonateModalOpen: false,
-  isAnnoucementModalOpen: false,
+  isImportantMessageModalOpen: false,
 };
 
 interface ModalContextProviderProps {

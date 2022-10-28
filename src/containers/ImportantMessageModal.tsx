@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { ModalActionType } from "../context/modal/modalReducer";
 import { PrimaryBlockButton } from "../common/buttons";
 
-// TODO: rename this modal
 const ModalStyle = {
   overlay: {
     backgroundColor: "rgba(0,0,0,0.9)",
@@ -70,7 +69,7 @@ const Content = styled.div`
   }
 `;
 
-const DonateModal = () => {
+const ImportantMessageModal = () => {
   const { state, dispatch } = useModalContext();
 
   const understand = () => {
@@ -85,7 +84,7 @@ const DonateModal = () => {
     <>
       <Modal
         style={ModalStyle}
-        isOpen={state.isAnnoucementModalOpen}
+        isOpen={state.isImportantMessageModalOpen}
         contentLabel="Important Annoucement"
         ariaHideApp={false}
       >
@@ -146,4 +145,4 @@ const DonateModal = () => {
   );
 };
 
-export default DonateModal;
+export default ImportantMessageModal;

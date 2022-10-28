@@ -17,7 +17,7 @@ export const modalContextReducer = (
 ): ModalContextState => {
   switch (action.type) {
     case ModalActionType.SET_ANNOUCEMENT_MODAL_STATE: {
-      return { ...state, isAnnoucementModalOpen: action.payload };
+      return { ...state, isImportantMessageModalOpen: action.payload };
     }
     case ModalActionType.SET_SELECT_PAIR_MODAL_STATE: {
       return { ...state, isSelectPairModalOpen: action.payload };
