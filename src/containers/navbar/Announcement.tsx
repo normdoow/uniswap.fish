@@ -234,6 +234,9 @@ const FeatureUpdateTag = () => (
 const AchievementTag = () => (
   <Tag style={{ background: "#ff7900" }}>Achievement</Tag>
 );
+const AnnouncementTag = () => (
+  <Tag style={{ background: "#f81980" }}>Announcement</Tag>
+);
 
 const announcementTrackerValue = `${ANNOUNCEMENTS[0].tag}_${ANNOUNCEMENTS[0].tweetId}_${ANNOUNCEMENTS[0].message}`;
 
@@ -277,6 +280,7 @@ const Announcement = () => {
               >
                 {announcement.tag === "achievement" && <AchievementTag />}
                 {announcement.tag === "feature-update" && <FeatureUpdateTag />}
+                {announcement.tag === "announcement" && <AnnouncementTag />}
                 <TwitterTweetEmbed tweetId={announcement.tweetId} />
               </div>
             );
