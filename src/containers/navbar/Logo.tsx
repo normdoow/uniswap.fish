@@ -1,6 +1,28 @@
+import { faCaretDown, faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 
+const Container = styled.div`
+  position: relative;
+  cursor: zoom-in;
+  display: flex;
+  align-items: center;
+
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+
+  & > span {
+    color: #ddd;
+    margin-left: 7px;
+    font-size: 1.1rem;
+  }
+  & > span.hovered {
+    color: white;
+  }
+`;
 const fishAnimation = keyframes`
   50% {
     transform: rotateZ(10deg);
@@ -13,7 +35,6 @@ const bubbleAnimation = keyframes`
 `;
 const LogoContainer = styled.h1`
   margin: 0;
-  cursor: zoom-in;
   display: flex;
   align-items: center;
   width: 45px;
@@ -23,7 +44,7 @@ const LogoContainer = styled.h1`
   overflow: hidden;
   position: relative;
 
-  &:hover {
+  &.hovered {
     box-shadow: 0px 0px 15px 0px rgba(254, 238, 248, 0.75);
     -webkit-box-shadow: 0px 0px 15px 0px rgba(254, 238, 248, 0.75);
     -moz-box-shadow: 0px 0px 15px 0px rgba(254, 238, 248, 0.75);
@@ -101,6 +122,16 @@ const popupOpenAnimation = keyframes`
     opacity: 0;
   }
 `;
+const linkAnimation = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateX(-15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
 const NavPopup = styled.div`
   position: absolute;
   background: white;
@@ -115,18 +146,26 @@ const NavPopup = styled.div`
     text-decoration: none;
     color: #555;
     display: block;
-    padding: 5px;
+    padding: 5px 8px;
     cursor: pointer;
     font-weight: 500;
     font-size: 0.9rem;
-
+    border: 1px solid transparent;
     display: grid;
     grid-template-columns: 22px 1fr;
+    opacity: 0;
   }
   & a:hover {
-    background: #fd61b7;
-    color: white;
+    background: #feeef8;
+    border: 1px solid #dfadcc;
+    color: #64023d;
     border-radius: 6px;
+  }
+  & a.fadeIn {
+    animation-name: ${linkAnimation};
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
   }
 
   // use this instead of display: none to preload iframe
@@ -138,7 +177,7 @@ const NavPopup = styled.div`
   }
 
   & > div.animatedContainer {
-    margin-top: 30px;
+    margin-top: 20px;
     opacity: 0;
 
     animation-name: ${animatedContainerAnimation};
@@ -157,6 +196,39 @@ const NavPopup = styled.div`
   }
 `;
 
+const LINKS = [
+  {
+    target: undefined,
+    href: "/",
+    icon: "🏠",
+    text: "Home",
+  },
+  {
+    target: "_blank",
+    href: "https://gitcoin.co/grants/4203/uniswap-calculator-v3",
+    icon: "💰",
+    text: "Gitcoin Donation",
+  },
+  {
+    target: "_blank",
+    href: "https://github.com/chunza2542/uniswap.fish",
+    icon: "🧑🏻‍💻",
+    text: "Github Repository",
+  },
+  {
+    target: "_blank",
+    href: "https://twitter.com/uniswapdotfish",
+    icon: "🐦",
+    text: "@uniswapdotfish",
+  },
+  {
+    target: undefined,
+    href: "mailto:hello@uniswap.fish",
+    icon: "💌",
+    text: "hello@uniswap.fish",
+  },
+];
+
 const Logo = () => {
   const [playLogoAnimation, setPlayLogoAnimation] = useState(false);
   const [isOpenNavPopup, setIsOpenNavPopup] = useState(false);
@@ -173,46 +245,42 @@ const Logo = () => {
 
   return (
     <>
-      <LogoContainer
+      <Container
         id="logo-container"
         onMouseEnter={() => setPlayLogoAnimation(true)}
         onMouseLeave={() => setPlayLogoAnimation(false)}
         onClick={() => setIsOpenNavPopup(!isOpenNavPopup)}
       >
-        <img
-          src="/logo-only-fish.png"
-          className={playLogoAnimation ? "animated" : ""}
-        />
-        <div className={playLogoAnimation ? "bubble n1" : ""} />
-        <div className={playLogoAnimation ? "bubble n2" : ""} />
-        <div className={playLogoAnimation ? "bubble n3" : ""} />
-      </LogoContainer>
+        <LogoContainer className={playLogoAnimation ? "hovered" : ""}>
+          <img
+            src="/logo-only-fish.png"
+            className={playLogoAnimation ? "animated" : ""}
+          />
+          <div className={playLogoAnimation ? "bubble n1" : ""} />
+          <div className={playLogoAnimation ? "bubble n2" : ""} />
+          <div className={playLogoAnimation ? "bubble n3" : ""} />
+        </LogoContainer>
+        <span className={playLogoAnimation ? "hovered" : ""}>
+          <FontAwesomeIcon icon={faChevronDown} />
+        </span>
+      </Container>
 
       <NavPopup className={`${isOpenNavPopup ? "opened" : ""}`}>
         <div className={`${isOpenNavPopup ? "animatedContainer" : ""}`}>
-          <a href="https://uniswap.fish">
-            <span>🏠</span>
-            <span>Home</span>
-          </a>
-          <a
-            target="_blank"
-            href="https://gitcoin.co/grants/4203/uniswap-calculator-v3"
-          >
-            <span>💰</span>
-            <span>Gitcoin Donation</span>
-          </a>
-          <a target="_blank" href="https://github.com/chunza2542/uniswap.fish">
-            <span>🧑🏻‍💻</span>
-            <span>Github Repository</span>
-          </a>
-          <a target="_blank" href="https://twitter.com/uniswapdotfish">
-            <span>🐦</span>
-            <span>@uniswapdotfish</span>
-          </a>
-          <a href="mailto:hello@uniswap.fish">
-            <span>💌</span>
-            <span>hello@uniswap.fish</span>
-          </a>
+          {LINKS.map((link, i) => {
+            return (
+              <a
+                key={`nav_${link.text}`}
+                target={link.target}
+                className={isOpenNavPopup ? "fadeIn" : ""}
+                style={{ animationDelay: `${i * 0.075}s` }}
+                href={link.href}
+              >
+                <span>{link.icon}</span>
+                <span>{link.text}</span>
+              </a>
+            );
+          })}
         </div>
       </NavPopup>
     </>
