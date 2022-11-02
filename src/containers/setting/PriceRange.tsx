@@ -185,41 +185,46 @@ const PriceRange = () => {
         </div>
       </Heading>
       <Group>
-        <MinMaxPriceContainer>
+        <MinMaxPriceContainer style={isFullRange ? { marginBottom: 2 } : {}}>
           <InputGroup>
-            <div
-              className="btn btn-left"
-              onClick={() => {
-                dispatch({
-                  type: AppActionType.UPDATE_PRICE_RANGE,
-                  payload: [
-                    state.priceRangeValue[0] - btnStep,
-                    state.priceRangeValue[1],
-                  ],
-                });
-              }}
-            >
-              <span>-</span>
-            </div>
-            <div
-              className="btn btn-right"
-              onClick={() => {
-                dispatch({
-                  type: AppActionType.UPDATE_PRICE_RANGE,
-                  payload: [
-                    state.priceRangeValue[0] + btnStep,
-                    state.priceRangeValue[1],
-                  ],
-                });
-              }}
-            >
-              <span>+</span>
-            </div>
+            {!isFullRange && (
+              <>
+                <div
+                  className="btn btn-left"
+                  onClick={() => {
+                    dispatch({
+                      type: AppActionType.UPDATE_PRICE_RANGE,
+                      payload: [
+                        state.priceRangeValue[0] - btnStep,
+                        state.priceRangeValue[1],
+                      ],
+                    });
+                  }}
+                >
+                  <span>-</span>
+                </div>
+                <div
+                  className="btn btn-right"
+                  onClick={() => {
+                    dispatch({
+                      type: AppActionType.UPDATE_PRICE_RANGE,
+                      payload: [
+                        state.priceRangeValue[0] + btnStep,
+                        state.priceRangeValue[1],
+                      ],
+                    });
+                  }}
+                >
+                  <span>+</span>
+                </div>
+              </>
+            )}
             <span>Min Price</span>
             <Input
-              value={state.priceRangeValue[0]}
+              value={!isFullRange ? state.priceRangeValue[0] : 0}
               type="number"
               placeholder="0.0"
+              disabled={isFullRange}
               onChange={(e) => {
                 let value = Number(e.target.value);
 
@@ -235,39 +240,44 @@ const PriceRange = () => {
           </InputGroup>
 
           <InputGroup>
-            <div
-              className="btn btn-left"
-              onClick={() => {
-                dispatch({
-                  type: AppActionType.UPDATE_PRICE_RANGE,
-                  payload: [
-                    state.priceRangeValue[0],
-                    state.priceRangeValue[1] - btnStep,
-                  ],
-                });
-              }}
-            >
-              <span>-</span>
-            </div>
-            <div
-              className="btn btn-right"
-              onClick={() => {
-                dispatch({
-                  type: AppActionType.UPDATE_PRICE_RANGE,
-                  payload: [
-                    state.priceRangeValue[0],
-                    state.priceRangeValue[1] + btnStep,
-                  ],
-                });
-              }}
-            >
-              <span>+</span>
-            </div>
+            {!isFullRange && (
+              <>
+                <div
+                  className="btn btn-left"
+                  onClick={() => {
+                    dispatch({
+                      type: AppActionType.UPDATE_PRICE_RANGE,
+                      payload: [
+                        state.priceRangeValue[0],
+                        state.priceRangeValue[1] - btnStep,
+                      ],
+                    });
+                  }}
+                >
+                  <span>-</span>
+                </div>
+                <div
+                  className="btn btn-right"
+                  onClick={() => {
+                    dispatch({
+                      type: AppActionType.UPDATE_PRICE_RANGE,
+                      payload: [
+                        state.priceRangeValue[0],
+                        state.priceRangeValue[1] + btnStep,
+                      ],
+                    });
+                  }}
+                >
+                  <span>+</span>
+                </div>
+              </>
+            )}
             <span>Max Price</span>
             <Input
-              value={state.priceRangeValue[1]}
-              type="number"
+              value={!isFullRange ? state.priceRangeValue[1] : "∞"}
+              type={!isFullRange ? "number" : "text"}
               placeholder="0.0"
+              disabled={isFullRange}
               onChange={(e) => {
                 let value = Number(e.target.value);
 
@@ -282,24 +292,26 @@ const PriceRange = () => {
             </span>
           </InputGroup>
         </MinMaxPriceContainer>
-        <Slider
-          thumbClassName="thumb-green"
-          value={priceRangeSlider}
-          min={0}
-          max={100}
-          step={step}
-          onChange={(value, _) => {
-            setPriceRangeSlider(value);
+        {!isFullRange && (
+          <Slider
+            thumbClassName="thumb-green"
+            value={priceRangeSlider}
+            min={0}
+            max={100}
+            step={step}
+            onChange={(value, _) => {
+              setPriceRangeSlider(value);
 
-            dispatch({
-              type: AppActionType.UPDATE_PRICE_RANGE,
-              payload: [
-                min + ((max - min) * value[0]) / 100,
-                min + ((max - min) * value[1]) / 100,
-              ],
-            });
-          }}
-        />
+              dispatch({
+                type: AppActionType.UPDATE_PRICE_RANGE,
+                payload: [
+                  min + ((max - min) * value[0]) / 100,
+                  min + ((max - min) * value[1]) / 100,
+                ],
+              });
+            }}
+          />
+        )}
       </Group>
 
       <Group style={{ marginTop: 7 }}>
