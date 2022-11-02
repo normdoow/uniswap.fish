@@ -177,8 +177,8 @@ const PriceRange = () => {
               width={45}
               offColor="#333"
               offHandleColor="#777"
-              onColor="#ffcde5"
-              onHandleColor="#fb108e"
+              onColor="#2A4174"
+              onHandleColor="#608EF7"
               onChange={(checked) => setIsFullRange(checked)}
             />
           </FullRangeContainer>
