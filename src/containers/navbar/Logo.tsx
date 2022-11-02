@@ -16,8 +16,8 @@ const LogoContainer = styled.h1`
   cursor: zoom-in;
   display: flex;
   align-items: center;
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
   background: #feeef8;
   border-radius: 50%;
   overflow: hidden;
@@ -35,10 +35,10 @@ const LogoContainer = styled.h1`
   }
 
   & img {
-    width: 60px;
+    width: 55px;
     position: absolute;
     left: -17px;
-    top: 7px;
+    top: 6px;
     z-index: 999;
     -webkit-user-drag: none;
   }
