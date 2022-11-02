@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import styled from "styled-components";
+import Switch from "react-switch";
 import { Heading } from "../../common/components";
 import { Price } from "../../common/interfaces/coingecko.interface";
 import { useAppContext } from "../../context/app/appContext";
@@ -86,12 +87,24 @@ const MinMaxPriceContainer = styled.div`
 
   margin-bottom: 7px;
 `;
+const FullRangeContainer = styled.div`
+  display: flex;
+  align-items: center;
+
+  & > span {
+    font-size: 0.8rem;
+    font-weight: 400;
+    margin-right: 5px;
+    color: #bbb;
+  }
+`;
 
 const PriceRange = () => {
   const { state, dispatch } = useAppContext();
   const [activePriceAssumptionSlider, setActivePriceAssumptionSlider] =
     useState(0);
   const [priceRangeSlider, setPriceRangeSlider] = useState([0, 0]);
+  const [isFullRange, setIsFullRange] = useState(false);
 
   const prices = divideArray(
     (state.token1PriceChart?.prices || []).map((p: Price) => p.value),
@@ -142,7 +155,35 @@ const PriceRange = () => {
 
   return (
     <div>
-      <Heading>Price Range</Heading>
+      <Heading>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <span>Price Range</span>
+          <FullRangeContainer>
+            <span style={isFullRange ? { color: "white" } : {}}>
+              Full Range:{" "}
+            </span>
+            <Switch
+              checked={isFullRange}
+              checkedIcon={false}
+              uncheckedIcon={false}
+              handleDiameter={18}
+              height={24}
+              width={45}
+              offColor="#333"
+              offHandleColor="#777"
+              onColor="#ffcde5"
+              onHandleColor="#fb108e"
+              onChange={(checked) => setIsFullRange(checked)}
+            />
+          </FullRangeContainer>
+        </div>
+      </Heading>
       <Group>
         <MinMaxPriceContainer>
           <InputGroup>
