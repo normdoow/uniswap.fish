@@ -146,9 +146,10 @@ const CorrelationChart = () => {
 
     d3Chart.updateMinMaxPriceRange(
       state.priceRangeValue[0],
-      state.priceRangeValue[1]
+      state.priceRangeValue[1],
+      state.isFullRange
     );
-  }, [state.priceRangeValue]);
+  }, [state.priceRangeValue, state.isFullRange]);
 
   if (state.token0PriceChart === null || state.token1PriceChart === null) {
     return <></>;

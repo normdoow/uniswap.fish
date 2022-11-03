@@ -268,7 +268,14 @@ class D3CorrelationChart {
 
     return { minPriceSVG, maxPriceSVG };
   }
-  updateMinMaxPriceRange(minPrice: number, maxPrice: number) {
+  updateMinMaxPriceRange(
+    minPrice: number,
+    maxPrice: number,
+    isFullRange: boolean
+  ) {
+    this.minPrice.attr("opacity", Number(!isFullRange));
+    this.maxPrice.attr("opacity", Number(!isFullRange));
+
     this.minPrice
       .attr("x1", 0)
       .attr("y1", this.y(minPrice))
