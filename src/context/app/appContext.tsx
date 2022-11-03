@@ -13,6 +13,7 @@ export interface AppContextState {
   network: Network;
   tokenList: Token[];
   isPairToggled: boolean;
+  isFullRange: boolean;
 
   pool: Pool | null;
   poolTicks: Tick[] | null;
@@ -31,6 +32,7 @@ const initialState: AppContextState = {
   network: NETWORKS[0],
   tokenList: [],
   isPairToggled: false,
+  isFullRange: false,
 
   pool: null,
   poolTicks: null,

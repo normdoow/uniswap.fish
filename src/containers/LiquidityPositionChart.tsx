@@ -265,8 +265,8 @@ const LiquidityPositionChart = () => {
       );
     }
 
-    d3Chart.updateMinMaxTickRange(minTick, maxTick);
-  }, [state.priceRangeValue, state.token0, state.token1]);
+    d3Chart.updateMinMaxTickRange(minTick, maxTick, state.isFullRange);
+  }, [state.priceRangeValue, state.token0, state.token1, state.isFullRange]);
 
   return (
     <Container>

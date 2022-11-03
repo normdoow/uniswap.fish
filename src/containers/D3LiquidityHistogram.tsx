@@ -124,7 +124,14 @@ class D3LiquidityHistogram {
 
     return { minTickSVG, maxTickSVG };
   }
-  updateMinMaxTickRange(minTick: number, maxTick: number) {
+  updateMinMaxTickRange(
+    minTick: number,
+    maxTick: number,
+    isFullRange: boolean
+  ) {
+    this.minTick.attr("opacity", Number(!isFullRange));
+    this.maxTick.attr("opacity", Number(!isFullRange));
+
     this.minTick
       .attr("y1", 0)
       .attr("x1", this.x(minTick))

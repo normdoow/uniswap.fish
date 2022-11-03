@@ -10,6 +10,7 @@ import { AppContextState } from "./appContext";
 export enum AppActionType {
   RESET_TOKEN_LIST = "RESET_TOKEN_LIST",
   RESET_PAIR = "RESET_PAIR",
+  SET_IS_FULL_RANGE = "SET_IS_FULL_RANGE",
   TOGGLE_CURRENT_PAIR = "TOGGLE_CURRENT_PAIR",
   UPDATE_OUT_OF_RANGE_PERCENTAGE = "UPDATE_OUT_OF_RANGE_PERCENTAGE",
   UPDATE_PRICE_RANGE = "UPDATE_PRICE_RANGE",
@@ -36,6 +37,7 @@ export type AppAction =
         volume24H: number;
       };
     }
+  | { type: AppActionType.SET_IS_FULL_RANGE; payload: boolean }
   | { type: AppActionType.TOGGLE_CURRENT_PAIR }
   | { type: AppActionType.UPDATE_OUT_OF_RANGE_PERCENTAGE; payload: number }
   | { type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE; payload: number }
@@ -58,6 +60,9 @@ export const appReducer = (
     }
     case AppActionType.UPDATE_OUT_OF_RANGE_PERCENTAGE: {
       return { ...state, outOfRangePercentageValue: action.payload };
+    }
+    case AppActionType.SET_IS_FULL_RANGE: {
+      return { ...state, isFullRange: action.payload };
     }
     case AppActionType.RESET_TOKEN_LIST: {
       return { ...state, tokenList: action.payload.tokenList };

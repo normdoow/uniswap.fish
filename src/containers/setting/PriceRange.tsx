@@ -104,7 +104,7 @@ const PriceRange = () => {
   const [activePriceAssumptionSlider, setActivePriceAssumptionSlider] =
     useState(0);
   const [priceRangeSlider, setPriceRangeSlider] = useState([0, 0]);
-  const [isFullRange, setIsFullRange] = useState(false);
+  const isFullRange = state.isFullRange;
 
   const prices = divideArray(
     (state.token1PriceChart?.prices || []).map((p: Price) => p.value),
@@ -154,7 +154,7 @@ const PriceRange = () => {
   }, [state.priceRangeValue, min, max]);
 
   return (
-    <div>
+    <div style={{ marginTop: 7 }}>
       <Heading>
         <div
           style={{
@@ -179,7 +179,12 @@ const PriceRange = () => {
               offHandleColor="#777"
               onColor="#2A4174"
               onHandleColor="#608EF7"
-              onChange={(checked) => setIsFullRange(checked)}
+              onChange={(checked) =>
+                dispatch({
+                  type: AppActionType.SET_IS_FULL_RANGE,
+                  payload: checked,
+                })
+              }
             />
           </FullRangeContainer>
         </div>
