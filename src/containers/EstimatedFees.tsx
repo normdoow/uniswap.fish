@@ -44,11 +44,18 @@ const EstimatedFees = () => {
   const { state } = useAppContext();
 
   const P = state.priceAssumptionValue;
-  const Pl = state.priceRangeValue[0];
-  const Pu = state.priceRangeValue[1];
+  let Pl = state.priceRangeValue[0];
+  let Pu = state.priceRangeValue[1];
   const priceUSDX = state.token1PriceChart?.currentPriceUSD || 1;
   const priceUSDY = state.token0PriceChart?.currentPriceUSD || 1;
   const depositAmountUSD = state.depositAmountValue;
+
+  if (state.isFullRange && state.poolTicks) {
+    const firstTick = state.poolTicks[0];
+    const lastTick = state.poolTicks[state.poolTicks.length - 1];
+    Pl = Number(firstTick.price0);
+    Pu = Number(lastTick.price0);
+  }
 
   const { amount0, amount1 } = getTokensAmountFromDepositAmountUSD(
     P,

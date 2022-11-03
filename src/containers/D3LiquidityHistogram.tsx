@@ -129,8 +129,8 @@ class D3LiquidityHistogram {
     maxTick: number,
     isFullRange: boolean
   ) {
-    this.minTick.attr("opacity", Number(!isFullRange));
-    this.maxTick.attr("opacity", Number(!isFullRange));
+    this.minTick.attr("opacity", !isFullRange ? 1 : 0.3);
+    this.maxTick.attr("opacity", !isFullRange ? 1 : 0.3);
 
     this.minTick
       .attr("y1", 0)
