@@ -1,5 +1,10 @@
 export const ANNOUNCEMENTS = [
   {
+    message: "full range estimation",
+    tweetId: "1588185345849688065",
+    tag: "feature-update",
+  },
+  {
     message: "smoothie",
     tweetId: "1586976511705260033",
     tag: "announcement",
