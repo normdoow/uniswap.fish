@@ -1,12 +1,10 @@
 # 🦄 UniswapCalculator
 
-Uniswap V3 Fee Calculator, Visit: [uniswapv3.thechun.dev](https://uniswapv3.thechun.dev/)
+Uniswap V3 Fee Calculator, Visit: [uniswap.fish](https://uniswap.fish/), [@uniswapdotfish](https://twitter.com/uniswapdotfish)
 
 > Disclaimer: please do your own research, this website is intended to be used and must be used for informational purpose only. It is very important to do your own analysis before making any investment based on your personal circumstances.
 
-![Screenshot](https://uniswapv3.thechun.dev/cover.jpeg)
-
-[Report a bug or request a feature](https://github.com/chunza2542/uniswapv3-calculator/issues)
+[Report a bug or request a feature](https://github.com/chunza2542/uniswap.fish/issues)
 
 [Donate this project on Gitcoin Grant](https://gitcoin.co/grants/4203/uniswap-calculator-v3)
 
