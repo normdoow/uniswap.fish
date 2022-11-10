@@ -273,8 +273,8 @@ class D3CorrelationChart {
     maxPrice: number,
     isFullRange: boolean
   ) {
-    this.minPrice.attr("opacity", !isFullRange ? 1 : 0.3);
-    this.maxPrice.attr("opacity", !isFullRange ? 1 : 0.3);
+    this.minPrice.attr("opacity", !isFullRange ? 1 : 0.4);
+    this.maxPrice.attr("opacity", !isFullRange ? 1 : 0.4);
 
     this.minPrice
       .attr("x1", 0)
