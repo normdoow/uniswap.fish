@@ -28,7 +28,7 @@ export const Table = styled.div`
   border-radius: 12px;
   font-size: 0.8rem;
   font-weight: 500;
-  color: #999;
+  color: #aaa;
 
   & > div:nth-child(2) {
     text-align: right;

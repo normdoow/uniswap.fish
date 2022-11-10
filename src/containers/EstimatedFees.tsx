@@ -14,10 +14,16 @@ import { ScreenWidth } from "../utils/styled";
 const SettingContainer = styled.div`
   background: rgba(255, 255, 255, 0.1);
   border-radius: 16px;
-  padding: 16px;
+  overflow: hidden;
+
+  & > div.padding {
+    padding: 16px;
+  }
 
   @media only screen and (max-width: ${ScreenWidth.MOBILE}px) {
-    padding: 12px;
+    & > div.padding {
+      padding: 12px;
+    }
     border-radius: 12px;
   }
 `;
@@ -38,6 +44,27 @@ const Fee = styled.span`
 const Tag = styled.div`
   display: inline-block;
   color: rgba(255, 255, 255, 0.3);
+`;
+const ILButton = styled.button`
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.075);
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: center;
+
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  color: #ccc;
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 8px;
+
+  &:hover {
+    color: white;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.1);
+  }
 `;
 
 const EstimatedFees = () => {
@@ -96,28 +123,31 @@ const EstimatedFees = () => {
 
   return (
     <SettingContainer>
-      <Heading>
-        Estimated Fees <Tag>(24h)</Tag>
-      </Heading>
-      <Fee>
-        <Dollar>$</Dollar>
-        {estimatedFee.toFixed(2)}
-      </Fee>
+      <div className="padding">
+        <Heading>
+          Estimated Fees <Tag>(24h)</Tag>
+        </Heading>
+        <Fee>
+          <Dollar>$</Dollar>
+          {estimatedFee.toFixed(2)}
+        </Fee>
+        <Table>
+          <div>MONTHLY</div>
+          <div>${(estimatedFee * 30).toFixed(2)}</div>
+          <div>
+            {((100 * (estimatedFee * 30)) / depositAmountUSD).toFixed(2)}%
+          </div>
+        </Table>
+        <Table>
+          <div>YEARLY (APR)</div>
+          <div>${(estimatedFee * 365).toFixed(2)}</div>
+          <div>
+            {((100 * (estimatedFee * 365)) / depositAmountUSD).toFixed(2)}%
+          </div>
+        </Table>
+      </div>
 
-      <Table>
-        <div>MONTHLY</div>
-        <div>${(estimatedFee * 30).toFixed(2)}</div>
-        <div>
-          {((100 * (estimatedFee * 30)) / depositAmountUSD).toFixed(2)}%
-        </div>
-      </Table>
-      <Table>
-        <div>YEARLY (APR)</div>
-        <div>${(estimatedFee * 365).toFixed(2)}</div>
-        <div>
-          {((100 * (estimatedFee * 365)) / depositAmountUSD).toFixed(2)}%
-        </div>
-      </Table>
+      <ILButton>Calculate Impermanent Loss</ILButton>
     </SettingContainer>
   );
 };
