@@ -1,8 +1,8 @@
 import React from "react";
 import {
+  faCoins,
   faExchangeAlt,
   faExternalLinkAlt,
-  faSocks,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
@@ -24,7 +24,7 @@ const InvisibleTabletSpan = styled.span`
   }
 `;
 const ButtonIcon = styled.span`
-  margin-right: 5px;
+  margin-right: 7px;
 
   @media only screen and (max-width: 610px) {
     margin-right: 0;
@@ -150,9 +150,9 @@ const Header = () => {
           }}
         >
           <ButtonIcon>
-            <FontAwesomeIcon icon={faSocks} />
+            <FontAwesomeIcon icon={faCoins} />
           </ButtonIcon>
-          <InvisibleTabletSpan>Change Pair</InvisibleTabletSpan>
+          <InvisibleTabletSpan>Change Pool</InvisibleTabletSpan>
         </PrimaryButton>
       </div>
     </HeaderContainer>
