@@ -70,10 +70,7 @@ const Strategy = styled.div`
 
   & > span.badge {
     position: absolute;
-    color: white;
     font-size: 0.8rem;
-    color: #4190ff;
-    background: rgba(20, 112, 241, 0.175);
     border-radius: 5px;
     padding: 1px 5px;
     font-weight: bold;
@@ -172,7 +169,15 @@ const ImpermanentLossModal = () => {
           <Container>
             <StrategyContainer>
               <Strategy>
-                <span className="badge">Strategy A: HODL</span>
+                <span
+                  className="badge"
+                  style={{
+                    background: "rgba(20, 112, 241, 0.175)",
+                    color: "#4190ff",
+                  }}
+                >
+                  Strategy A: HODL
+                </span>
                 <span className="value">
                   <span className="p">+25%</span>
                   <Dollar style={{ fontSize: "1.5rem" }}>$</Dollar>
@@ -205,7 +210,15 @@ const ImpermanentLossModal = () => {
               </Strategy>
 
               <Strategy>
-                <span className="badge">Strategy B: UNIV3</span>
+                <span
+                  className="badge"
+                  style={{
+                    background: "rgba(252, 7, 125, 0.175)",
+                    color: "#ff69b2",
+                  }}
+                >
+                  Strategy B: UNIV3
+                </span>
                 <span className="value">
                   <span className="p">+25%</span>
                   <Dollar style={{ fontSize: "1.5rem" }}>$</Dollar>
