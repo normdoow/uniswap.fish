@@ -6,7 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { Group, Input, InputGroup } from "../common/input";
 import Slider from "./setting/Slider";
-import { Table } from "../common/components";
+import { Dollar, Table } from "../common/components";
+import { useAppContext } from "../context/app/appContext";
 
 const ModalStyle = {
   overlay: {
@@ -58,17 +59,60 @@ const StrategyContainer = styled.div`
   position: relative;
   & > div {
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
-    height: 75px;
+    padding: 8px;
   }
   & > div:nth-child(1) {
     margin-bottom: 10px;
   }
 `;
+const Strategy = styled.div`
+  position: relative;
+  & > span.badge {
+    position: absolute;
+    color: white;
+    font-size: 0.8rem;
+    color: #4190ff;
+    background: rgba(20, 112, 241, 0.175);
+    border-radius: 5px;
+    padding: 1px 5px;
+    font-weight: bold;
+  }
+  & > span.value {
+    color: white;
+    font-size: 1.4rem;
+    display: flex;
+    justify-content: right;
+    margin-top: -5px;
+
+    & > span.p {
+      font-size: 0.8rem;
+      margin-right: 8px;
+      margin-top: 11px;
+      color: #25af60;
+      font-weight: bold;
+    }
+  }
+  & > ${Dollar} {
+    background: red;
+  }
+`;
+const Token = styled.div`
+  display: flex;
+  align-items: center;
+
+  & > img {
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    transform: translateX(-5px);
+  }
+`;
 
 const ImpermanentLossModal = () => {
   const modalContext = useModalContext();
+  const { state, dispatch } = useAppContext();
 
   return (
     <>
@@ -95,8 +139,60 @@ const ImpermanentLossModal = () => {
           </Header>
           <Container>
             <StrategyContainer>
-              <div>HOLD</div>
-              <div>LP</div>
+              <Strategy>
+                <span className="badge">Strategy A: HODL</span>
+                <span className="value">
+                  <span className="p">+25%</span>
+                  <Dollar style={{ fontSize: "1.5rem" }}>$</Dollar>
+                  10025.14
+                </span>
+                <Table>
+                  <Token>
+                    <img alt={state.token0?.name} src={state.token0?.logoURI} />{" "}
+                    <span>{state.token0?.symbol}</span>
+                  </Token>
+                  <div>1000</div>
+                  <div>$1000</div>
+                </Table>
+                <Table>
+                  <Token>
+                    <img alt={state.token1?.name} src={state.token1?.logoURI} />{" "}
+                    <span>{state.token1?.symbol}</span>
+                  </Token>
+                  <div>1000</div>
+                  <div>$1000</div>
+                </Table>
+              </Strategy>
+
+              <Strategy>
+                <span className="badge">Strategy B: UNIV3</span>
+                <span className="value">
+                  <span className="p">+25%</span>
+                  <Dollar style={{ fontSize: "1.5rem" }}>$</Dollar>
+                  10025.14
+                </span>
+                <Table>
+                  <Token>
+                    <img alt={state.token0?.name} src={state.token0?.logoURI} />{" "}
+                    <span>{state.token0?.symbol}</span>
+                  </Token>
+                  <div>1000</div>
+                  <div>$1000</div>
+                </Table>
+                <Table>
+                  <Token>
+                    <img alt={state.token1?.name} src={state.token1?.logoURI} />{" "}
+                    <span>{state.token1?.symbol}</span>
+                  </Token>
+                  <div>1000</div>
+                  <div>$1000</div>
+                </Table>
+                <Table>
+                  <div>LP Yield (12.25d)</div>
+                  <div>5.25%</div>
+                  <div>$1000</div>
+                </Table>
+              </Strategy>
             </StrategyContainer>
 
             <Table>
