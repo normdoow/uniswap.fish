@@ -13,7 +13,7 @@ export const Br = styled.div`
 `;
 
 export const Dollar = styled.span`
-  font-family: "Gowun Batang", serif;
+  font-family: "Gowun Batang", serif !important;
 `;
 
 export const Table = styled.div`
