@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { Group, Input, InputGroup } from "../common/input";
 import Slider from "./setting/Slider";
-import { Dollar, Table } from "../common/components";
+import { Dollar } from "../common/components";
 import { useAppContext } from "../context/app/appContext";
 
 const ModalStyle = {
@@ -29,7 +29,7 @@ const ModalStyle = {
 };
 const Container = styled.div`
   min-width: 370px;
-  padding: 15px;
+  padding: 12px 10px;
 `;
 const Header = styled.h1`
   color: white;
@@ -57,18 +57,17 @@ const Header = styled.h1`
 `;
 const StrategyContainer = styled.div`
   position: relative;
-  & > div {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 8px;
-  }
   & > div:nth-child(1) {
     margin-bottom: 10px;
   }
 `;
 const Strategy = styled.div`
   position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 8px;
+
   & > span.badge {
     position: absolute;
     color: white;
@@ -84,7 +83,8 @@ const Strategy = styled.div`
     font-size: 1.4rem;
     display: flex;
     justify-content: right;
-    margin-top: -5px;
+    margin-top: -9px;
+    transform: translateY(2px) translateX(-3px);
 
     & > span.p {
       font-size: 0.8rem;
@@ -107,6 +107,38 @@ const Token = styled.div`
     width: 18px;
     border-radius: 50%;
     transform: translateX(-5px);
+  }
+`;
+export const Table = styled.div`
+  width: 100%;
+  display: grid;
+  grid-gap: 5px;
+  margin-top: 3px;
+
+  padding: 6px 12px;
+  &.adjust-padding-right {
+    padding-right: 6px;
+  }
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #aaa;
+
+  & > div {
+    display: grid;
+    grid-template-columns: 8rem 1fr 5rem;
+    grid-gap: 7px;
+
+    & > div:nth-child(2) {
+      text-align: right;
+    }
+    & > div:nth-child(3) {
+      text-align: left;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 5rem;
+      text-align: center;
+    }
   }
 `;
 
@@ -146,21 +178,29 @@ const ImpermanentLossModal = () => {
                   <Dollar style={{ fontSize: "1.5rem" }}>$</Dollar>
                   10025.14
                 </span>
-                <Table>
-                  <Token>
-                    <img alt={state.token0?.name} src={state.token0?.logoURI} />{" "}
-                    <span>{state.token0?.symbol}</span>
-                  </Token>
-                  <div>1000</div>
-                  <div>$1000</div>
-                </Table>
-                <Table>
-                  <Token>
-                    <img alt={state.token1?.name} src={state.token1?.logoURI} />{" "}
-                    <span>{state.token1?.symbol}</span>
-                  </Token>
-                  <div>1000</div>
-                  <div>$1000</div>
+                <Table className="adjust-padding-right">
+                  <div>
+                    <Token>
+                      <img
+                        alt={state.token0?.name}
+                        src={state.token0?.logoURI}
+                      />{" "}
+                      <span>{state.token0?.symbol}</span>
+                    </Token>
+                    <div>1000</div>
+                    <div>$1000</div>
+                  </div>
+                  <div>
+                    <Token>
+                      <img
+                        alt={state.token1?.name}
+                        src={state.token1?.logoURI}
+                      />{" "}
+                      <span>{state.token1?.symbol}</span>
+                    </Token>
+                    <div>1000</div>
+                    <div>$1000</div>
+                  </div>
                 </Table>
               </Strategy>
 
@@ -171,42 +211,52 @@ const ImpermanentLossModal = () => {
                   <Dollar style={{ fontSize: "1.5rem" }}>$</Dollar>
                   10025.14
                 </span>
-                <Table>
-                  <Token>
-                    <img alt={state.token0?.name} src={state.token0?.logoURI} />{" "}
-                    <span>{state.token0?.symbol}</span>
-                  </Token>
-                  <div>1000</div>
-                  <div>$1000</div>
-                </Table>
-                <Table>
-                  <Token>
-                    <img alt={state.token1?.name} src={state.token1?.logoURI} />{" "}
-                    <span>{state.token1?.symbol}</span>
-                  </Token>
-                  <div>1000</div>
-                  <div>$1000</div>
-                </Table>
-                <Table>
-                  <div>LP Yield (12.25d)</div>
-                  <div>5.25%</div>
-                  <div>$1000</div>
+                <Table className="adjust-padding-right">
+                  <div>
+                    <Token>
+                      <img
+                        alt={state.token0?.name}
+                        src={state.token0?.logoURI}
+                      />{" "}
+                      <span>{state.token0?.symbol}</span>
+                    </Token>
+                    <div>1000</div>
+                    <div>$1000</div>
+                  </div>
+                  <div>
+                    <Token>
+                      <img
+                        alt={state.token1?.name}
+                        src={state.token1?.logoURI}
+                      />{" "}
+                      <span>{state.token1?.symbol}</span>
+                    </Token>
+                    <div>1000</div>
+                    <div>$1000</div>
+                  </div>
+                  <div>
+                    <div>LP Yield (12.25d)</div>
+                    <div>5.25%</div>
+                    <div>$1000</div>
+                  </div>
                 </Table>
               </Strategy>
             </StrategyContainer>
 
-            <Table>
-              <div>IL</div>
-              <div>-5000 USDT</div>
-              <div>-10%</div>
-            </Table>
-            <Table>
-              <div>PnL</div>
-              <div>+259 USDT</div>
-              <div>+10%</div>
+            <Table style={{ marginTop: 10, color: "white" }}>
+              <div>
+                <div>Impermanent Loss</div>
+                <div>-$5000</div>
+                <div>-10%</div>
+              </div>
+              <div>
+                <div>PnL (12.25d)</div>
+                <div>+$259</div>
+                <div>+10%</div>
+              </div>
             </Table>
 
-            <Group>
+            <Group style={{ marginTop: 10 }}>
               <InputGroup>
                 <div
                   className="btn btn-left"
@@ -230,7 +280,9 @@ const ImpermanentLossModal = () => {
                 >
                   <span>+</span>
                 </div>
-                <span>Number of Days in the Position</span>
+                <span style={{ fontWeight: "bold" }}>
+                  Number of Days in the Position
+                </span>
                 <Input
                   value={12.25}
                   type="number"
@@ -244,7 +296,7 @@ const ImpermanentLossModal = () => {
                   //   });
                   // }}
                 />
-                <span>You need to have at least 12.25d to stay profit</span>
+                <span>You need to be in the position ≥ 12.25d to profit</span>
               </InputGroup>
 
               <InputGroup style={{ marginTop: 8 }}>
@@ -271,7 +323,7 @@ const ImpermanentLossModal = () => {
                   <span>+</span>
                 </div>
 
-                <span>Future Price (+10%)</span>
+                <span style={{ fontWeight: "bold" }}>Future Price (+10%)</span>
                 <Input
                   // value={state.priceAssumptionValue || 0}
                   type="number"
