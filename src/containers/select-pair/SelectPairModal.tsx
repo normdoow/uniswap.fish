@@ -46,7 +46,7 @@ const ModalStyle = {
     borderRadius: "16px",
     marginRight: "calc(-50% + 30px)",
     transform: "translate(-50%, -50%)",
-    background: "rgb(28, 27, 28)",
+    background: "rgb(22, 22, 22)",
   },
 };
 const Container = styled.div`
@@ -214,7 +214,7 @@ const Logo = styled.h1`
   display: flex;
   padding: 15px;
   align-items: center;
-  background: rgb(50, 50, 50);
+  background: rgb(40, 40, 40);
   & > span {
     font-size: 1.4rem;
     margin-right: 7px;

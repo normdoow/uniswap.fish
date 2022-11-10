@@ -15,6 +15,7 @@ import { FeedbackButton } from "./common/buttons";
 import { useAppContext } from "./context/app/appContext";
 import { faBug } from "@fortawesome/free-solid-svg-icons";
 import { getCurrentNetwork } from "./common/network";
+import ImpermanentLossModal from "./containers/ImpermanentLossModal";
 // import { useModalContext } from "./context/modal/modalContext";
 // import AnnoucementModal from "./containers/AnnoucementModal";
 // import { ModalActionType } from "./context/modal/modalReducer";
@@ -57,6 +58,7 @@ function App() {
   return (
     <>
       <SelectPairModal />
+      <ImpermanentLossModal />
       {/* <AnnoucementModal /> */}
       {/* <DonateModal /> */}
 

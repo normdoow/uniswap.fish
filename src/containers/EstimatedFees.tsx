@@ -10,6 +10,8 @@ import {
   getTokensAmountFromDepositAmountUSD,
 } from "../utils/uniswapv3/math";
 import { ScreenWidth } from "../utils/styled";
+import { useModalContext } from "../context/modal/modalContext";
+import { ModalActionType } from "../context/modal/modalReducer";
 
 const SettingContainer = styled.div`
   background: rgba(255, 255, 255, 0.1);
@@ -69,6 +71,7 @@ const ILButton = styled.button`
 
 const EstimatedFees = () => {
   const { state } = useAppContext();
+  const modalContext = useModalContext();
 
   const P = state.priceAssumptionValue;
   let Pl = state.priceRangeValue[0];
@@ -147,7 +150,16 @@ const EstimatedFees = () => {
         </Table>
       </div>
 
-      <ILButton>Calculate Impermanent Loss</ILButton>
+      <ILButton
+        onClick={() => {
+          modalContext.dispatch({
+            type: ModalActionType.SET_IMPERMANENT_LOSS_MODAL_STATE,
+            payload: true,
+          });
+        }}
+      >
+        Calculate Impermanent Loss
+      </ILButton>
     </SettingContainer>
   );
 };

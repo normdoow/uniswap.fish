@@ -79,3 +79,7 @@ input[type="number"] {
 .thumb-green-1 {
   background-color: rgba(37, 175, 96, 1) !important;
 }
+.thumb-yellow-0,
+.thumb-yellow-1 {
+  background-color: #fccc5d !important;
+}
