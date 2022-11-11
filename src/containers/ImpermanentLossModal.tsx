@@ -305,23 +305,23 @@ const ImpermanentLossModal = () => {
               <InputGroup>
                 <div
                   className="btn btn-left"
-                  // onClick={() => {
-                  //   dispatch({
-                  //     type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE,
-                  //     payload: state.priceAssumptionValue - btnStep,
-                  //   });
-                  // }}
+                  onClick={() => {
+                    dispatch({
+                      type: AppActionType.SET_DAYS_IN_POSITION,
+                      payload: state.daysInPosition - 0.25,
+                    });
+                  }}
                 >
                   <span>-</span>
                 </div>
                 <div
                   className="btn btn-right"
-                  // onClick={() => {
-                  //   dispatch({
-                  //     type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE,
-                  //     payload: state.priceAssumptionValue + btnStep,
-                  //   });
-                  // }}
+                  onClick={() => {
+                    dispatch({
+                      type: AppActionType.SET_DAYS_IN_POSITION,
+                      payload: state.daysInPosition + 0.25,
+                    });
+                  }}
                 >
                   <span>+</span>
                 </div>
@@ -329,17 +329,17 @@ const ImpermanentLossModal = () => {
                   Number of Days in the Position
                 </span>
                 <Input
-                  value={12.25}
+                  value={state.daysInPosition}
                   type="number"
                   placeholder="0.0"
-                  // onChange={(e) => {
-                  //   let value = Number(e.target.value);
+                  onChange={(e) => {
+                    let value = Number(e.target.value);
 
-                  //   dispatch({
-                  //     type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE,
-                  //     payload: value,
-                  //   });
-                  // }}
+                    dispatch({
+                      type: AppActionType.SET_DAYS_IN_POSITION,
+                      payload: value,
+                    });
+                  }}
                 />
                 <span>You need to be in the position ≥ 12.25d to profit</span>
               </InputGroup>

@@ -28,6 +28,7 @@ export interface AppContextState {
   priceAssumptionValue: number;
 
   futurePrice: null | number;
+  daysInPosition: number;
   // TODO: Refactor
   outOfRangePercentageValue: number;
 }
@@ -50,6 +51,7 @@ const initialState: AppContextState = {
   priceAssumptionValue: 0,
 
   futurePrice: null,
+  daysInPosition: 7,
   outOfRangePercentageValue: 0,
 };
 
