@@ -151,45 +151,6 @@ const EstimatedFees = () => {
         </Table>
       </div>
 
-      <div
-        style={{
-          color: "#ccc",
-          fontSize: "0.8rem",
-          fontStyle: "italic",
-          padding: "0 15px",
-          paddingBottom: "15px",
-          cursor: "pointer",
-        }}
-        onClick={() => {
-          const app_context = {
-            token0: state.token0?.id,
-            token1: state.token1?.id,
-            chain: getCurrentNetwork().id,
-            pool: state.pool?.id,
-            depositAmount: state.depositAmountValue,
-            priceRange: state.priceRangeValue,
-            mostActivePrice: state.priceAssumptionValue,
-            IL: {
-              daysInPosition: state.daysInPosition,
-              currentPrice: state.currentPrice,
-              futurePrice: state.futurePrice,
-            },
-          };
-          if (process.env.NODE_ENV === "development") {
-            return console.log({ app_context });
-          }
-          window.freddyWidget.setOptions({
-            custom_fields: {
-              app_context: JSON.stringify(app_context),
-            },
-          });
-          window.freddyWidget.show();
-        }}
-      >
-        The impermanent loss calculator is still in the beta version. We'd like
-        you to try and <b>give us feedback.</b>
-      </div>
-
       <ILButton
         onClick={() => {
           const props = {
