@@ -54,7 +54,7 @@ const initialState: AppContextState = {
   // Impermanent Loss Calculator
   currentPrice: null,
   futurePrice: null,
-  daysInPosition: 7,
+  daysInPosition: 0,
   outOfRangePercentageValue: 0,
 };
 

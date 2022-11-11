@@ -124,7 +124,7 @@ export const appReducer = (
         isPairToggled: !state.isPairToggled,
         currentPrice: null,
         futurePrice: null,
-        daysInPosition: 7,
+        daysInPosition: 0,
         pool,
         token0,
         token1,
