@@ -10,6 +10,7 @@ import { divideArray, findMax, findMin } from "../../utils/math";
 import { ScreenWidth } from "../../utils/styled";
 import Slider from "./Slider";
 import { Group, Input, InputGroup } from "../../common/input";
+import ImpermanentLossModal from "../ImpermanentLossModal";
 
 const MinMaxPriceContainer = styled.div`
   display: grid;
@@ -85,6 +86,8 @@ const PriceRange = () => {
     ]);
   }, [state.priceRangeValue, min, max]);
 
+  // TODO: Handle negative input value (& ImpermanentLossModal)
+  // TODO: Handle default 0 value (UX)
   return (
     <div style={{ marginTop: 7 }}>
       <Heading>
@@ -126,6 +129,7 @@ const PriceRange = () => {
           <InputGroup>
             {!isFullRange && (
               <>
+                {/* TODO: Refactor +, - btn */}
                 <div
                   className="btn btn-left"
                   onClick={() => {
