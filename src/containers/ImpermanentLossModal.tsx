@@ -148,7 +148,10 @@ const ImpermanentLossModal = () => {
   const { state, dispatch } = useAppContext();
   const [futurePriceSlider, setFuturePriceSlider] = useState(0);
 
-  const futurePrice = state.futurePrice || state.priceAssumptionValue || 0;
+  const initialPrice = state.priceAssumptionValue;
+  const futurePrice = state.futurePrice || initialPrice || 0;
+  const futurePricePercentage =
+    (100 * (futurePrice - initialPrice)) / initialPrice;
 
   // TODO: Refactor
   const prices = divideArray(
@@ -364,7 +367,10 @@ const ImpermanentLossModal = () => {
                 >
                   <span>+</span>
                 </div>
-                <span style={{ fontWeight: "bold" }}>Future Price (+10%)</span>
+                <span style={{ fontWeight: "bold" }}>
+                  Future Price ({futurePricePercentage >= 0 ? "+" : ""}
+                  {futurePricePercentage.toFixed(2)}%)
+                </span>
                 <Input
                   value={futurePrice}
                   type="number"
