@@ -479,7 +479,18 @@ const ImpermanentLossModal = () => {
                     <div>${valueUSDToken1B.toFixed(2)}</div>
                   </div>
                   <div>
-                    <div>LP Yield ({state.daysInPosition.toFixed(0)}d)</div>
+                    <div
+                      data-for="il"
+                      data-place="right"
+                      data-html={true}
+                      data-tip={`LP Yield = Daily Estimated Fee x Days Of Active Position; where<br>Daily Estimated Fee = $${estimatedFee.toFixed(
+                        2
+                      )}/d<br>Days Of Active Position = ${
+                        state.daysInPosition
+                      }<br><br>P.S. Daily Estimated Fee is calculated based on lower/upper ticks, current price, and deposit amount.`}
+                    >
+                      LP Yield ({state.daysInPosition.toFixed(0)}d)
+                    </div>
                     <div>{yieldPercentage.toFixed(2)}%</div>
                     <div>${estimatedYield.toFixed(2)}</div>
                   </div>
