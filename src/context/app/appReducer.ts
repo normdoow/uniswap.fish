@@ -16,7 +16,9 @@ export enum AppActionType {
   UPDATE_PRICE_RANGE = "UPDATE_PRICE_RANGE",
   UPDATE_DEPOSIT_AMOUNT = "UPDATE_DEPOSIT_AMOUNT",
   UPDATE_PRICE_ASSUMPTION_VALUE = "UPDATE_PRICE_ASSUMPTION_VALUE",
+
   SET_FUTURE_PRICE = "SET_FUTURE_PRICE",
+  SET_CURRENT_PRICE = "SET_CURRENT_PRICE",
   SET_DAYS_IN_POSITION = "SET_DAYS_IN_POSITION",
 }
 export type AppAction =
@@ -40,7 +42,8 @@ export type AppAction =
       };
     }
   | { type: AppActionType.SET_IS_FULL_RANGE; payload: boolean }
-  | { type: AppActionType.SET_FUTURE_PRICE; payload: null | number }
+  | { type: AppActionType.SET_FUTURE_PRICE; payload: null | number[] }
+  | { type: AppActionType.SET_CURRENT_PRICE; payload: null | number[] }
   | { type: AppActionType.SET_DAYS_IN_POSITION; payload: number }
   | { type: AppActionType.TOGGLE_CURRENT_PAIR }
   | { type: AppActionType.UPDATE_OUT_OF_RANGE_PERCENTAGE; payload: number }
@@ -67,6 +70,9 @@ export const appReducer = (
     }
     case AppActionType.SET_IS_FULL_RANGE: {
       return { ...state, isFullRange: action.payload };
+    }
+    case AppActionType.SET_CURRENT_PRICE: {
+      return { ...state, currentPrice: action.payload };
     }
     case AppActionType.SET_FUTURE_PRICE: {
       return { ...state, futurePrice: action.payload };

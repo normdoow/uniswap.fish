@@ -144,6 +144,7 @@ export const Table = styled.div`
     }
   }
 `;
+// TODO: Refactor this CSS
 const FuturePriceContainer = styled.div`
   display: grid;
   grid-gap: 7px;
@@ -209,62 +210,55 @@ const PriceInput = styled.input`
 const ImpermanentLossModal = () => {
   const modalContext = useModalContext();
   const { state, dispatch } = useAppContext();
-  const [futurePriceSlider, setFuturePriceSlider] = useState(0);
 
-  const initialPrice = state.priceAssumptionValue;
-  const futurePrice = state.futurePrice || initialPrice || 0;
-  const futurePricePercentage =
-    (100 * (futurePrice - initialPrice)) / initialPrice;
+  // TODO: Refactor calculation logic & pref
+  const initialPrice: number[] = [
+    state.token0PriceChart?.prices[state.token0PriceChart?.prices.length - 1]
+      .value || 0,
+    state.token1PriceChart?.prices[state.token1PriceChart?.prices.length - 1]
+      .value || 0,
+  ];
+  const currentPrice = state.currentPrice || initialPrice;
+  const futurePrice = state.futurePrice || initialPrice;
 
-  // TODO: Refactor (Input)
-  const prices = divideArray(
-    (state.token1PriceChart?.prices || []).map((p: Price) => p.value),
-    (state.token0PriceChart?.prices || []).map((p: Price) => p.value)
-  );
-  const currentPrice = Number(state.pool?.token0Price || NaN);
-  let _min = findMin(prices);
-  let _max = findMax(prices);
-  if (state.token0PriceChart === null || state.token1PriceChart === null) {
-    _min = currentPrice - currentPrice * 0.3;
-    _max = currentPrice + currentPrice * 0.3;
-  }
-  const margin = _max - _min;
-  const min = Math.max(0, _min - margin);
-  const max = _max + margin;
-  const btnStep = ((max - min) * 2) / 100; // 2%
-  const step = 0.000001;
+  const calculateTokensAmount = (pricesUSD: number[]) => {
+    const P = pricesUSD[1] / pricesUSD[0];
+    let Pl = state.priceRangeValue[0];
+    let Pu = state.priceRangeValue[1];
+    const priceUSDX = state.token1PriceChart?.currentPriceUSD || 1;
+    const priceUSDY = state.token0PriceChart?.currentPriceUSD || 1;
+    const depositAmountUSD = state.depositAmountValue;
 
-  useEffect(() => {
-    setFuturePriceSlider((100 * (futurePrice - min)) / (max - min));
-  }, [futurePrice, min, max]);
+    if (state.isFullRange && state.poolTicks) {
+      const firstTick = state.poolTicks[0];
+      const lastTick = state.poolTicks[state.poolTicks.length - 1];
+      Pl = Number(firstTick.price0);
+      Pu = Number(lastTick.price0);
+    }
 
-  // TODO: Refactor (Strategy A)
-  const P = state.priceAssumptionValue;
-  let Pl = state.priceRangeValue[0];
-  let Pu = state.priceRangeValue[1];
-  const priceUSDX = state.token1PriceChart?.currentPriceUSD || 1;
-  const priceUSDY = state.token0PriceChart?.currentPriceUSD || 1;
-  const depositAmountUSD = state.depositAmountValue;
+    // TODO: Refactor (amt0, amt1 confusion)
+    const { amount0, amount1 } = getTokensAmountFromDepositAmountUSD(
+      P,
+      Pl,
+      Pu,
+      priceUSDX,
+      priceUSDY,
+      depositAmountUSD
+    );
 
-  if (state.isFullRange && state.poolTicks) {
-    const firstTick = state.poolTicks[0];
-    const lastTick = state.poolTicks[state.poolTicks.length - 1];
-    Pl = Number(firstTick.price0);
-    Pu = Number(lastTick.price0);
-  }
+    return { price: P, amount0, amount1 };
+  };
 
-  // TODO: Refactor (amt0, amt1 confusion)
-  const { amount0, amount1 } = getTokensAmountFromDepositAmountUSD(
-    P,
-    Pl,
-    Pu,
-    priceUSDX,
-    priceUSDY,
-    depositAmountUSD
-  );
+  const current = calculateTokensAmount(currentPrice);
+  const future = calculateTokensAmount(futurePrice);
 
-  const valueUSDToken0 = amount1 * priceUSDY;
-  const valueUSDToken1 = amount0 * futurePrice * priceUSDY;
+  const futurePrice0Percentage =
+    (100 * (futurePrice[0] - currentPrice[0])) / currentPrice[0];
+  const futurePrice1Percentage =
+    (100 * (futurePrice[1] - currentPrice[1])) / currentPrice[1];
+
+  const valueUSDToken0 = 9;
+  const valueUSDToken1 = 10;
 
   return (
     <>
@@ -315,7 +309,7 @@ const ImpermanentLossModal = () => {
                       />{" "}
                       <span>{state.token0?.symbol}</span>
                     </Token>
-                    <div>{amount1.toFixed(5)}</div>
+                    <div>{current.amount1.toFixed(5)}</div>
                     <div>${valueUSDToken0.toFixed(2)}</div>
                   </div>
                   <div>
@@ -326,7 +320,7 @@ const ImpermanentLossModal = () => {
                       />{" "}
                       <span>{state.token1?.symbol}</span>
                     </Token>
-                    <div>{amount0.toFixed(5)}</div>
+                    <div>{current.amount0.toFixed(5)}</div>
                     <div>${valueUSDToken1.toFixed(2)}</div>
                   </div>
                 </Table>
@@ -439,11 +433,11 @@ const ImpermanentLossModal = () => {
                 <FuturePriceInputGroup style={{ marginTop: 8 }}>
                   <span className="heading">Current Price</span>
                   <div className="group">
-                    <span>ETH Price (USD)</span>
+                    <span>{state.token0?.symbol} Price (USD)</span>
                     <div className="price-input-container">
                       <Dollar>$</Dollar>
                       <PriceInput
-                        defaultValue={1000}
+                        defaultValue={currentPrice[0]}
                         type="number"
                         placeholder="0.00"
                         onChange={(e) => {
@@ -451,19 +445,19 @@ const ImpermanentLossModal = () => {
                           if (value < 0) value = 0;
 
                           dispatch({
-                            type: AppActionType.UPDATE_DEPOSIT_AMOUNT,
-                            payload: value,
+                            type: AppActionType.SET_CURRENT_PRICE,
+                            payload: [value, currentPrice[1]],
                           });
                         }}
                       />
                     </div>
                   </div>
                   <div className="group">
-                    <span>DAI Price (USD)</span>
+                    <span>{state.token1?.symbol} Price (USD)</span>
                     <div className="price-input-container">
                       <Dollar>$</Dollar>
                       <PriceInput
-                        defaultValue={1000}
+                        defaultValue={currentPrice[1]}
                         type="number"
                         placeholder="0.00"
                         onChange={(e) => {
@@ -471,8 +465,8 @@ const ImpermanentLossModal = () => {
                           if (value < 0) value = 0;
 
                           dispatch({
-                            type: AppActionType.UPDATE_DEPOSIT_AMOUNT,
-                            payload: value,
+                            type: AppActionType.SET_CURRENT_PRICE,
+                            payload: [currentPrice[0], value],
                           });
                         }}
                       />
@@ -481,16 +475,17 @@ const ImpermanentLossModal = () => {
                 </FuturePriceInputGroup>
 
                 <FuturePriceInputGroup style={{ marginTop: 8 }}>
-                  <span className="heading">
-                    Future Price ({futurePricePercentage >= 0 ? "+" : ""}
-                    {futurePricePercentage.toFixed(2)}%)
-                  </span>
+                  <span className="heading">Future Price</span>
                   <div className="group">
-                    <span>ETH Price (USD)</span>
+                    <span>
+                      {state.token0?.symbol} Price (
+                      {futurePrice0Percentage >= 0 ? "+" : ""}
+                      {futurePrice0Percentage.toFixed(2)}%)
+                    </span>
                     <div className="price-input-container">
                       <Dollar>$</Dollar>
                       <PriceInput
-                        defaultValue={1000}
+                        defaultValue={futurePrice[0]}
                         type="number"
                         placeholder="0.00"
                         onChange={(e) => {
@@ -498,19 +493,23 @@ const ImpermanentLossModal = () => {
                           if (value < 0) value = 0;
 
                           dispatch({
-                            type: AppActionType.UPDATE_DEPOSIT_AMOUNT,
-                            payload: value,
+                            type: AppActionType.SET_FUTURE_PRICE,
+                            payload: [value, futurePrice[1]],
                           });
                         }}
                       />
                     </div>
                   </div>
                   <div className="group">
-                    <span>DAI Price (USD)</span>
+                    <span>
+                      {state.token1?.symbol} Price (
+                      {futurePrice1Percentage >= 0 ? "+" : ""}
+                      {futurePrice1Percentage.toFixed(2)}%)
+                    </span>
                     <div className="price-input-container">
                       <Dollar>$</Dollar>
                       <PriceInput
-                        defaultValue={1000}
+                        defaultValue={futurePrice[1]}
                         type="number"
                         placeholder="0.00"
                         onChange={(e) => {
@@ -518,8 +517,8 @@ const ImpermanentLossModal = () => {
                           if (value < 0) value = 0;
 
                           dispatch({
-                            type: AppActionType.UPDATE_DEPOSIT_AMOUNT,
-                            payload: value,
+                            type: AppActionType.SET_FUTURE_PRICE,
+                            payload: [futurePrice[0], value],
                           });
                         }}
                       />

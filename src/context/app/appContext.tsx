@@ -27,7 +27,8 @@ export interface AppContextState {
   priceRangeValue: number[];
   priceAssumptionValue: number;
 
-  futurePrice: null | number;
+  currentPrice: null | number[];
+  futurePrice: null | number[];
   daysInPosition: number;
   // TODO: Refactor
   outOfRangePercentageValue: number;
@@ -50,6 +51,8 @@ const initialState: AppContextState = {
   priceRangeValue: [0, 0],
   priceAssumptionValue: 0,
 
+  // Impermanent Loss Calculator
+  currentPrice: null,
   futurePrice: null,
   daysInPosition: 7,
   outOfRangePercentageValue: 0,
