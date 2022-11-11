@@ -79,12 +79,21 @@ const Strategy = styled.div`
   border-radius: 12px;
   padding: 8px;
 
+  &.recommend {
+    border: 1px solid rgba(37, 175, 96, 0.75);
+    box-shadow: 0px 0px 5px 0px rgba(37, 175, 96, 0.75);
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(37, 175, 96, 0.75);
+    -moz-box-shadow: 0px 0px 5px 0px rgba(37, 175, 96, 0.75);
+  }
+
   & > span.badge {
     position: absolute;
-    font-size: 0.8rem;
+    font-size: 0.6rem;
     border-radius: 5px;
     padding: 1px 5px;
-    font-weight: bold;
+    font-weight: 500;
+    color: #bbb;
+    border: 1px solid #bbb;
   }
   & > span.value {
     color: white;
@@ -364,16 +373,10 @@ const ImpermanentLossModal = () => {
           </Header>
           <Container>
             <StrategyContainer>
-              <Strategy>
-                <span
-                  className="badge"
-                  style={{
-                    background: "rgba(20, 112, 241, 0.175)",
-                    color: "#4190ff",
-                  }}
-                >
-                  Strategy A: HODL
-                </span>
+              <Strategy
+                className={totalValueA > totalValueB ? "recommend" : ""}
+              >
+                <span className="badge">Strategy A: HODL</span>
                 <span className="value">
                   <span className="p">
                     {percentageA >= 0 ? "+" : ""}
@@ -408,16 +411,10 @@ const ImpermanentLossModal = () => {
                 </Table>
               </Strategy>
 
-              <Strategy>
-                <span
-                  className="badge"
-                  style={{
-                    background: "rgba(252, 7, 125, 0.175)",
-                    color: "#ff69b2",
-                  }}
-                >
-                  Strategy B: UNIV3
-                </span>
+              <Strategy
+                className={totalValueB > totalValueA ? "recommend" : ""}
+              >
+                <span className="badge">Strategy B: Uniswap V3</span>
                 <span className="value">
                   <span className="p">
                     {percentageB >= 0 ? "+" : ""}
@@ -469,7 +466,17 @@ const ImpermanentLossModal = () => {
                 <div>
                   {PnL >= 0 ? "+" : "-"}${Math.abs(PnL).toFixed(2)}
                 </div>
-                <div>
+                <div
+                  style={{
+                    fontWeight: "bold",
+                    color:
+                      Number(PnLPercentage.toFixed(2)) > 0
+                        ? "#25af60"
+                        : Number(PnLPercentage.toFixed(2)) < 0
+                        ? "#ff5aaa"
+                        : "",
+                  }}
+                >
                   {PnLPercentage >= 0 ? "+" : ""}
                   {PnLPercentage.toFixed(2)}%
                 </div>
