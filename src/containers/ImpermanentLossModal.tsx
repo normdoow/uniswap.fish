@@ -489,7 +489,18 @@ const ImpermanentLossModal = () => {
 
             <Table style={{ marginTop: 10, color: "white" }}>
               <div>
-                <div>Impermanent Loss</div>
+                <div
+                  data-for="il"
+                  data-place="right"
+                  data-html={true}
+                  data-tip={`Impermanent Loss (IL) <br><br> IL = A - (Token0's B + Token1's B); where<br>A = $${totalValueA.toFixed(
+                    2
+                  )}<br>Token0's B = $${valueUSDToken0B.toFixed(
+                    2
+                  )}<br>Token1's B = $${valueUSDToken1B.toFixed(2)}`}
+                >
+                  Impermanent Loss
+                </div>
                 <div>-${IL.toFixed(2)}</div>
                 <div>-{ILPercentage.toFixed(2)}%</div>
               </div>
@@ -498,9 +509,10 @@ const ImpermanentLossModal = () => {
                   data-for="il"
                   data-place="right"
                   data-html={true}
-                  data-tip={`Profit and loss (PnL) comparing between strategy A and B <br><br> PnL = ${totalValueB.toFixed(
+                  data-tip={`Profit and loss (PnL) comparing between strategy A and B <br><br> PnL = B - A; where<br>
+                  B = $${totalValueB.toFixed(2)}<br>A = $${totalValueA.toFixed(
                     2
-                  )} - ${totalValueA.toFixed(2)}`}
+                  )}`}
                 >
                   PnL ({state.daysInPosition.toFixed(0)}d)
                 </div>
