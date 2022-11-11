@@ -494,7 +494,16 @@ const ImpermanentLossModal = () => {
                 <div>-{ILPercentage.toFixed(2)}%</div>
               </div>
               <div>
-                <div>PnL ({state.daysInPosition.toFixed(0)}d)</div>
+                <div
+                  data-for="il"
+                  data-place="right"
+                  data-html={true}
+                  data-tip={`Profit and loss (PnL) comparing between strategy A and B <br><br> PnL = ${totalValueB.toFixed(
+                    2
+                  )} - ${totalValueA.toFixed(2)}`}
+                >
+                  PnL ({state.daysInPosition.toFixed(0)}d)
+                </div>
                 <div>
                   {PnL >= 0 ? "+" : "-"}${Math.abs(PnL).toFixed(2)}
                 </div>
