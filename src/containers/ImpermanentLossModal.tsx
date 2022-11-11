@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { AppActionType } from "../context/app/appReducer";
 import { divideArray, findMax, findMin } from "../utils/math";
 import { Price } from "../common/interfaces/coingecko.interface";
+import { getTokensAmountFromDepositAmountUSD } from "../utils/uniswapv3/math";
 
 const ModalStyle = {
   overlay: {
@@ -153,7 +154,7 @@ const ImpermanentLossModal = () => {
   const futurePricePercentage =
     (100 * (futurePrice - initialPrice)) / initialPrice;
 
-  // TODO: Refactor
+  // TODO: Refactor (Input)
   const prices = divideArray(
     (state.token1PriceChart?.prices || []).map((p: Price) => p.value),
     (state.token0PriceChart?.prices || []).map((p: Price) => p.value)
@@ -174,6 +175,34 @@ const ImpermanentLossModal = () => {
   useEffect(() => {
     setFuturePriceSlider((100 * (futurePrice - min)) / (max - min));
   }, [futurePrice, min, max]);
+
+  // TODO: Refactor (Strategy A)
+  const P = state.priceAssumptionValue;
+  let Pl = state.priceRangeValue[0];
+  let Pu = state.priceRangeValue[1];
+  const priceUSDX = state.token1PriceChart?.currentPriceUSD || 1;
+  const priceUSDY = state.token0PriceChart?.currentPriceUSD || 1;
+  const depositAmountUSD = state.depositAmountValue;
+
+  if (state.isFullRange && state.poolTicks) {
+    const firstTick = state.poolTicks[0];
+    const lastTick = state.poolTicks[state.poolTicks.length - 1];
+    Pl = Number(firstTick.price0);
+    Pu = Number(lastTick.price0);
+  }
+
+  // TODO: Refactor (amt0, amt1 confusion)
+  const { amount0, amount1 } = getTokensAmountFromDepositAmountUSD(
+    P,
+    Pl,
+    Pu,
+    priceUSDX,
+    priceUSDY,
+    depositAmountUSD
+  );
+
+  const valueUSDToken0 = amount1 * priceUSDY;
+  const valueUSDToken1 = amount0 * futurePrice * priceUSDY;
 
   return (
     <>
@@ -224,8 +253,8 @@ const ImpermanentLossModal = () => {
                       />{" "}
                       <span>{state.token0?.symbol}</span>
                     </Token>
-                    <div>1000</div>
-                    <div>$1000</div>
+                    <div>{amount1.toFixed(5)}</div>
+                    <div>${valueUSDToken0.toFixed(2)}</div>
                   </div>
                   <div>
                     <Token>
@@ -235,8 +264,8 @@ const ImpermanentLossModal = () => {
                       />{" "}
                       <span>{state.token1?.symbol}</span>
                     </Token>
-                    <div>1000</div>
-                    <div>$1000</div>
+                    <div>{amount0.toFixed(5)}</div>
+                    <div>${valueUSDToken1.toFixed(2)}</div>
                   </div>
                 </Table>
               </Strategy>
