@@ -1,5 +1,11 @@
 export const ANNOUNCEMENTS = [
   {
+    message: "impermanent loss calculator",
+    tweetId: "1591118734252310529",
+    tag: "feature-update",
+  },
+
+  {
     message: "full range estimation",
     tweetId: "1588185345849688065",
     tag: "feature-update",
