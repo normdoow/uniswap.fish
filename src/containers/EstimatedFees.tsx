@@ -192,6 +192,13 @@ const EstimatedFees = () => {
 
       <ILButton
         onClick={() => {
+          const props = {
+            featureId: "Impermanent Loss Calculator",
+          };
+          window.plausible("FeatureUsage", {
+            props,
+          });
+
           modalContext.dispatch({
             type: ModalActionType.SET_IMPERMANENT_LOSS_MODAL_STATE,
             payload: true,
