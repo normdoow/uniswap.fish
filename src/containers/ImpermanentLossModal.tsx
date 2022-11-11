@@ -95,6 +95,10 @@ const Strategy = styled.div`
     color: #bbb;
     border: 1px solid #bbb;
   }
+  & > span.badge.recommend {
+    color: rgba(37, 175, 96, 1);
+    border: 1px solid rgba(37, 175, 96, 0.75);
+  }
   & > span.value {
     color: white;
     font-size: 1.4rem;
@@ -376,7 +380,13 @@ const ImpermanentLossModal = () => {
               <Strategy
                 className={totalValueA > totalValueB ? "recommend" : ""}
               >
-                <span className="badge">Strategy A: HODL</span>
+                <span
+                  className={`badge ${
+                    totalValueA > totalValueB ? "recommend" : ""
+                  }`}
+                >
+                  Strategy A: HODL
+                </span>
                 <span className="value">
                   <span className="p">
                     {percentageA >= 0 ? "+" : ""}
@@ -414,7 +424,13 @@ const ImpermanentLossModal = () => {
               <Strategy
                 className={totalValueB > totalValueA ? "recommend" : ""}
               >
-                <span className="badge">Strategy B: Uniswap V3</span>
+                <span
+                  className={`badge ${
+                    totalValueB > totalValueA ? "recommend" : ""
+                  }`}
+                >
+                  Strategy B: Uniswap V3
+                </span>
                 <span className="value">
                   <span className="p">
                     {percentageB >= 0 ? "+" : ""}
