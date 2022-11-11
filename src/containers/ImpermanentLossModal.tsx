@@ -264,6 +264,16 @@ const ImpermanentLossModal = () => {
   const percentageA =
     (100 * (totalValueA - state.depositAmountValue)) / state.depositAmountValue;
 
+  // Strategy B
+  const token0AmountB = future.amount1;
+  const token1AmountB = future.amount0;
+  const valueUSDToken0B = token0AmountB * futurePrice[0];
+  const valueUSDToken1B = token1AmountB * futurePrice[1];
+  const totalValueB = valueUSDToken0B + valueUSDToken1B;
+
+  const IL = totalValueA - totalValueB;
+  const ILPercentage = (100 * IL) / totalValueA;
+
   return (
     <>
       <Modal
@@ -346,7 +356,7 @@ const ImpermanentLossModal = () => {
                 <span className="value">
                   <span className="p">+25%</span>
                   <Dollar style={{ fontSize: "1.5rem" }}>$</Dollar>
-                  10025.14
+                  {totalValueB.toFixed(2)}
                 </span>
                 <Table className="adjust-padding-right">
                   <div>
@@ -357,8 +367,8 @@ const ImpermanentLossModal = () => {
                       />{" "}
                       <span>{state.token0?.symbol}</span>
                     </Token>
-                    <div>1000</div>
-                    <div>$1000</div>
+                    <div>{token0AmountB.toFixed(5)}</div>
+                    <div>${valueUSDToken0B.toFixed(2)}</div>
                   </div>
                   <div>
                     <Token>
@@ -368,8 +378,8 @@ const ImpermanentLossModal = () => {
                       />{" "}
                       <span>{state.token1?.symbol}</span>
                     </Token>
-                    <div>1000</div>
-                    <div>$1000</div>
+                    <div>{token1AmountB.toFixed(5)}</div>
+                    <div>${valueUSDToken1B.toFixed(2)}</div>
                   </div>
                   <div>
                     <div>LP Yield (12.25d)</div>
@@ -383,8 +393,8 @@ const ImpermanentLossModal = () => {
             <Table style={{ marginTop: 10, color: "white" }}>
               <div>
                 <div>Impermanent Loss</div>
-                <div>-$5000</div>
-                <div>-10%</div>
+                <div>-${IL.toFixed(2)}</div>
+                <div>-${ILPercentage.toFixed(2)}%</div>
               </div>
               <div>
                 <div>PnL (12.25d)</div>
