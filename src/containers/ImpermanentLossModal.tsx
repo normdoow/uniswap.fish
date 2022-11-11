@@ -8,6 +8,10 @@ import { Group, Input, InputGroup } from "../common/input";
 import Slider from "./setting/Slider";
 import { Dollar } from "../common/components";
 import { useAppContext } from "../context/app/appContext";
+import { useEffect, useState } from "react";
+import { AppActionType } from "../context/app/appReducer";
+import { divideArray, findMax, findMin } from "../utils/math";
+import { Price } from "../common/interfaces/coingecko.interface";
 
 const ModalStyle = {
   overlay: {
@@ -142,6 +146,31 @@ export const Table = styled.div`
 const ImpermanentLossModal = () => {
   const modalContext = useModalContext();
   const { state, dispatch } = useAppContext();
+  const [futurePriceSlider, setFuturePriceSlider] = useState(0);
+
+  const futurePrice = state.futurePrice || state.priceAssumptionValue || 0;
+
+  // TODO: Refactor
+  const prices = divideArray(
+    (state.token1PriceChart?.prices || []).map((p: Price) => p.value),
+    (state.token0PriceChart?.prices || []).map((p: Price) => p.value)
+  );
+  const currentPrice = Number(state.pool?.token0Price || NaN);
+  let _min = findMin(prices);
+  let _max = findMax(prices);
+  if (state.token0PriceChart === null || state.token1PriceChart === null) {
+    _min = currentPrice - currentPrice * 0.3;
+    _max = currentPrice + currentPrice * 0.3;
+  }
+  const margin = _max - _min;
+  const min = Math.max(0, _min - margin);
+  const max = _max + margin;
+  const btnStep = ((max - min) * 2) / 100; // 2%
+  const step = 0.000001;
+
+  useEffect(() => {
+    setFuturePriceSlider((100 * (futurePrice - min)) / (max - min));
+  }, [futurePrice, min, max]);
 
   return (
     <>
@@ -315,56 +344,55 @@ const ImpermanentLossModal = () => {
               <InputGroup style={{ marginTop: 8 }}>
                 <div
                   className="btn btn-left"
-                  // onClick={() => {
-                  //   dispatch({
-                  //     type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE,
-                  //     payload: state.priceAssumptionValue - btnStep,
-                  //   });
-                  // }}
+                  onClick={() => {
+                    dispatch({
+                      type: AppActionType.SET_FUTURE_PRICE,
+                      payload: futurePrice - btnStep,
+                    });
+                  }}
                 >
                   <span>-</span>
                 </div>
                 <div
                   className="btn btn-right"
-                  // onClick={() => {
-                  //   dispatch({
-                  //     type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE,
-                  //     payload: state.priceAssumptionValue + btnStep,
-                  //   });
-                  // }}
+                  onClick={() => {
+                    dispatch({
+                      type: AppActionType.SET_FUTURE_PRICE,
+                      payload: futurePrice + btnStep,
+                    });
+                  }}
                 >
                   <span>+</span>
                 </div>
-
                 <span style={{ fontWeight: "bold" }}>Future Price (+10%)</span>
                 <Input
-                  // value={state.priceAssumptionValue || 0}
+                  value={futurePrice}
                   type="number"
                   placeholder="0.0"
-                  // onChange={(e) => {
-                  //   let value = Number(e.target.value);
+                  onChange={(e) => {
+                    let value = Number(e.target.value);
 
-                  //   dispatch({
-                  //     type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE,
-                  //     payload: value,
-                  //   });
-                  // }}
+                    dispatch({
+                      type: AppActionType.SET_FUTURE_PRICE,
+                      payload: value,
+                    });
+                  }}
                 />
                 <span>ETH per USDT</span>
               </InputGroup>
               <Slider
                 thumbClassName="thumb-yellow"
-                // value={activePriceAssumptionSlider}
-                value={10}
+                value={futurePriceSlider}
                 min={0}
                 max={100}
-                step={100}
+                step={step}
                 onChange={(value, _) => {
-                  // setActivePriceAssumptionSlider(value);
-                  // dispatch({
-                  //   type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE,
-                  //   payload: min + ((max - min) * value) / 100,
-                  // });
+                  setFuturePriceSlider(value);
+
+                  dispatch({
+                    type: AppActionType.SET_FUTURE_PRICE,
+                    payload: min + ((max - min) * value) / 100,
+                  });
                 }}
               />
             </Group>

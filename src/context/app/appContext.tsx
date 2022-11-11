@@ -26,6 +26,9 @@ export interface AppContextState {
   depositAmountValue: number;
   priceRangeValue: number[];
   priceAssumptionValue: number;
+
+  futurePrice: null | number;
+  // TODO: Refactor
   outOfRangePercentageValue: number;
 }
 const initialState: AppContextState = {
@@ -45,6 +48,8 @@ const initialState: AppContextState = {
   depositAmountValue: 1000,
   priceRangeValue: [0, 0],
   priceAssumptionValue: 0,
+
+  futurePrice: null,
   outOfRangePercentageValue: 0,
 };
 
