@@ -173,6 +173,7 @@ export const FuturePriceInputGroup = styled.div`
   border-radius: 12px;
   position: relative;
   margin-bottom: 2px;
+  margin-top: 2px;
 
   & > span.heading {
     font-size: 0.8rem;
@@ -515,54 +516,8 @@ const ImpermanentLossModal = () => {
             </Table>
 
             <Group style={{ marginTop: 10 }}>
-              <InputGroup>
-                <div
-                  className="btn btn-left"
-                  onClick={() => {
-                    dispatch({
-                      type: AppActionType.SET_DAYS_IN_POSITION,
-                      payload: Math.max(state.daysInPosition - 1, 0),
-                    });
-                  }}
-                >
-                  <span>-</span>
-                </div>
-                <div
-                  className="btn btn-right"
-                  onClick={() => {
-                    dispatch({
-                      type: AppActionType.SET_DAYS_IN_POSITION,
-                      payload: state.daysInPosition + 1,
-                    });
-                  }}
-                >
-                  <span>+</span>
-                </div>
-                <span style={{ color: "#bbb", fontWeight: "bold" }}>
-                  Number of Days in the Position
-                </span>
-                <Input
-                  value={state.daysInPosition}
-                  type="number"
-                  placeholder="0.0"
-                  onChange={(e) => {
-                    let value = Number(e.target.value);
-                    if (value < 0) value = 0;
-
-                    dispatch({
-                      type: AppActionType.SET_DAYS_IN_POSITION,
-                      payload: value,
-                    });
-                  }}
-                />
-                <span>
-                  You need to be in the position ≥ {minDaysToProfit.toFixed(2)}d
-                  to cover IL
-                </span>
-              </InputGroup>
-
               <FuturePriceContainer>
-                <FuturePriceInputGroup style={{ marginTop: 8 }}>
+                <FuturePriceInputGroup>
                   <span
                     className="heading"
                     data-for="il"
@@ -615,7 +570,7 @@ const ImpermanentLossModal = () => {
                   </div>
                 </FuturePriceInputGroup>
 
-                <FuturePriceInputGroup style={{ marginTop: 8 }}>
+                <FuturePriceInputGroup>
                   <span
                     className="heading"
                     data-for="il"
@@ -677,6 +632,57 @@ const ImpermanentLossModal = () => {
                   </div>
                 </FuturePriceInputGroup>
               </FuturePriceContainer>
+
+              <InputGroup style={{ marginTop: 7, marginBottom: 2 }}>
+                <div
+                  className="btn btn-left"
+                  onClick={() => {
+                    dispatch({
+                      type: AppActionType.SET_DAYS_IN_POSITION,
+                      payload: Math.max(state.daysInPosition - 1, 0),
+                    });
+                  }}
+                >
+                  <span>-</span>
+                </div>
+                <div
+                  className="btn btn-right"
+                  onClick={() => {
+                    dispatch({
+                      type: AppActionType.SET_DAYS_IN_POSITION,
+                      payload: state.daysInPosition + 1,
+                    });
+                  }}
+                >
+                  <span>+</span>
+                </div>
+                <span
+                  style={{ color: "#bbb", fontWeight: "bold" }}
+                  data-for="il"
+                  data-place="right"
+                  data-tip="Expected number of days that your position will be accrued fees."
+                >
+                  Days of Active Position
+                </span>
+                <Input
+                  value={state.daysInPosition}
+                  type="number"
+                  placeholder="0.0"
+                  onChange={(e) => {
+                    let value = Number(e.target.value);
+                    if (value < 0) value = 0;
+
+                    dispatch({
+                      type: AppActionType.SET_DAYS_IN_POSITION,
+                      payload: value,
+                    });
+                  }}
+                />
+                <span>
+                  Your position need to be active ≥ {minDaysToProfit.toFixed(2)}
+                  d to cover IL
+                </span>
+              </InputGroup>
             </Group>
           </Container>
         </>
