@@ -377,11 +377,19 @@ const ImpermanentLossModal = () => {
           <Container>
             <StrategyContainer>
               <Strategy
-                className={totalValueA > totalValueB ? "recommend" : ""}
+                className={
+                  Number(totalValueA.toFixed(2)) >
+                  Number(totalValueB.toFixed(2))
+                    ? "recommend"
+                    : ""
+                }
               >
                 <span
                   className={`badge ${
-                    totalValueA > totalValueB ? "recommend" : ""
+                    Number(totalValueA.toFixed(2)) >
+                    Number(totalValueB.toFixed(2))
+                      ? "recommend"
+                      : ""
                   }`}
                 >
                   Strategy A: HODL
@@ -421,11 +429,19 @@ const ImpermanentLossModal = () => {
               </Strategy>
 
               <Strategy
-                className={totalValueB > totalValueA ? "recommend" : ""}
+                className={
+                  Number(totalValueB.toFixed(2)) >
+                  Number(totalValueA.toFixed(2))
+                    ? "recommend"
+                    : ""
+                }
               >
                 <span
                   className={`badge ${
-                    totalValueB > totalValueA ? "recommend" : ""
+                    Number(totalValueB.toFixed(2)) >
+                    Number(totalValueA.toFixed(2))
+                      ? "recommend"
+                      : ""
                   }`}
                 >
                   Strategy B: Uniswap V3
