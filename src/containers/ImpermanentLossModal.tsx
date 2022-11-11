@@ -5,13 +5,11 @@ import { ModalActionType } from "../context/modal/modalReducer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { Group, Input, InputGroup } from "../common/input";
-import Slider from "./setting/Slider";
 import { Dollar } from "../common/components";
 import { useAppContext } from "../context/app/appContext";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { AppActionType } from "../context/app/appReducer";
-import { divideArray, findMax, findMin } from "../utils/math";
-import { Price } from "../common/interfaces/coingecko.interface";
+import ReactTooltip from "react-tooltip";
 import {
   estimateFee,
   getLiquidityDelta,
@@ -361,6 +359,7 @@ const ImpermanentLossModal = () => {
         ariaHideApp={false}
       >
         <>
+          <ReactTooltip id="il" delayShow={150} />
           <Header>
             <span>Impermanent Loss Calculator</span>
             <div
@@ -548,7 +547,16 @@ const ImpermanentLossModal = () => {
 
               <FuturePriceContainer>
                 <FuturePriceInputGroup style={{ marginTop: 8 }}>
-                  <span className="heading">Current Price</span>
+                  <span
+                    className="heading"
+                    data-for="il"
+                    data-place="right"
+                    data-tip={`${Number(current.price.toFixed(7))} ${
+                      state.token0?.symbol
+                    }/${state.token1?.symbol}`}
+                  >
+                    Current Price
+                  </span>
                   <div className="group">
                     <span>{state.token0?.symbol} Price (USD)</span>
                     <div className="price-input-container">
@@ -592,7 +600,17 @@ const ImpermanentLossModal = () => {
                 </FuturePriceInputGroup>
 
                 <FuturePriceInputGroup style={{ marginTop: 8 }}>
-                  <span className="heading">Future Price</span>
+                  <span
+                    className="heading"
+                    data-for="il"
+                    data-place="bottom"
+                    data-tip={`${Number(future.price.toFixed(7))} ${
+                      state.token0?.symbol
+                    }/${state.token1?.symbol}`}
+                  >
+                    Future Price
+                  </span>
+
                   <div className="group">
                     <span>
                       {state.token0?.symbol} Price (

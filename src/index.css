@@ -6,6 +6,10 @@ html {
   box-sizing: border-box;
 }
 
+*[data-for="il"] {
+  cursor: help;
+}
+
 body {
   margin: 0;
   font-family: "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI",
