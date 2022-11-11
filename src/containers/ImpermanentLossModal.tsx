@@ -100,6 +100,7 @@ const Strategy = styled.div`
     background: red;
   }
 `;
+
 const Token = styled.div`
   display: flex;
   align-items: center;
@@ -141,6 +142,67 @@ export const Table = styled.div`
       border-radius: 5rem;
       text-align: center;
     }
+  }
+`;
+const FuturePriceContainer = styled.div`
+  display: grid;
+  grid-gap: 7px;
+  grid-template-columns: repeat(2, 1fr);
+`;
+export const FuturePriceInputGroup = styled.div`
+  border: 1px solid rgba(255, 255, 255, 0.175);
+  padding: 6px 8px;
+  border-radius: 12px;
+  position: relative;
+  margin-bottom: 2px;
+
+  & > span.heading {
+    font-size: 0.8rem;
+    color: #bbb;
+    display: block;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.175);
+    font-weight: bold;
+    padding-bottom: 6px;
+  }
+
+  & > div.group {
+    & > span {
+      margin-top: 6px;
+      display: block;
+      color: #999;
+      font-size: 0.8rem;
+      margin-bottom: 3px;
+    }
+
+    & > div.price-input-container {
+      display: flex;
+      align-items: center;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.075);
+      padding: 3px 6px;
+
+      & > span {
+        color: white;
+        font-size: 1.1rem;
+        margin-right: 3px;
+        font-family: sans-serif;
+        font-weight: bold;
+        transform: translateY(-1.5px);
+      }
+    }
+  }
+`;
+const PriceInput = styled.input`
+  display: block;
+  width: 110px;
+  border: 0;
+  background: transparent;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+
+  &:focus {
+    outline: none;
   }
 `;
 
@@ -354,7 +416,7 @@ const ImpermanentLossModal = () => {
                 >
                   <span>+</span>
                 </div>
-                <span style={{ fontWeight: "bold" }}>
+                <span style={{ color: "#bbb", fontWeight: "bold" }}>
                   Number of Days in the Position
                 </span>
                 <Input
@@ -373,63 +435,98 @@ const ImpermanentLossModal = () => {
                 <span>You need to be in the position ≥ 12.25d to profit</span>
               </InputGroup>
 
-              <InputGroup style={{ marginTop: 8 }}>
-                <div
-                  className="btn btn-left"
-                  onClick={() => {
-                    dispatch({
-                      type: AppActionType.SET_FUTURE_PRICE,
-                      payload: futurePrice - btnStep,
-                    });
-                  }}
-                >
-                  <span>-</span>
-                </div>
-                <div
-                  className="btn btn-right"
-                  onClick={() => {
-                    dispatch({
-                      type: AppActionType.SET_FUTURE_PRICE,
-                      payload: futurePrice + btnStep,
-                    });
-                  }}
-                >
-                  <span>+</span>
-                </div>
-                <span style={{ fontWeight: "bold" }}>
-                  Future Price ({futurePricePercentage >= 0 ? "+" : ""}
-                  {futurePricePercentage.toFixed(2)}%)
-                </span>
-                <Input
-                  value={futurePrice}
-                  type="number"
-                  placeholder="0.0"
-                  onChange={(e) => {
-                    let value = Number(e.target.value);
+              <FuturePriceContainer>
+                <FuturePriceInputGroup style={{ marginTop: 8 }}>
+                  <span className="heading">Current Price</span>
+                  <div className="group">
+                    <span>ETH Price (USD)</span>
+                    <div className="price-input-container">
+                      <Dollar>$</Dollar>
+                      <PriceInput
+                        defaultValue={1000}
+                        type="number"
+                        placeholder="0.00"
+                        onChange={(e) => {
+                          let value = Number(e.target.value);
+                          if (value < 0) value = 0;
 
-                    dispatch({
-                      type: AppActionType.SET_FUTURE_PRICE,
-                      payload: value,
-                    });
-                  }}
-                />
-                <span>ETH per USDT</span>
-              </InputGroup>
-              <Slider
-                thumbClassName="thumb-yellow"
-                value={futurePriceSlider}
-                min={0}
-                max={100}
-                step={step}
-                onChange={(value, _) => {
-                  setFuturePriceSlider(value);
+                          dispatch({
+                            type: AppActionType.UPDATE_DEPOSIT_AMOUNT,
+                            payload: value,
+                          });
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="group">
+                    <span>DAI Price (USD)</span>
+                    <div className="price-input-container">
+                      <Dollar>$</Dollar>
+                      <PriceInput
+                        defaultValue={1000}
+                        type="number"
+                        placeholder="0.00"
+                        onChange={(e) => {
+                          let value = Number(e.target.value);
+                          if (value < 0) value = 0;
 
-                  dispatch({
-                    type: AppActionType.SET_FUTURE_PRICE,
-                    payload: min + ((max - min) * value) / 100,
-                  });
-                }}
-              />
+                          dispatch({
+                            type: AppActionType.UPDATE_DEPOSIT_AMOUNT,
+                            payload: value,
+                          });
+                        }}
+                      />
+                    </div>
+                  </div>
+                </FuturePriceInputGroup>
+
+                <FuturePriceInputGroup style={{ marginTop: 8 }}>
+                  <span className="heading">
+                    Future Price ({futurePricePercentage >= 0 ? "+" : ""}
+                    {futurePricePercentage.toFixed(2)}%)
+                  </span>
+                  <div className="group">
+                    <span>ETH Price (USD)</span>
+                    <div className="price-input-container">
+                      <Dollar>$</Dollar>
+                      <PriceInput
+                        defaultValue={1000}
+                        type="number"
+                        placeholder="0.00"
+                        onChange={(e) => {
+                          let value = Number(e.target.value);
+                          if (value < 0) value = 0;
+
+                          dispatch({
+                            type: AppActionType.UPDATE_DEPOSIT_AMOUNT,
+                            payload: value,
+                          });
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="group">
+                    <span>DAI Price (USD)</span>
+                    <div className="price-input-container">
+                      <Dollar>$</Dollar>
+                      <PriceInput
+                        defaultValue={1000}
+                        type="number"
+                        placeholder="0.00"
+                        onChange={(e) => {
+                          let value = Number(e.target.value);
+                          if (value < 0) value = 0;
+
+                          dispatch({
+                            type: AppActionType.UPDATE_DEPOSIT_AMOUNT,
+                            payload: value,
+                          });
+                        }}
+                      />
+                    </div>
+                  </div>
+                </FuturePriceInputGroup>
+              </FuturePriceContainer>
             </Group>
           </Container>
         </>
