@@ -257,8 +257,12 @@ const ImpermanentLossModal = () => {
   const futurePrice1Percentage =
     (100 * (futurePrice[1] - currentPrice[1])) / currentPrice[1];
 
-  const valueUSDToken0 = 9;
-  const valueUSDToken1 = 10;
+  // Strategy A
+  const valueUSDToken0A = current.amount1 * futurePrice[0];
+  const valueUSDToken1A = current.amount0 * futurePrice[1];
+  const totalValueA = valueUSDToken0A + valueUSDToken1A;
+  const percentageA =
+    (100 * (totalValueA - state.depositAmountValue)) / state.depositAmountValue;
 
   return (
     <>
@@ -296,9 +300,12 @@ const ImpermanentLossModal = () => {
                   Strategy A: HODL
                 </span>
                 <span className="value">
-                  <span className="p">+25%</span>
+                  <span className="p">
+                    {percentageA >= 0 ? "+" : ""}
+                    {percentageA.toFixed(2)}%
+                  </span>
                   <Dollar style={{ fontSize: "1.5rem" }}>$</Dollar>
-                  10025.14
+                  {totalValueA.toFixed(2)}
                 </span>
                 <Table className="adjust-padding-right">
                   <div>
@@ -310,7 +317,7 @@ const ImpermanentLossModal = () => {
                       <span>{state.token0?.symbol}</span>
                     </Token>
                     <div>{current.amount1.toFixed(5)}</div>
-                    <div>${valueUSDToken0.toFixed(2)}</div>
+                    <div>${valueUSDToken0A.toFixed(2)}</div>
                   </div>
                   <div>
                     <Token>
@@ -321,7 +328,7 @@ const ImpermanentLossModal = () => {
                       <span>{state.token1?.symbol}</span>
                     </Token>
                     <div>{current.amount0.toFixed(5)}</div>
-                    <div>${valueUSDToken1.toFixed(2)}</div>
+                    <div>${valueUSDToken1A.toFixed(2)}</div>
                   </div>
                 </Table>
               </Strategy>
