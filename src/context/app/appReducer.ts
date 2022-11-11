@@ -122,6 +122,7 @@ export const appReducer = (
       return {
         ...state,
         isPairToggled: !state.isPairToggled,
+        currentPrice: null,
         futurePrice: null,
         daysInPosition: 7,
         pool,

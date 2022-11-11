@@ -8,11 +8,17 @@ import { Group, Input, InputGroup } from "../common/input";
 import Slider from "./setting/Slider";
 import { Dollar } from "../common/components";
 import { useAppContext } from "../context/app/appContext";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AppActionType } from "../context/app/appReducer";
 import { divideArray, findMax, findMin } from "../utils/math";
 import { Price } from "../common/interfaces/coingecko.interface";
-import { getTokensAmountFromDepositAmountUSD } from "../utils/uniswapv3/math";
+import {
+  estimateFee,
+  getLiquidityDelta,
+  getLiquidityFromTick,
+  getTickFromPrice,
+  getTokensAmountFromDepositAmountUSD,
+} from "../utils/uniswapv3/math";
 
 const ModalStyle = {
   overlay: {
@@ -213,10 +219,8 @@ const ImpermanentLossModal = () => {
 
   // TODO: Refactor calculation logic & pref
   const initialPrice: number[] = [
-    state.token0PriceChart?.prices[state.token0PriceChart?.prices.length - 1]
-      .value || 0,
-    state.token1PriceChart?.prices[state.token1PriceChart?.prices.length - 1]
-      .value || 0,
+    state.token0PriceChart?.currentPriceUSD || 0,
+    state.token1PriceChart?.currentPriceUSD || 0,
   ];
   const currentPrice = state.currentPrice || initialPrice;
   const futurePrice = state.futurePrice || initialPrice;
@@ -269,10 +273,71 @@ const ImpermanentLossModal = () => {
   const token1AmountB = future.amount0;
   const valueUSDToken0B = token0AmountB * futurePrice[0];
   const valueUSDToken1B = token1AmountB * futurePrice[1];
-  const totalValueB = valueUSDToken0B + valueUSDToken1B;
 
-  const IL = totalValueA - totalValueB;
-  const ILPercentage = (100 * IL) / totalValueA;
+  const P = current.price;
+  let Pl = state.priceRangeValue[0];
+  let Pu = state.priceRangeValue[1];
+  const priceUSDX = state.token1PriceChart?.currentPriceUSD || 1;
+  const priceUSDY = state.token0PriceChart?.currentPriceUSD || 1;
+  const depositAmountUSD = state.depositAmountValue;
+
+  if (state.isFullRange && state.poolTicks) {
+    const firstTick = state.poolTicks[0];
+    const lastTick = state.poolTicks[state.poolTicks.length - 1];
+    Pl = Number(firstTick.price0);
+    Pu = Number(lastTick.price0);
+  }
+
+  const { amount0, amount1 } = getTokensAmountFromDepositAmountUSD(
+    P,
+    Pl,
+    Pu,
+    priceUSDX,
+    priceUSDY,
+    depositAmountUSD
+  );
+
+  const deltaL = getLiquidityDelta(
+    P,
+    Pl,
+    Pu,
+    amount0,
+    amount1,
+    Number(state.token0?.decimals || 18),
+    Number(state.token1?.decimals || 18)
+  );
+
+  let currentTick = getTickFromPrice(
+    P,
+    state.token0?.decimals || "18",
+    state.token1?.decimals || "18"
+  );
+
+  if (state.isPairToggled) currentTick = -currentTick;
+
+  const L = useMemo(
+    () => getLiquidityFromTick(state.poolTicks || [], currentTick),
+    [state.poolTicks, currentTick]
+  );
+  const volume24H = state.volume24H;
+  const feeTier = state.pool?.feeTier || "";
+  const estimatedFee =
+    P >= Pl && P <= Pu ? estimateFee(deltaL, L, volume24H, feeTier) : 0;
+  const estimatedYield = estimatedFee * state.daysInPosition;
+  const yieldPercentage = (100 * estimatedYield) / state.depositAmountValue;
+
+  const totalValueB = valueUSDToken0B + valueUSDToken1B + estimatedYield;
+  const percentageB =
+    (100 * (totalValueB - state.depositAmountValue)) / state.depositAmountValue;
+
+  // Summary
+  const IL = Math.abs(totalValueA - (valueUSDToken0B + valueUSDToken1B));
+  const ILPercentage = Math.abs((100 * IL) / totalValueA);
+
+  const PnL = totalValueB - totalValueA;
+  const PnLPercentage = (100 * PnL) / totalValueA;
+
+  const minDaysToProfit = IL / estimatedFee;
 
   return (
     <>
@@ -354,7 +419,10 @@ const ImpermanentLossModal = () => {
                   Strategy B: UNIV3
                 </span>
                 <span className="value">
-                  <span className="p">+25%</span>
+                  <span className="p">
+                    {percentageB >= 0 ? "+" : ""}
+                    {percentageB.toFixed(2)}%
+                  </span>
                   <Dollar style={{ fontSize: "1.5rem" }}>$</Dollar>
                   {totalValueB.toFixed(2)}
                 </span>
@@ -382,9 +450,9 @@ const ImpermanentLossModal = () => {
                     <div>${valueUSDToken1B.toFixed(2)}</div>
                   </div>
                   <div>
-                    <div>LP Yield (12.25d)</div>
-                    <div>5.25%</div>
-                    <div>$1000</div>
+                    <div>LP Yield ({state.daysInPosition.toFixed(0)}d)</div>
+                    <div>{yieldPercentage.toFixed(2)}%</div>
+                    <div>${estimatedYield.toFixed(2)}</div>
                   </div>
                 </Table>
               </Strategy>
@@ -394,12 +462,17 @@ const ImpermanentLossModal = () => {
               <div>
                 <div>Impermanent Loss</div>
                 <div>-${IL.toFixed(2)}</div>
-                <div>-${ILPercentage.toFixed(2)}%</div>
+                <div>-{ILPercentage.toFixed(2)}%</div>
               </div>
               <div>
-                <div>PnL (12.25d)</div>
-                <div>+$259</div>
-                <div>+10%</div>
+                <div>PnL ({state.daysInPosition.toFixed(0)}d)</div>
+                <div>
+                  {PnL >= 0 ? "+" : "-"}${Math.abs(PnL).toFixed(2)}
+                </div>
+                <div>
+                  {PnLPercentage >= 0 ? "+" : ""}
+                  {PnLPercentage.toFixed(2)}%
+                </div>
               </div>
             </Table>
 
@@ -410,7 +483,7 @@ const ImpermanentLossModal = () => {
                   onClick={() => {
                     dispatch({
                       type: AppActionType.SET_DAYS_IN_POSITION,
-                      payload: state.daysInPosition - 0.25,
+                      payload: Math.max(state.daysInPosition - 1, 0),
                     });
                   }}
                 >
@@ -421,7 +494,7 @@ const ImpermanentLossModal = () => {
                   onClick={() => {
                     dispatch({
                       type: AppActionType.SET_DAYS_IN_POSITION,
-                      payload: state.daysInPosition + 0.25,
+                      payload: state.daysInPosition + 1,
                     });
                   }}
                 >
@@ -436,6 +509,7 @@ const ImpermanentLossModal = () => {
                   placeholder="0.0"
                   onChange={(e) => {
                     let value = Number(e.target.value);
+                    if (value < 0) value = 0;
 
                     dispatch({
                       type: AppActionType.SET_DAYS_IN_POSITION,
@@ -443,7 +517,10 @@ const ImpermanentLossModal = () => {
                     });
                   }}
                 />
-                <span>You need to be in the position ≥ 12.25d to profit</span>
+                <span>
+                  You need to be in the position ≥ {minDaysToProfit.toFixed(2)}d
+                  to cover IL
+                </span>
               </InputGroup>
 
               <FuturePriceContainer>
