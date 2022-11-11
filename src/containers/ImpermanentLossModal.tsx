@@ -405,7 +405,23 @@ const ImpermanentLossModal = () => {
                 </span>
                 <Table className="adjust-padding-right">
                   <div>
-                    <Token>
+                    {/* TODO: Refactor tooltips */}
+                    <Token
+                      data-for="il"
+                      data-place="right"
+                      data-html={true}
+                      data-tip={`The token amount is calculated based on lower/upper tick and current price; where<br>Lower tick = ${
+                        state.isFullRange ? "0" : Pl.toFixed(5)
+                      } ${state.token0?.symbol}/${
+                        state.token1?.symbol
+                      }<br>Upper tick = ${
+                        state.isFullRange ? "∞" : Pu.toFixed(5)
+                      } ${state.token0?.symbol}/${
+                        state.token1?.symbol
+                      }<br>Current price = ${current.price.toFixed(5)}${
+                        state.token0?.symbol
+                      }/${state.token1?.symbol}`}
+                    >
                       <img
                         alt={state.token0?.name}
                         src={state.token0?.logoURI}
@@ -416,7 +432,22 @@ const ImpermanentLossModal = () => {
                     <div>${valueUSDToken0A.toFixed(2)}</div>
                   </div>
                   <div>
-                    <Token>
+                    <Token
+                      data-for="il"
+                      data-place="right"
+                      data-html={true}
+                      data-tip={`The token amount is calculated based on lower/upper tick and current price; where<br>Lower tick = ${
+                        state.isFullRange ? "0" : Pl.toFixed(5)
+                      } ${state.token0?.symbol}/${
+                        state.token1?.symbol
+                      }<br>Upper tick = ${
+                        state.isFullRange ? "∞" : Pu.toFixed(5)
+                      } ${state.token0?.symbol}/${
+                        state.token1?.symbol
+                      }<br>Current price = ${current.price.toFixed(5)}${
+                        state.token0?.symbol
+                      }/${state.token1?.symbol}`}
+                    >
                       <img
                         alt={state.token1?.name}
                         src={state.token1?.logoURI}
@@ -457,7 +488,22 @@ const ImpermanentLossModal = () => {
                 </span>
                 <Table className="adjust-padding-right">
                   <div>
-                    <Token>
+                    <Token
+                      data-for="il"
+                      data-place="right"
+                      data-html={true}
+                      data-tip={`The token amount is calculated based on lower/upper tick and future price; where<br>Lower tick = ${
+                        state.isFullRange ? "0" : Pl.toFixed(5)
+                      } ${state.token0?.symbol}/${
+                        state.token1?.symbol
+                      }<br>Upper tick = ${
+                        state.isFullRange ? "∞" : Pu.toFixed(5)
+                      } ${state.token0?.symbol}/${
+                        state.token1?.symbol
+                      }<br>Future price = ${future.price.toFixed(5)}${
+                        state.token0?.symbol
+                      }/${state.token1?.symbol}`}
+                    >
                       <img
                         alt={state.token0?.name}
                         src={state.token0?.logoURI}
@@ -468,7 +514,22 @@ const ImpermanentLossModal = () => {
                     <div>${valueUSDToken0B.toFixed(2)}</div>
                   </div>
                   <div>
-                    <Token>
+                    <Token
+                      data-for="il"
+                      data-place="right"
+                      data-html={true}
+                      data-tip={`The token amount is calculated based on lower/upper tick and future price; where<br>Lower tick = ${
+                        state.isFullRange ? "0" : Pl.toFixed(5)
+                      } ${state.token0?.symbol}/${
+                        state.token1?.symbol
+                      }<br>Upper tick = ${
+                        state.isFullRange ? "∞" : Pu.toFixed(5)
+                      } ${state.token0?.symbol}/${
+                        state.token1?.symbol
+                      }<br>Future price = ${future.price.toFixed(5)}${
+                        state.token0?.symbol
+                      }/${state.token1?.symbol}`}
+                    >
                       <img
                         alt={state.token1?.name}
                         src={state.token1?.logoURI}
