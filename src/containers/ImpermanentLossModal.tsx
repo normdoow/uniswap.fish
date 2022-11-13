@@ -38,6 +38,7 @@ const ModalStyle = {
 };
 const Container = styled.div`
   min-width: 370px;
+  max-height: 80vh;
   padding: 12px 10px;
 `;
 const Header = styled.h1`
