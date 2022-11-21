@@ -200,6 +200,7 @@ const LiquidityPositionChart = () => {
       type: AppActionType.UPDATE_PRICE_RANGE,
       payload: [min, max],
     });
+    // eslint-disable-next-line
   }, [
     refElement,
     state.poolTicks,
@@ -232,6 +233,7 @@ const LiquidityPositionChart = () => {
         )
       );
     }
+    // eslint-disable-next-line
   }, [state.priceAssumptionValue, state.token0, state.token1]);
 
   useEffect(() => {
@@ -266,6 +268,7 @@ const LiquidityPositionChart = () => {
     }
 
     d3Chart.updateMinMaxTickRange(minTick, maxTick, state.isFullRange);
+    // eslint-disable-next-line
   }, [state.priceRangeValue, state.token0, state.token1, state.isFullRange]);
 
   return (

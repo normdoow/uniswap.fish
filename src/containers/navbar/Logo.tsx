@@ -1,4 +1,4 @@
-import { faCaretDown, faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
@@ -253,6 +253,7 @@ const Logo = () => {
       >
         <LogoContainer className={playLogoAnimation ? "hovered" : ""}>
           <img
+            alt="Uniswap.fish Logo"
             src="/logo-only-fish.png"
             className={playLogoAnimation ? "animated" : ""}
           />

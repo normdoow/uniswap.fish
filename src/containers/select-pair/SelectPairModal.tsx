@@ -270,15 +270,29 @@ const SelectPairModal = () => {
 
   const [pools, setPools] = useState<Pool[]>([]);
   const [selectedPool, setSelectedPool] = useState<Pool | null>(null);
-
   const [isSubmitLoading, setIsSubmitLoading] = useState<boolean>(false);
+
+  const fetchTokens = async () => {
+    appContext.dispatch({
+      type: AppActionType.RESET_TOKEN_LIST,
+      payload: { tokenList: [] },
+    });
+
+    const tokenList = await getTopTokenList();
+    appContext.dispatch({
+      type: AppActionType.RESET_TOKEN_LIST,
+      payload: { tokenList },
+    });
+  };
 
   useEffect(() => {
     fetchTokens();
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     fetchPools();
+    // eslint-disable-next-line
   }, [selectedTokens]);
 
   const isFormDisabled =
@@ -385,19 +399,6 @@ const SelectPairModal = () => {
     }
 
     return {};
-  };
-
-  const fetchTokens = async () => {
-    appContext.dispatch({
-      type: AppActionType.RESET_TOKEN_LIST,
-      payload: { tokenList: [] },
-    });
-
-    const tokenList = await getTopTokenList();
-    appContext.dispatch({
-      type: AppActionType.RESET_TOKEN_LIST,
-      payload: { tokenList },
-    });
   };
 
   const selectToken = (token: Token) => {

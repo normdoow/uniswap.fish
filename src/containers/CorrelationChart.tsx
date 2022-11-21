@@ -133,6 +133,7 @@ const CorrelationChart = () => {
       maxRange: state.priceRangeValue[1],
       mostActivePrice: state.priceAssumptionValue,
     });
+    // eslint-disable-next-line
   }, [refElement, state.token0PriceChart, state.token1PriceChart]);
 
   useEffect(() => {
