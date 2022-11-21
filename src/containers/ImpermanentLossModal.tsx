@@ -17,6 +17,7 @@ import {
   getTickFromPrice,
   getTokensAmountFromDepositAmountUSD,
 } from "../utils/uniswapv3/math";
+import AdjustButton from "../common/components/AdjustButton";
 
 const ModalStyle = {
   overlay: {
@@ -727,28 +728,20 @@ const ImpermanentLossModal = () => {
               </PriceContainer>
 
               <InputGroup style={{ marginTop: 7, marginBottom: 2 }}>
-                <div
-                  className="btn btn-left"
-                  onClick={() => {
+                <AdjustButton
+                  onDecrease={() => {
                     dispatch({
                       type: AppActionType.SET_DAYS_IN_POSITION,
                       payload: Math.max(state.daysInPosition - 1, 0),
                     });
                   }}
-                >
-                  <span>-</span>
-                </div>
-                <div
-                  className="btn btn-right"
-                  onClick={() => {
+                  onIncrease={() => {
                     dispatch({
                       type: AppActionType.SET_DAYS_IN_POSITION,
                       payload: state.daysInPosition + 1,
                     });
                   }}
-                >
-                  <span>+</span>
-                </div>
+                />
                 <span
                   style={{ color: "#bbb", fontWeight: "bold" }}
                   data-for="il"

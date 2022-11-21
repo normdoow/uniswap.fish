@@ -9,6 +9,7 @@ import { AppActionType } from "../../context/app/appReducer";
 import { divideArray, findMax, findMin } from "../../utils/math";
 import Slider from "./Slider";
 import { Group, Input, InputGroup } from "../../common/components/atomic";
+import AdjustButton from "../../common/components/AdjustButton";
 
 const MinMaxPriceContainer = styled.div`
   display: grid;
@@ -124,37 +125,26 @@ const PriceRange = () => {
         <MinMaxPriceContainer style={isFullRange ? { marginBottom: 2 } : {}}>
           <InputGroup>
             {!isFullRange && (
-              <>
-                {/* TODO: Refactor +, - btn */}
-                <div
-                  className="btn btn-left"
-                  onClick={() => {
-                    dispatch({
-                      type: AppActionType.UPDATE_PRICE_RANGE,
-                      payload: [
-                        state.priceRangeValue[0] - btnStep,
-                        state.priceRangeValue[1],
-                      ],
-                    });
-                  }}
-                >
-                  <span>-</span>
-                </div>
-                <div
-                  className="btn btn-right"
-                  onClick={() => {
-                    dispatch({
-                      type: AppActionType.UPDATE_PRICE_RANGE,
-                      payload: [
-                        state.priceRangeValue[0] + btnStep,
-                        state.priceRangeValue[1],
-                      ],
-                    });
-                  }}
-                >
-                  <span>+</span>
-                </div>
-              </>
+              <AdjustButton
+                onDecrease={() => {
+                  dispatch({
+                    type: AppActionType.UPDATE_PRICE_RANGE,
+                    payload: [
+                      state.priceRangeValue[0] - btnStep,
+                      state.priceRangeValue[1],
+                    ],
+                  });
+                }}
+                onIncrease={() => {
+                  dispatch({
+                    type: AppActionType.UPDATE_PRICE_RANGE,
+                    payload: [
+                      state.priceRangeValue[0] + btnStep,
+                      state.priceRangeValue[1],
+                    ],
+                  });
+                }}
+              />
             )}
             <span>Min Price</span>
             <Input
@@ -178,36 +168,26 @@ const PriceRange = () => {
 
           <InputGroup>
             {!isFullRange && (
-              <>
-                <div
-                  className="btn btn-left"
-                  onClick={() => {
-                    dispatch({
-                      type: AppActionType.UPDATE_PRICE_RANGE,
-                      payload: [
-                        state.priceRangeValue[0],
-                        state.priceRangeValue[1] - btnStep,
-                      ],
-                    });
-                  }}
-                >
-                  <span>-</span>
-                </div>
-                <div
-                  className="btn btn-right"
-                  onClick={() => {
-                    dispatch({
-                      type: AppActionType.UPDATE_PRICE_RANGE,
-                      payload: [
-                        state.priceRangeValue[0],
-                        state.priceRangeValue[1] + btnStep,
-                      ],
-                    });
-                  }}
-                >
-                  <span>+</span>
-                </div>
-              </>
+              <AdjustButton
+                onDecrease={() => {
+                  dispatch({
+                    type: AppActionType.UPDATE_PRICE_RANGE,
+                    payload: [
+                      state.priceRangeValue[0],
+                      state.priceRangeValue[1] - btnStep,
+                    ],
+                  });
+                }}
+                onIncrease={() => {
+                  dispatch({
+                    type: AppActionType.UPDATE_PRICE_RANGE,
+                    payload: [
+                      state.priceRangeValue[0],
+                      state.priceRangeValue[1] + btnStep,
+                    ],
+                  });
+                }}
+              />
             )}
             <span>Max Price</span>
             <Input
@@ -253,28 +233,20 @@ const PriceRange = () => {
 
       <Group style={{ marginTop: 7 }}>
         <InputGroup>
-          <div
-            className="btn btn-left"
-            onClick={() => {
+          <AdjustButton
+            onDecrease={() => {
               dispatch({
                 type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE,
                 payload: state.priceAssumptionValue - btnStep,
               });
             }}
-          >
-            <span>-</span>
-          </div>
-          <div
-            className="btn btn-right"
-            onClick={() => {
+            onIncrease={() => {
               dispatch({
                 type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE,
                 payload: state.priceAssumptionValue + btnStep,
               });
             }}
-          >
-            <span>+</span>
-          </div>
+          />
 
           <span>Most Active Price Assumption</span>
           <Input
