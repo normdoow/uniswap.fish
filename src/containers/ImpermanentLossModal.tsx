@@ -230,7 +230,6 @@ const ImpermanentLossModal = () => {
   const modalContext = useModalContext();
   const { state, dispatch } = useAppContext();
 
-  // TODO: Refactor calculation logic & pref
   const initialPrice: number[] = [
     state.token0PriceChart?.currentPriceUSD || 0,
     state.token1PriceChart?.currentPriceUSD || 0,
@@ -253,7 +252,6 @@ const ImpermanentLossModal = () => {
       Pu = Number(lastTick.price0);
     }
 
-    // TODO: Refactor (amt0, amt1 confusion)
     const { amount0, amount1 } = getTokensAmountFromDepositAmountUSD(
       P,
       Pl,
@@ -406,7 +404,6 @@ const ImpermanentLossModal = () => {
                 </span>
                 <Table className="adjust-padding-right">
                   <div>
-                    {/* TODO: Refactor tooltips */}
                     <Token
                       data-for="il"
                       data-place="right"

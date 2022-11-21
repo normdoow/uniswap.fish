@@ -37,7 +37,6 @@ const PriceRange = () => {
   const [priceRangeSlider, setPriceRangeSlider] = useState([0, 0]);
   const isFullRange = state.isFullRange;
 
-  // TODO: Refactor
   const prices = divideArray(
     (state.token1PriceChart?.prices || []).map((p: Price) => p.value),
     (state.token0PriceChart?.prices || []).map((p: Price) => p.value)
