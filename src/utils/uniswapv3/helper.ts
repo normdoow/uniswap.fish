@@ -9,9 +9,9 @@ export const getFeeTierPercentage = (tier: string): number => {
   return 0;
 };
 
-export const getTokenLogoURL = (address: string): string => {
-  const mapper = TokenImageURI as { [key: string]: string };
-  const imageURL = mapper[address];
+export const getTokenLogoURL = (platform: string, address: string): string => {
+  const mapper = TokenImageURI as any;
+  const imageURL = mapper[platform][address];
 
   if (imageURL) return imageURL;
 
