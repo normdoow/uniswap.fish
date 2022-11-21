@@ -25,7 +25,7 @@ Uniswap V3 Fee Calculator, Visit: [uniswap.fish](https://uniswap.fish/), [@unisw
   - `deltaY * priceUSDY + deltaX * priceUSDX = depositAmountUSD`
 - So we can write a equation like this:
   - `deltaL * (sqrt(P) - sqrt(Pl)) * priceUSDY + deltaL * (1 / sqrt(P) - 1 / sqrt(Pu)) * priceUSDX = depositAmountUSD`
-  - Then: `deltaL = depositAmountUSD / (sqrt(P) - sqrt(Pl)) * priceUSDY + (1 / sqrt(P) - 1 / sqrt(Pu)) * priceUSDX`
+  - Then: `deltaL = depositAmountUSD / ((sqrt(P) - sqrt(Pl)) * priceUSDY + (1 / sqrt(P) - 1 / sqrt(Pu)) * priceUSDX)`
 - After we've calculated `deltaL`, we can calculate `deltaX` and `deltaY` using these formulas mentioned in Uniswap v3 Whitepaper
   - `deltaY = deltaL * (sqrt(P) - sqrt(Pl))` (Formula: 6.29, P.8)
   - `deltaX = deltaL * (1 / sqrt(P) - 1 / sqrt(Pu))` (Formula: 6.30, P.8)
