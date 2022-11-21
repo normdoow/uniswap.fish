@@ -4,7 +4,6 @@ import { Br } from "../../common/components";
 import { ScreenWidth } from "../../utils/styled";
 import DepositAmount from "./DepositAmount";
 import PriceRange from "./PriceRange";
-// import OutOfRangePercentage from "./OutOfRangePercentage";
 
 const SettingContainer = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -24,8 +23,6 @@ const Setting = () => {
       <DepositAmount />
       <Br />
       <PriceRange />
-      {/* <Br />
-      <OutOfRangePercentage /> */}
     </SettingContainer>
   );
 };

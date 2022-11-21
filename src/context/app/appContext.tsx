@@ -30,8 +30,6 @@ export interface AppContextState {
   currentPrice: null | number[];
   futurePrice: null | number[];
   daysInPosition: number;
-  // TODO: Refactor
-  outOfRangePercentageValue: number;
 }
 const initialState: AppContextState = {
   network: NETWORKS[0],
@@ -55,7 +53,6 @@ const initialState: AppContextState = {
   currentPrice: null,
   futurePrice: null,
   daysInPosition: 0,
-  outOfRangePercentageValue: 0,
 };
 
 interface AppContextProviderProps {

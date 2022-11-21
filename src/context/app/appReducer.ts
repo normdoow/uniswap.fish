@@ -46,7 +46,6 @@ export type AppAction =
   | { type: AppActionType.SET_CURRENT_PRICE; payload: null | number[] }
   | { type: AppActionType.SET_DAYS_IN_POSITION; payload: number }
   | { type: AppActionType.TOGGLE_CURRENT_PAIR }
-  | { type: AppActionType.UPDATE_OUT_OF_RANGE_PERCENTAGE; payload: number }
   | { type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE; payload: number }
   | { type: AppActionType.UPDATE_PRICE_RANGE; payload: number[] }
   | { type: AppActionType.UPDATE_DEPOSIT_AMOUNT; payload: number };
@@ -64,9 +63,6 @@ export const appReducer = (
     }
     case AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE: {
       return { ...state, priceAssumptionValue: action.payload };
-    }
-    case AppActionType.UPDATE_OUT_OF_RANGE_PERCENTAGE: {
-      return { ...state, outOfRangePercentageValue: action.payload };
     }
     case AppActionType.SET_IS_FULL_RANGE: {
       return { ...state, isFullRange: action.payload };
