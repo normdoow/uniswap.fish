@@ -162,13 +162,12 @@ export const Table = styled.div`
     }
   }
 `;
-// TODO: Refactor this CSS
-const FuturePriceContainer = styled.div`
+const PriceContainer = styled.div`
   display: grid;
   grid-gap: 7px;
   grid-template-columns: repeat(2, 1fr);
 `;
-export const FuturePriceInputGroup = styled.div`
+export const PriceInputGroup = styled.div`
   border: 1px solid rgba(255, 255, 255, 0.175);
   padding: 6px 8px;
   border-radius: 12px;
@@ -610,8 +609,8 @@ const ImpermanentLossModal = () => {
             </Table>
 
             <Group style={{ marginTop: 10 }}>
-              <FuturePriceContainer>
-                <FuturePriceInputGroup>
+              <PriceContainer>
+                <PriceInputGroup>
                   <span
                     className="heading"
                     data-for="il"
@@ -662,9 +661,9 @@ const ImpermanentLossModal = () => {
                       />
                     </div>
                   </div>
-                </FuturePriceInputGroup>
+                </PriceInputGroup>
 
-                <FuturePriceInputGroup>
+                <PriceInputGroup>
                   <span
                     className="heading"
                     data-for="il"
@@ -724,8 +723,8 @@ const ImpermanentLossModal = () => {
                       />
                     </div>
                   </div>
-                </FuturePriceInputGroup>
-              </FuturePriceContainer>
+                </PriceInputGroup>
+              </PriceContainer>
 
               <InputGroup style={{ marginTop: 7, marginBottom: 2 }}>
                 <div
