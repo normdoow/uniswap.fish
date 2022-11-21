@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Br } from "./common/components";
+import { Br } from "./common/components/atomic";
 import CorrelationChart from "./containers/CorrelationChart";
 import Footer from "./containers/Footer";
 import EstimatedFees from "./containers/EstimatedFees";
@@ -11,7 +11,7 @@ import SelectPairModal from "./containers/select-pair/SelectPairModal";
 import Setting from "./containers/setting/Setting";
 import { ScreenWidth } from "./utils/styled";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { FeedbackButton } from "./common/buttons";
+import { FeedbackButton } from "./common/components/atomic";
 import { useAppContext } from "./context/app/appContext";
 import { faBug } from "@fortawesome/free-solid-svg-icons";
 import { getCurrentNetwork } from "./common/network";

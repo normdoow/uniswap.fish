@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import styled from "styled-components";
-import { Heading } from "../common/components";
+import { Heading } from "../common/components/atomic";
 import D3LiquidityHistogram, { Bin } from "./D3LiquidityHistogram";
 import { useAppContext } from "../context/app/appContext";
 import { getPriceFromTick, getTickFromPrice } from "../utils/uniswapv3/math";

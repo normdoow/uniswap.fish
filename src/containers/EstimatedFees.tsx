@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import styled from "styled-components";
-import { Dollar, Heading, Table } from "../common/components";
+import { Dollar, Heading, Table } from "../common/components/atomic";
 import { useAppContext } from "../context/app/appContext";
 import {
   estimateFee,
@@ -12,7 +12,6 @@ import {
 import { ScreenWidth } from "../utils/styled";
 import { useModalContext } from "../context/modal/modalContext";
 import { ModalActionType } from "../context/modal/modalReducer";
-import { getCurrentNetwork } from "../common/network";
 
 const SettingContainer = styled.div`
   background: rgba(255, 255, 255, 0.1);

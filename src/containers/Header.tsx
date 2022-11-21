@@ -6,7 +6,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
-import { Button, PrimaryButton } from "../common/buttons";
+import { Button, PrimaryButton } from "../common/components/atomic";
 import { useAppContext } from "../context/app/appContext";
 import { AppActionType } from "../context/app/appReducer";
 import { useModalContext } from "../context/modal/modalContext";

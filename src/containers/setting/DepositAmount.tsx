@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Dollar, Heading, Table } from "../../common/components";
+import { Dollar, Heading, Table } from "../../common/components/atomic";
 import { useAppContext } from "../../context/app/appContext";
 import { AppActionType } from "../../context/app/appReducer";
 import { getTokensAmountFromDepositAmountUSD } from "../../utils/uniswapv3/math";

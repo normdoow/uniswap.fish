@@ -2,7 +2,7 @@ import Modal from "react-modal";
 import { useModalContext } from "../context/modal/modalContext";
 import styled from "styled-components";
 import { ModalActionType } from "../context/modal/modalReducer";
-import { PrimaryBlockButton } from "../common/buttons";
+import { PrimaryBlockButton } from "../common/components/atomic";
 
 const ModalStyle = {
   overlay: {

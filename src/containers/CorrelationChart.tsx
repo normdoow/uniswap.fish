@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { Heading } from "../common/components";
+import { Heading } from "../common/components/atomic";
 import D3CorrelationChart, { Point } from "./D3CorrelationChart";
 import { useAppContext } from "../context/app/appContext";
 import { averageArray, findMax, findMin } from "../utils/math";

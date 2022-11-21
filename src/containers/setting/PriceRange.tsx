@@ -2,13 +2,13 @@ import { useState } from "react";
 import { useEffect } from "react";
 import styled from "styled-components";
 import Switch from "react-switch";
-import { Heading } from "../../common/components";
+import { Heading } from "../../common/components/atomic";
 import { Price } from "../../common/interfaces/coingecko.interface";
 import { useAppContext } from "../../context/app/appContext";
 import { AppActionType } from "../../context/app/appReducer";
 import { divideArray, findMax, findMin } from "../../utils/math";
 import Slider from "./Slider";
-import { Group, Input, InputGroup } from "../../common/input";
+import { Group, Input, InputGroup } from "../../common/components/atomic";
 
 const MinMaxPriceContainer = styled.div`
   display: grid;

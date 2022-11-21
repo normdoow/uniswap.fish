@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import Modal from "react-modal";
 import ReactLoading from "react-loading";
 import { useModalContext } from "../../context/modal/modalContext";
-import { Heading } from "../../common/components";
+import { Heading } from "../../common/components/atomic";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -10,7 +10,7 @@ import {
   faChevronDown,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
-import { PrimaryBlockButton } from "../../common/buttons";
+import { PrimaryBlockButton } from "../../common/components/atomic";
 import { useState } from "react";
 import {
   getPoolFromPair,
