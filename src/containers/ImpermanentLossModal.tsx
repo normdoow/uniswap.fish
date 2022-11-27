@@ -1,3 +1,4 @@
+import React from "react";
 import Modal from "react-modal";
 import { useModalContext } from "../context/modal/modalContext";
 import styled from "styled-components";
