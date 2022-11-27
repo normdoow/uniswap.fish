@@ -155,11 +155,9 @@ const EstimatedFees = () => {
           const props = {
             featureId: "Impermanent Loss Calculator",
           };
-          if (typeof window !== "undefined") {
-            window.plausible("FeatureUsage", {
-              props,
-            });
-          }
+          window.plausible("FeatureUsage", {
+            props,
+          });
 
           modalContext.dispatch({
             type: ModalActionType.SET_IMPERMANENT_LOSS_MODAL_STATE,

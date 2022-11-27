@@ -58,6 +58,34 @@ const GlobalStyle = createGlobalStyle`
         );
     }
   }
+
+  /* Override CSS */
+  *[data-for="il"] {
+    cursor: help;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  .thumb-red-0,
+  .thumb-red-1 {
+    background-color: rgb(247, 2, 119) !important;
+  }
+  .thumb-green-0,
+  .thumb-green-1 {
+    background-color: rgba(37, 175, 96, 1) !important;
+  }
+  .thumb-yellow-0,
+  .thumb-yellow-1 {
+    background-color: #fccc5d !important;
+  }
 `;
 
 export default GlobalStyle;
