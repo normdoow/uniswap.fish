@@ -16,6 +16,7 @@ import { useAppContext } from "../context/app/appContext";
 import { faBug } from "@fortawesome/free-solid-svg-icons";
 import { getCurrentNetwork } from "../common/network";
 import ImpermanentLossModal from "../containers/ImpermanentLossModal";
+import { Script } from "gatsby";
 // import { useModalContext } from "./context/modal/modalContext";
 // import AnnoucementModal from "./containers/AnnoucementModal";
 // import { ModalActionType } from "./context/modal/modalReducer";
@@ -102,6 +103,13 @@ export function Head() {
         content="Calculate your Uniswap v3 positions fee returns, APY, APR, ROI, yields, and impermanent loss based on how much pool liquidity you provide."
       />
       <meta name="twitter:image" content="https://uniswap.fish/ogimage.jpeg" />
+      <Script>
+        {`var ffWidgetId = "bbf56663-84dc-4b55-bf9c-333b5b4c2720";
+    var ffWidgetScript = document.createElement("script");
+    ffWidgetScript.type = "text/javascript";
+    ffWidgetScript.src = "https://freddyfeedback.com/widget/freddyfeedback.js";
+    document.head.appendChild(ffWidgetScript);`}
+      </Script>
     </>
   );
 }
