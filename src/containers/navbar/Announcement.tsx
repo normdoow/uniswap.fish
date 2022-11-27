@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useRef, useState } from "react";
 import { TwitterTweetEmbed } from "react-twitter-embed";
 import styled, { keyframes } from "styled-components";

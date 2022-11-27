@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "styled-components";
 import ReactSlider from "react-slider";
 import { ScreenWidth } from "../../utils/styled";

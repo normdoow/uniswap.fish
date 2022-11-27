@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { Heading } from "../common/components/atomic";
 import D3LiquidityHistogram, { Bin } from "./D3LiquidityHistogram";
