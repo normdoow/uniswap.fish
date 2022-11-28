@@ -259,6 +259,7 @@ const SelectPairModal = () => {
   const appContext = useAppContext();
   const modalContext = useModalContext();
 
+  const [autoSubmit, setAutoSubmit] = useState(false);
   const [selectedNetwork, setSelectedNetwork] = useState<Network | null>(null);
   const [selectedTokens, setSelectedTokens] = useState<Token[] | null[]>([
     null,
@@ -277,24 +278,56 @@ const SelectPairModal = () => {
   const [isSubmitLoading, setIsSubmitLoading] = useState<boolean>(false);
 
   // load user's selection based on url query string
+  // TODO: Refactor logic
   useEffect(() => {
+    if (
+      selectedNetwork ||
+      selectedTokens[0] ||
+      selectedTokens[1] ||
+      selectedPool
+    ) {
+      return;
+    }
+
     const network = getQueryParam("network");
     if (network) {
       const selectedNetwork = NETWORKS.find((n) => n.id === network);
-      if (selectedNetwork) setSelectedNetwork(selectedNetwork);
+      if (selectedNetwork) {
+        setSelectedNetwork(selectedNetwork);
+        setCurrentNetwork(selectedNetwork);
+      }
     } else {
       setSelectedNetwork(NETWORKS[0]);
       setQueryParam("network", NETWORKS[0].id);
+      setCurrentNetwork(NETWORKS[0]);
     }
-    // const token0 = getQueryParam("token0");
-    // console.log(token0);
-    // if (token0) {
-    //   getToken(token0).then((token) => {
-    //     if (token) selectedTokens[0] = token;
-    //     setSelectedTokens(selectedTokens);
-    //   });
-    // }
+
+    const token0 = getQueryParam("token0");
+    const token1 = getQueryParam("token1");
+    if (token0 && token1) {
+      Promise.all([getToken(token0), getToken(token1)]).then((tokens) => {
+        setSelectedTokens(tokens);
+
+        const feeTier = getQueryParam("feeTier");
+        if (feeTier && tokens) {
+          getPoolFromPair(tokens[0], tokens[1]).then((pools) => {
+            const selectedPool = pools.find((p) => p.feeTier === feeTier);
+            if (selectedPool) {
+              setSelectedPool(selectedPool);
+              setAutoSubmit(true);
+            }
+          });
+        }
+      });
+    }
   }, []);
+
+  useEffect(() => {
+    if (autoSubmit && !isSubmitLoading) {
+      setAutoSubmit(false);
+      handleSubmit();
+    }
+  }, [autoSubmit, isSubmitLoading]);
 
   const fetchTokens = async () => {
     appContext.dispatch({
@@ -388,8 +421,11 @@ const SelectPairModal = () => {
       }
     });
     if (maxLiquidity !== 0) {
-      setSelectedPool(maxPool);
-      setQueryParam("feeTier", maxPool.feeTier);
+      setSelectedPool((pool) => {
+        const newPool = pool || maxPool;
+        setQueryParam("feeTier", newPool.feeTier);
+        return newPool;
+      });
     }
   };
 
