@@ -30,6 +30,7 @@ import {
   Pool,
   Token,
 } from "../../common/interfaces/uniswap.interface";
+import { deleteQueryParam, setQueryParam } from "../../utils/querystring";
 
 const ModalStyle = {
   overlay: {
@@ -271,6 +272,26 @@ const SelectPairModal = () => {
   const [pools, setPools] = useState<Pool[]>([]);
   const [selectedPool, setSelectedPool] = useState<Pool | null>(null);
   const [isSubmitLoading, setIsSubmitLoading] = useState<boolean>(false);
+
+  // update url params
+  useEffect(() => {
+    if (selectedNetwork) setQueryParam("network", selectedNetwork.id);
+    if (selectedTokens[0]) {
+      setQueryParam("token0", selectedTokens[0].id);
+    } else {
+      deleteQueryParam("token0");
+    }
+    if (selectedTokens[1]) {
+      setQueryParam("token1", selectedTokens[1].id);
+    } else {
+      deleteQueryParam("token1");
+    }
+    if (selectedPool) {
+      setQueryParam("feeTier", selectedPool.feeTier);
+    } else {
+      deleteQueryParam("feeTier");
+    }
+  }, [selectedNetwork, selectedTokens, selectedPool]);
 
   const fetchTokens = async () => {
     appContext.dispatch({
