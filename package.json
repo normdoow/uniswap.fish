@@ -58,9 +58,8 @@
     "generate": "yarn generate-token-image-uri-mapping && yarn generate-contract-address-mapping",
     "start": "gatsby develop -p 3000 -o",
     "build": "yarn generate && gatsby build",
-    "deploy": "yarn build && firebase deploy",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "deploy": "firebase deploy",
+    "serve": "serve public"
   },
   "eslintConfig": {
     "extends": [
