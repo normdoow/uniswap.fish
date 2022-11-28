@@ -17,6 +17,7 @@ import {
   getPoolTicks,
   getTopTokenList,
   getAvgTradingVolume,
+  getToken,
 } from "../../repos/uniswap";
 import SearchTokenPage from "./SearchTokenPage";
 import { useAppContext } from "../../context/app/appContext";
@@ -30,7 +31,11 @@ import {
   Pool,
   Token,
 } from "../../common/interfaces/uniswap.interface";
-import { deleteQueryParam, setQueryParam } from "../../utils/querystring";
+import {
+  deleteQueryParam,
+  getQueryParam,
+  setQueryParam,
+} from "../../utils/querystring";
 
 const ModalStyle = {
   overlay: {
@@ -254,9 +259,7 @@ const SelectPairModal = () => {
   const appContext = useAppContext();
   const modalContext = useModalContext();
 
-  const [selectedNetwork, setSelectedNetwork] = useState<Network | null>(
-    NETWORKS[0]
-  );
+  const [selectedNetwork, setSelectedNetwork] = useState<Network | null>(null);
   const [selectedTokens, setSelectedTokens] = useState<Token[] | null[]>([
     null,
     null,
@@ -273,25 +276,25 @@ const SelectPairModal = () => {
   const [selectedPool, setSelectedPool] = useState<Pool | null>(null);
   const [isSubmitLoading, setIsSubmitLoading] = useState<boolean>(false);
 
-  // update url params
+  // load user's selection based on url query string
   useEffect(() => {
-    if (selectedNetwork) setQueryParam("network", selectedNetwork.id);
-    if (selectedTokens[0]) {
-      setQueryParam("token0", selectedTokens[0].id);
+    const network = getQueryParam("network");
+    if (network) {
+      const selectedNetwork = NETWORKS.find((n) => n.id === network);
+      if (selectedNetwork) setSelectedNetwork(selectedNetwork);
     } else {
-      deleteQueryParam("token0");
+      setSelectedNetwork(NETWORKS[0]);
+      setQueryParam("network", NETWORKS[0].id);
     }
-    if (selectedTokens[1]) {
-      setQueryParam("token1", selectedTokens[1].id);
-    } else {
-      deleteQueryParam("token1");
-    }
-    if (selectedPool) {
-      setQueryParam("feeTier", selectedPool.feeTier);
-    } else {
-      deleteQueryParam("feeTier");
-    }
-  }, [selectedNetwork, selectedTokens, selectedPool]);
+    // const token0 = getQueryParam("token0");
+    // console.log(token0);
+    // if (token0) {
+    //   getToken(token0).then((token) => {
+    //     if (token) selectedTokens[0] = token;
+    //     setSelectedTokens(selectedTokens);
+    //   });
+    // }
+  }, []);
 
   const fetchTokens = async () => {
     appContext.dispatch({
@@ -372,6 +375,7 @@ const SelectPairModal = () => {
 
     if (pools.length === 0) {
       setSelectedPool(null);
+      deleteQueryParam("feeTier");
       return;
     }
 
@@ -385,6 +389,7 @@ const SelectPairModal = () => {
     });
     if (maxLiquidity !== 0) {
       setSelectedPool(maxPool);
+      setQueryParam("feeTier", maxPool.feeTier);
     }
   };
 
@@ -432,6 +437,8 @@ const SelectPairModal = () => {
     setSelectedTokens(_selectedTokens);
     setSelectedTokenIndex(null);
     setShowSelectTokenPage(false);
+
+    setQueryParam(`token${selectedTokenIndex}`, token.id);
   };
 
   return (
@@ -475,6 +482,11 @@ const SelectPairModal = () => {
                       setSelectedTokens([null, null]);
                       setShowSelectNetworkPage(false);
                       setPools([]);
+
+                      setQueryParam("network", network.id);
+                      deleteQueryParam("token0");
+                      deleteQueryParam("token1");
+                      deleteQueryParam("feeTier");
                     }
                   }}
                   id={`${network.name}_${i}`}
@@ -536,7 +548,6 @@ const SelectPairModal = () => {
                 <TokenSelect
                   onClick={() => {
                     if (!isSubmitLoading) {
-                      setSelectedPool(null);
                       setShowSelectNetworkPage(true);
                     }
                   }}
@@ -563,6 +574,7 @@ const SelectPairModal = () => {
                   onClick={() => {
                     if (!isSubmitLoading) {
                       setSelectedPool(null);
+                      deleteQueryParam("feeTier");
                       setShowSelectTokenPage(true);
                       setSelectedTokenIndex(0);
                     }
@@ -586,6 +598,7 @@ const SelectPairModal = () => {
                   onClick={() => {
                     if (!isSubmitLoading) {
                       setSelectedPool(null);
+                      deleteQueryParam("feeTier");
                       setShowSelectTokenPage(true);
                       setSelectedTokenIndex(1);
                     }
@@ -614,7 +627,10 @@ const SelectPairModal = () => {
                   onClick={() => {
                     if (!isSubmitLoading) {
                       const tier = getFeeTier("100");
-                      tier && setSelectedPool(tier);
+                      if (tier) {
+                        setSelectedPool(tier);
+                        setQueryParam("feeTier", tier.feeTier);
+                      }
                     }
                   }}
                 >
@@ -629,7 +645,10 @@ const SelectPairModal = () => {
                   onClick={() => {
                     if (!isSubmitLoading) {
                       const tier = getFeeTier("500");
-                      tier && setSelectedPool(tier);
+                      if (tier) {
+                        setSelectedPool(tier);
+                        setQueryParam("feeTier", tier.feeTier);
+                      }
                     }
                   }}
                 >
@@ -644,7 +663,10 @@ const SelectPairModal = () => {
                   onClick={() => {
                     if (!isSubmitLoading) {
                       const tier = getFeeTier("3000");
-                      tier && setSelectedPool(tier);
+                      if (tier) {
+                        setSelectedPool(tier);
+                        setQueryParam("feeTier", tier.feeTier);
+                      }
                     }
                   }}
                 >
@@ -659,7 +681,10 @@ const SelectPairModal = () => {
                   onClick={() => {
                     if (!isSubmitLoading) {
                       const tier = getFeeTier("10000");
-                      tier && setSelectedPool(tier);
+                      if (tier) {
+                        setSelectedPool(tier);
+                        setQueryParam("feeTier", tier.feeTier);
+                      }
                     }
                   }}
                 >
