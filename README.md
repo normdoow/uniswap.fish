@@ -34,7 +34,7 @@ Uniswap V3 Fee Calculator, Visit: [uniswap.fish](https://uniswap.fish/), [@unisw
 
 - Estimated fee (daily) can be calculated by this equation:
   - `fee = feeTier * volume24H * (deltaL / (L + deltaL))` where:
-    - `volume24H` = average of 24h volume from `[currentDay - 4, currentDay - 1]`
+    - `volume24H` = average of 24h volume from `[currentDay - 7, currentDay - 1]`
     - `L` = total liquidity (cumulative of `liquidityNet` from all ticks that `il <= ic`)
     - `deltaL` = delta liquidity, can be calculated from:
       - `liquidityAmount0 = amount0 * (sqrt(pu) * sqrt(pl)) / (sqrt(pu) - sqrt(pl))`
