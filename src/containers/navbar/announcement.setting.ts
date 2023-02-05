@@ -1,10 +1,14 @@
 export const ANNOUNCEMENTS = [
   {
+    message: "arbitrum chain integration",
+    tweetId: "1622215298727411715",
+    tag: "feature-update",
+  },
+  {
     message: "impermanent loss calculator",
     tweetId: "1591118734252310529",
     tag: "feature-update",
   },
-
   {
     message: "full range estimation",
     tweetId: "1588185345849688065",
