@@ -33,7 +33,7 @@ export const NETWORKS: Network[] = [
     desc: "Celo Mainnet",
     disabled: false,
     logoURI: "celo.svg",
-    isNew: true,
+    isNew: false,
     subgraphEndpoint:
       "https://api.thegraph.com/subgraphs/name/jesse-sawa/uniswap-celo",
   },
@@ -41,11 +41,11 @@ export const NETWORKS: Network[] = [
     id: "arbitrum",
     name: "Arbitrum",
     desc: "Arbitrum Mainnet (L2)",
-    disabled: true,
+    disabled: false,
     logoURI:
       "https://assets.website-files.com/5f973c970bea5548ad4287ef/60a320b472858ace6700df76_arb-icon.svg",
     subgraphEndpoint:
-      "https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-dev",
+      "https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-arbitrum-one",
   },
 ];
 
