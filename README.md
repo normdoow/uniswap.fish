@@ -45,4 +45,4 @@ Uniswap V3 Fee Calculator, Visit: [uniswap.fish](https://uniswap.fish/), [@unisw
 
 ---
 
-Crafted with 🧡 by [@chunza2542](https://twitter.com/chunza2542).
+Crafted with 🧡 by [@chunrapeepat](https://twitter.com/chunrapeepat).

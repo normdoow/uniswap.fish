@@ -120,7 +120,7 @@ const DonateModal = () => {
             <Content>
               <p>
                 Hi! 🖐 my name is{" "}
-                <a href="https://twitter.com/chunza2542" target="_blank">
+                <a href="https://twitter.com/chunrapeepat" target="_blank">
                   Chun
                 </a>
                 , 22 y/o software developer, indie maker. It's been 2 weeks now
