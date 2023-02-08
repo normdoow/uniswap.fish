@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { ModalActionType } from "../context/modal/modalReducer";
 import ReactTooltip from "react-tooltip";
+import { Br, PrimaryDarkBlockButton } from "../common/components/atomic";
 
 const ModalStyle = {
   overlay: {
@@ -54,10 +55,84 @@ const Header = styled.h1`
   }
 `;
 
+const InputGroup = styled.div`
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+
+  & .fiat {
+    color: #999;
+    margin-left: 12px;
+    margin-top: -7px;
+    margin-bottom: 10px;
+    font-size: 0.785rem;
+  }
+
+  & .amount {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+
+    & input {
+      background: transparent;
+      border: 0;
+      outline: none;
+      color: white;
+      font-size: 24px;
+      font-weight: 500;
+      width: 200px;
+    }
+    & .token {
+      color: white;
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+
+      background: rgba(255, 255, 255, 0.1);
+      padding: 3px;
+      padding-right: 8px;
+      border-radius: 5rem;
+
+      & img {
+        width: 25px;
+        height: 25px;
+        margin-right: 5px;
+      }
+    }
+  }
+`;
+
 const DepositAmountSection = () => {
   return (
     <>
-      <span>Deposit Amount</span>
+      <span style={{ color: "#999", fontSize: "0.875rem" }}>
+        Please specify the amount of token you want to deposit into the
+        position.
+      </span>
+      <Br />
+      <InputGroup style={{ marginBottom: 8 }}>
+        <div className="amount">
+          <input type="number" placeholder="0" />
+          <div className="token">
+            <img src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" />
+            <span>USDC</span>
+          </div>
+        </div>
+        <div className="fiat">$500534.30</div>
+      </InputGroup>
+      <InputGroup>
+        <div className="amount">
+          <input type="number" placeholder="0" />
+          <div className="token">
+            <img src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" />
+            <span>ETH</span>
+          </div>
+        </div>
+        <div className="fiat">&nbsp;</div>
+      </InputGroup>
+      <Br />
+      <PrimaryDarkBlockButton>Calculate Swap Route</PrimaryDarkBlockButton>
     </>
   );
 };
