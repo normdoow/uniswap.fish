@@ -109,7 +109,7 @@ export const PrimaryBlockButton = styled(PrimaryButton)`
   }
 `;
 export const PrimaryDarkBlockButton = styled(PrimaryButton)`
-  background: rgba(76, 130, 251, 0.24) !important;
+  background: rgba(76, 130, 251, 0.24);
   color: rgb(76, 130, 251);
 
   width: 100%;
@@ -121,9 +121,8 @@ export const PrimaryDarkBlockButton = styled(PrimaryButton)`
     transform: scale(1.5);
   }
 
-  background: #1470f1;
   &:hover {
-    background: rgba(76, 130, 251, 0.3) !important;
+    background: rgba(76, 130, 251, 0.3);
   }
 `;
 

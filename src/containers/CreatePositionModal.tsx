@@ -105,7 +105,10 @@ const InputGroup = styled.div`
   }
 `;
 
-const DepositAmountSection = () => {
+interface DepositAmountSectionProps {
+  onSubmit: (token0Amount: number, token1Amount: number) => void;
+}
+const DepositAmountSection = ({ onSubmit }: DepositAmountSectionProps) => {
   const appContext = useAppContext();
   const [token0Amount, setToken0Amount] = useState<number | null>(null);
   const [token1Amount, setToken1Amount] = useState<number | null>(null);
@@ -116,6 +119,16 @@ const DepositAmountSection = () => {
   const token1USDValue =
     (token1Amount || 0) *
     (appContext.state.token1PriceChart?.currentPriceUSD || 0);
+
+  const isFormDisabled =
+    (token0Amount || 0) < 0 ||
+    (token1Amount || 0) < 0 ||
+    token0USDValue + token1USDValue === 0;
+
+  const handleSubmit = () => {
+    if (isFormDisabled) return;
+    onSubmit(token0Amount || 0, token1Amount || 0);
+  };
 
   return (
     <>
@@ -153,13 +166,29 @@ const DepositAmountSection = () => {
         <div className="fiat">${token1USDValue.toFixed(2)}</div>
       </InputGroup>
       <Br />
-      <PrimaryDarkBlockButton>Calculate Swap Route</PrimaryDarkBlockButton>
+      <PrimaryDarkBlockButton
+        onClick={handleSubmit}
+        disabled={isFormDisabled}
+        style={
+          isFormDisabled
+            ? {
+                background: "rgba(255, 255, 255, 0.1)",
+                color: "#999",
+                cursor: "not-allowed",
+              }
+            : {}
+        }
+      >
+        Calculate Swap Route
+      </PrimaryDarkBlockButton>
     </>
   );
 };
 
 const CreatePositionModal = () => {
   const { state, dispatch } = useModalContext();
+  const [token0Amount, setToken0Amount] = useState<number | null>(null);
+  const [token1Amount, setToken1Amount] = useState<number | null>(null);
 
   return (
     <>
@@ -197,7 +226,12 @@ const CreatePositionModal = () => {
             </span>
           </Header>
           <Container>
-            <DepositAmountSection />
+            <DepositAmountSection
+              onSubmit={(token0Amount, token1Amount) => {
+                setToken0Amount(token0Amount);
+                setToken1Amount(token1Amount);
+              }}
+            />
           </Container>
         </>
       </Modal>
