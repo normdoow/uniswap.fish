@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Modal from "react-modal";
 import { useModalContext } from "../context/modal/modalContext";
 import styled from "styled-components";
@@ -107,6 +107,15 @@ const InputGroup = styled.div`
 
 const DepositAmountSection = () => {
   const appContext = useAppContext();
+  const [token0Amount, setToken0Amount] = useState<number | null>(null);
+  const [token1Amount, setToken1Amount] = useState<number | null>(null);
+
+  const token0USDValue =
+    (token0Amount || 0) *
+    (appContext.state.token0PriceChart?.currentPriceUSD || 0);
+  const token1USDValue =
+    (token1Amount || 0) *
+    (appContext.state.token1PriceChart?.currentPriceUSD || 0);
 
   return (
     <>
@@ -117,23 +126,31 @@ const DepositAmountSection = () => {
       <Br />
       <InputGroup style={{ marginBottom: 8 }}>
         <div className="amount">
-          <input type="number" placeholder="0" />
+          <input
+            type="number"
+            placeholder="0"
+            onChange={(e) => setToken0Amount(Number(e.target.value))}
+          />
           <div className="token">
             <img src={appContext.state.token0?.logoURI} />
             <span>{appContext.state.token0?.symbol}</span>
           </div>
         </div>
-        <div className="fiat">$500534.30</div>
+        <div className="fiat">${token0USDValue.toFixed(2)}</div>
       </InputGroup>
       <InputGroup>
         <div className="amount">
-          <input type="number" placeholder="0" />
+          <input
+            type="number"
+            placeholder="0"
+            onChange={(e) => setToken1Amount(Number(e.target.value))}
+          />
           <div className="token">
             <img src={appContext.state.token1?.logoURI} />
             <span>{appContext.state.token1?.symbol}</span>
           </div>
         </div>
-        <div className="fiat">$0.00</div>
+        <div className="fiat">${token1USDValue.toFixed(2)}</div>
       </InputGroup>
       <Br />
       <PrimaryDarkBlockButton>Calculate Swap Route</PrimaryDarkBlockButton>
