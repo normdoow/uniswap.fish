@@ -17,6 +17,7 @@ import { faBug } from "@fortawesome/free-solid-svg-icons";
 import { getCurrentNetwork } from "../common/network";
 import ImpermanentLossModal from "../containers/ImpermanentLossModal";
 import { Script } from "gatsby";
+import CreatePositionModal from "../containers/CreatePositionModal";
 // import { useModalContext } from "./context/modal/modalContext";
 // import AnnoucementModal from "./containers/AnnoucementModal";
 // import { ModalActionType } from "./context/modal/modalReducer";
@@ -131,6 +132,7 @@ function App() {
     <>
       <SelectPairModal />
       <ImpermanentLossModal />
+      <CreatePositionModal />
       {/* <AnnoucementModal /> */}
       {/* <DonateModal /> */}
 

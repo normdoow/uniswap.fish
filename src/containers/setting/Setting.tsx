@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import { Br } from "../../common/components/atomic";
+import { Br, PrimaryDarkBlockButton } from "../../common/components/atomic";
+import { useModalContext } from "../../context/modal/modalContext";
+import { ModalActionType } from "../../context/modal/modalReducer";
 import { ScreenWidth } from "../../utils/styled";
 import DepositAmount from "./DepositAmount";
 import PriceRange from "./PriceRange";
@@ -18,11 +20,24 @@ const SettingContainer = styled.div`
 `;
 
 const Setting = () => {
+  const modalContext = useModalContext();
+
   return (
     <SettingContainer>
       <DepositAmount />
       <Br />
       <PriceRange />
+      <Br />
+      <PrimaryDarkBlockButton
+        onClick={() => {
+          modalContext.dispatch({
+            type: ModalActionType.SET_CREATE_POSITION_MODAL_STATE,
+            payload: true,
+          });
+        }}
+      >
+        Create Position
+      </PrimaryDarkBlockButton>
     </SettingContainer>
   );
 };

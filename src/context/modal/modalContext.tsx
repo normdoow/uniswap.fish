@@ -6,12 +6,14 @@ export interface ModalContextState {
   isDonateModalOpen: boolean;
   isImportantMessageModalOpen: boolean;
   isImpermanentLossModalOpen: boolean;
+  isCreatePositionModalOpen: boolean;
 }
 const initialState: ModalContextState = {
   isSelectPairModalOpen: true,
   isDonateModalOpen: false,
   isImportantMessageModalOpen: false,
   isImpermanentLossModalOpen: false,
+  isCreatePositionModalOpen: false,
 };
 
 interface ModalContextProviderProps {

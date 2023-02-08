@@ -5,6 +5,7 @@ export enum ModalActionType {
   SET_DONATE_MODAL_STATE = "SET_DONATE_MODAL_STATE",
   SET_ANNOUCEMENT_MODAL_STATE = "SET_ANNOUCEMENT_MODAL_STATE",
   SET_IMPERMANENT_LOSS_MODAL_STATE = "SET_IMPERMANENT_LOSS_MODAL_STATE",
+  SET_CREATE_POSITION_MODAL_STATE = "SET_CREATE_POSITION_MODAL_STATE",
 }
 
 export type ModalContextAction =
@@ -14,7 +15,8 @@ export type ModalContextAction =
   | {
       type: ModalActionType.SET_IMPERMANENT_LOSS_MODAL_STATE;
       payload: boolean;
-    };
+    }
+  | { type: ModalActionType.SET_CREATE_POSITION_MODAL_STATE; payload: boolean };
 
 export const modalContextReducer = (
   state: ModalContextState,
@@ -32,6 +34,9 @@ export const modalContextReducer = (
     }
     case ModalActionType.SET_IMPERMANENT_LOSS_MODAL_STATE: {
       return { ...state, isImpermanentLossModalOpen: action.payload };
+    }
+    case ModalActionType.SET_CREATE_POSITION_MODAL_STATE: {
+      return { ...state, isCreatePositionModalOpen: action.payload };
     }
   }
 };
