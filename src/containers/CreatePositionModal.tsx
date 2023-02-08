@@ -7,6 +7,7 @@ import { faQuestionCircle, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { ModalActionType } from "../context/modal/modalReducer";
 import ReactTooltip from "react-tooltip";
 import { Br, PrimaryDarkBlockButton } from "../common/components/atomic";
+import { useAppContext } from "../context/app/appContext";
 
 const ModalStyle = {
   overlay: {
@@ -98,12 +99,15 @@ const InputGroup = styled.div`
         width: 25px;
         height: 25px;
         margin-right: 5px;
+        border-radius: 50%;
       }
     }
   }
 `;
 
 const DepositAmountSection = () => {
+  const appContext = useAppContext();
+
   return (
     <>
       <span style={{ color: "#999", fontSize: "0.875rem" }}>
@@ -115,8 +119,8 @@ const DepositAmountSection = () => {
         <div className="amount">
           <input type="number" placeholder="0" />
           <div className="token">
-            <img src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png" />
-            <span>USDC</span>
+            <img src={appContext.state.token0?.logoURI} />
+            <span>{appContext.state.token0?.symbol}</span>
           </div>
         </div>
         <div className="fiat">$500534.30</div>
@@ -125,11 +129,11 @@ const DepositAmountSection = () => {
         <div className="amount">
           <input type="number" placeholder="0" />
           <div className="token">
-            <img src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png" />
-            <span>ETH</span>
+            <img src={appContext.state.token1?.logoURI} />
+            <span>{appContext.state.token1?.symbol}</span>
           </div>
         </div>
-        <div className="fiat">&nbsp;</div>
+        <div className="fiat">$0.00</div>
       </InputGroup>
       <Br />
       <PrimaryDarkBlockButton>Calculate Swap Route</PrimaryDarkBlockButton>
