@@ -6,7 +6,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { ModalActionType } from "../context/modal/modalReducer";
 import ReactTooltip from "react-tooltip";
-import { Br, PrimaryDarkBlockButton } from "../common/components/atomic";
+import {
+  Br,
+  PrimaryButton,
+  PrimaryDarkBlockButton,
+} from "../common/components/atomic";
 import { useAppContext } from "../context/app/appContext";
 
 const ModalStyle = {
@@ -185,6 +189,118 @@ const DepositAmountSection = ({ onSubmit }: DepositAmountSectionProps) => {
   );
 };
 
+const Stepper = styled.ul`
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin-top: 0;
+
+  & li {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+
+    & a {
+      color: #fff;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+    & a .circle {
+      color: #fff;
+      background: #1470f1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      font-weight: bold;
+      margin-right: 8px;
+    }
+    & a .label {
+      font-weight: 500;
+    }
+
+    & .step-content {
+      display: block;
+      margin-top: 0;
+      margin-left: 35px;
+      padding: 0px;
+      box-sizing: inherit;
+      color: #999;
+    }
+  }
+
+  & li:not(:last-child):after {
+    content: " ";
+    position: absolute;
+    width: 1px;
+    height: calc(100% - 40px);
+    left: 13px;
+    top: 33px;
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+`;
+const InstructionSection = () => {
+  const { state } = useAppContext();
+
+  return (
+    <>
+      <Stepper>
+        <li>
+          <a href="#!">
+            <span className="circle">1</span>
+            <span className="label">First step</span>
+          </a>
+
+          <div className="step-content">
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse
+              cupiditate voluptate facere iusto quaerat vitae excepturi,
+              accusantium ut aliquam repellat atque nesciunt nostrum similique.
+              Inventore nostrum ut, nobis porro sapiente.
+            </p>
+          </div>
+        </li>
+
+        <li>
+          <a href="#!">
+            <span className="circle">2</span>
+            <span className="label">Second step</span>
+          </a>
+
+          <div className="step-content">
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse
+              cupiditate voluptate facere iusto quaerat vitae excepturi,
+              accusantium ut aliquam repellat atque nesciunt nostrum similique.
+              Inventore nostrum ut, nobis porro sapiente.
+            </p>
+          </div>
+        </li>
+
+        <li>
+          <a href="#!">
+            <span className="circle">
+              <i className="fa fa-warning"></i>
+            </span>
+            <span className="label">Third step</span>
+          </a>
+        </li>
+      </Stepper>
+      <div>
+        <a
+          href={`https://app.uniswap.org/#/add/ETH/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/${state.pool?.feeTier}`}
+          target="_blank"
+        >
+          <PrimaryButton>Create Position on Uniswap V3</PrimaryButton>
+        </a>
+      </div>
+    </>
+  );
+};
+
 const CreatePositionModal = () => {
   const { state, dispatch } = useModalContext();
   const [token0Amount, setToken0Amount] = useState<number | null>(null);
@@ -220,18 +336,25 @@ const CreatePositionModal = () => {
                   type: ModalActionType.SET_CREATE_POSITION_MODAL_STATE,
                   payload: false,
                 });
+                // Reset state
+                setToken0Amount(null);
+                setToken1Amount(null);
               }}
             >
               <FontAwesomeIcon icon={faTimes} />
             </span>
           </Header>
           <Container>
-            <DepositAmountSection
-              onSubmit={(token0Amount, token1Amount) => {
-                setToken0Amount(token0Amount);
-                setToken1Amount(token1Amount);
-              }}
-            />
+            {token0Amount === null && token1Amount === null ? (
+              <DepositAmountSection
+                onSubmit={(token0Amount, token1Amount) => {
+                  setToken0Amount(token0Amount);
+                  setToken1Amount(token1Amount);
+                }}
+              />
+            ) : (
+              <InstructionSection />
+            )}
           </Container>
         </>
       </Modal>
