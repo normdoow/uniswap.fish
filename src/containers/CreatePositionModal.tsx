@@ -10,6 +10,7 @@ import {
   Br,
   PrimaryButton,
   PrimaryDarkBlockButton,
+  Table,
 } from "../common/components/atomic";
 import { useAppContext } from "../context/app/appContext";
 
@@ -226,9 +227,8 @@ const Stepper = styled.ul`
       display: block;
       margin-top: 0;
       margin-left: 35px;
-      padding: 0px;
+      padding: 8px 0;
       box-sizing: inherit;
-      color: #999;
     }
   }
 
@@ -241,6 +241,29 @@ const Stepper = styled.ul`
     top: 33px;
     background-color: rgba(255, 255, 255, 0.1);
   }
+
+  & .step-content .desc {
+    color: #999;
+    font-size: 0.875rem;
+  }
+  & .step-content.step1 {
+    & a {
+      color: #4c82fb;
+      font-weight: bold;
+      font-size: 0.875rem;
+    }
+  }
+`;
+const Token = styled.div`
+  display: flex;
+  align-items: center;
+
+  & > img {
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    transform: translateX(-5px);
+  }
 `;
 const InstructionSection = () => {
   const { state } = useAppContext();
@@ -251,52 +274,88 @@ const InstructionSection = () => {
         <li>
           <a href="#!">
             <span className="circle">1</span>
-            <span className="label">First step</span>
+            <span className="label">Swap ETH to USDC</span>
           </a>
 
-          <div className="step-content">
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse
-              cupiditate voluptate facere iusto quaerat vitae excepturi,
-              accusantium ut aliquam repellat atque nesciunt nostrum similique.
-              Inventore nostrum ut, nobis porro sapiente.
-            </p>
+          <div className="step-content step1">
+            <div className="desc">
+              Swap the token below to get the correct deposit ratio for the
+              position.
+            </div>
+
+            <Table>
+              <Token>
+                <img alt={state.token0?.name} src={state.token0?.logoURI} />{" "}
+                <span>{state.token0?.symbol}</span>
+              </Token>
+              <div>100</div>
+              <div>COPY</div>
+            </Table>
+            <Table>
+              <Token>
+                <img alt={state.token1?.name} src={state.token1?.logoURI} />{" "}
+                <span>{state.token1?.symbol}</span>
+              </Token>
+              <div>100</div>
+              <div>COPY</div>
+            </Table>
+
+            <a href="https://app.uniswap.org/#/swap" target="_blank">
+              Swap on Uniswap V3
+            </a>
           </div>
         </li>
 
         <li>
           <a href="#!">
             <span className="circle">2</span>
-            <span className="label">Second step</span>
+            <span className="label">Confirm Deposit Amounts</span>
           </a>
 
           <div className="step-content">
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse
-              cupiditate voluptate facere iusto quaerat vitae excepturi,
-              accusantium ut aliquam repellat atque nesciunt nostrum similique.
-              Inventore nostrum ut, nobis porro sapiente.
-            </p>
+            <div className="desc">Confirm your token amounts after swap</div>
+
+            <Table>
+              <Token>
+                <img alt={state.token0?.name} src={state.token0?.logoURI} />{" "}
+                <span>{state.token0?.symbol}</span>
+              </Token>
+              <div>100</div>
+              <div>COPY</div>
+            </Table>
+            <Table>
+              <Token>
+                <img alt={state.token1?.name} src={state.token1?.logoURI} />{" "}
+                <span>{state.token1?.symbol}</span>
+              </Token>
+              <div>100</div>
+              <div>COPY</div>
+            </Table>
           </div>
         </li>
 
         <li>
           <a href="#!">
-            <span className="circle">
-              <i className="fa fa-warning"></i>
-            </span>
-            <span className="label">Third step</span>
+            <span className="circle">3</span>
+            <span className="label">Create Position</span>
           </a>
+
+          <div className="step-content">
+            <div className="desc">
+              Once visit the create position page, please switch the network to
+              "Optimism" before doing any transaction.
+            </div>
+            <div>
+              <a
+                href={`https://app.uniswap.org/#/add/ETH/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/${state.pool?.feeTier}`}
+                target="_blank"
+              >
+                <PrimaryButton>Create Position on Uniswap V3</PrimaryButton>
+              </a>
+            </div>
+          </div>
         </li>
       </Stepper>
-      <div>
-        <a
-          href={`https://app.uniswap.org/#/add/ETH/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/${state.pool?.feeTier}`}
-          target="_blank"
-        >
-          <PrimaryButton>Create Position on Uniswap V3</PrimaryButton>
-        </a>
-      </div>
     </>
   );
 };
