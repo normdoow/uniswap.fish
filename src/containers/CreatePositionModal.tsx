@@ -285,10 +285,26 @@ const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
   const Pu = state.priceRangeValue[1];
   const depositRatio = getPositionTokensDepositRatio(P, Pl, Pu);
 
-  // Derived from: depositRatio = (amount0 - swap0) / (swap0 * 1/P)
-  const swap0 = amount0 / (1 + depositRatio / P);
-  // Derived from: depositRatio = (swap1 * P) / (amount1 - swap1)
-  const swap1 = (depositRatio * amount1) / (P + depositRatio);
+  // An amount that no need to swap
+  let amt0 = 0;
+  let amt1 = 0;
+  if (amount0 * (1 / depositRatio) <= amount1) {
+    amt0 = amount0;
+    amt1 = amount0 * (1 / depositRatio);
+  }
+  if (amount1 * depositRatio <= amount0) {
+    amt0 = amount1 * depositRatio;
+    amt1 = amount1;
+  }
+
+  // An amount that need to swap to get correct deposit ratio
+  const remaining0 = amount0 - amt0;
+  const remaining1 = amount1 - amt1;
+
+  // Derived from: depositRatio = (remaining0 - swap0) / (swap0 * 1/P)
+  const swap0 = remaining0 / (1 + depositRatio / P);
+  // Derived from: depositRatio = (swap1 * P) / (remaining1 - swap1)
+  const swap1 = (depositRatio * remaining1) / (P + depositRatio);
 
   return (
     <>
