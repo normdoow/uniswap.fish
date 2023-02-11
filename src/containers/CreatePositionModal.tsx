@@ -301,6 +301,7 @@ const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
   const remaining0 = amount0 - amt0;
   const remaining1 = amount1 - amt1;
 
+  // Calculate deposit ratio on the remaining amounts
   // Derived from: depositRatio = (remaining0 - swap0) / (swap0 * 1/P)
   const swap0 = remaining0 / (1 + depositRatio / P);
   // Derived from: depositRatio = (swap1 * P) / (remaining1 - swap1)
