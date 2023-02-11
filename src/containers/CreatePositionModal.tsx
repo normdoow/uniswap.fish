@@ -13,6 +13,10 @@ import {
   Table,
 } from "../common/components/atomic";
 import { useAppContext } from "../context/app/appContext";
+import {
+  getPositionTokensDepositRatio,
+  getPriceFromTick,
+} from "../utils/uniswapv3/math";
 
 const ModalStyle = {
   overlay: {
@@ -265,8 +269,26 @@ const Token = styled.div`
     transform: translateX(-5px);
   }
 `;
-const InstructionSection = () => {
+interface InstructionSectionProps {
+  amount0: number;
+  amount1: number;
+}
+const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
   const { state } = useAppContext();
+
+  const P = getPriceFromTick(
+    (state.isPairToggled ? -1 : 1) * Number(state.pool?.tick),
+    state.token0?.decimals || "18",
+    state.token1?.decimals || "18"
+  );
+  const Pl = state.priceRangeValue[0];
+  const Pu = state.priceRangeValue[1];
+  const depositRatio = getPositionTokensDepositRatio(P, Pl, Pu);
+
+  // Derived from: depositRatio = (amount0 - swap0) / (swap0 * 1/P)
+  const swap0 = amount0 / (1 + depositRatio / P);
+  // Derived from: depositRatio = (swap1 * P) / (amount1 - swap1)
+  const swap1 = (depositRatio * amount1) / (P + depositRatio);
 
   return (
     <>
@@ -282,7 +304,7 @@ const InstructionSection = () => {
               Swap the token below to get the correct deposit ratio for the
               position.
             </div>
-
+            Debug: {amount0} {amount1}
             <Table>
               <Token>
                 <img alt={state.token0?.name} src={state.token0?.logoURI} />{" "}
@@ -299,7 +321,6 @@ const InstructionSection = () => {
               <div>100</div>
               <div>COPY</div>
             </Table>
-
             <a href="https://app.uniswap.org/#/swap" target="_blank">
               Swap on Uniswap V3
             </a>
@@ -309,12 +330,10 @@ const InstructionSection = () => {
         <li>
           <a href="#!">
             <span className="circle">2</span>
-            <span className="label">Confirm Deposit Amounts</span>
+            <span className="label">Final Deposit Amounts</span>
           </a>
 
           <div className="step-content">
-            <div className="desc">Confirm your token amounts after swap</div>
-
             <Table>
               <Token>
                 <img alt={state.token0?.name} src={state.token0?.logoURI} />{" "}
@@ -412,7 +431,10 @@ const CreatePositionModal = () => {
                 }}
               />
             ) : (
-              <InstructionSection />
+              <InstructionSection
+                amount0={token0Amount || 0}
+                amount1={token1Amount || 0}
+              />
             )}
           </Container>
         </>

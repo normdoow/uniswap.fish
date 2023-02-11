@@ -41,6 +41,25 @@ export const getPriceFromTick = (
   return price.toNumber();
 };
 
+// Calculate the position tokens deposit ratio.
+export const getPositionTokensDepositRatio = (
+  P: number,
+  Pl: number,
+  Pu: number
+): number => {
+  const deltaL = 1000; // can be any number
+
+  let deltaY = deltaL * (Math.sqrt(P) - Math.sqrt(Pl));
+  if (P < Pl) deltaY = 0;
+  if (P >= Pu) deltaY = deltaL * (Math.sqrt(Pu) - Math.sqrt(Pl));
+
+  let deltaX = deltaL * (1 / Math.sqrt(P) - 1 / Math.sqrt(Pu));
+  if (P < Pl) deltaX = deltaL * (1 / Math.sqrt(Pl) - 1 / Math.sqrt(Pu));
+  if (P >= Pu) deltaX = 0;
+
+  return deltaY / deltaX;
+};
+
 // for calculation detail, please visit README.md (Section: Calculation Breakdown, No. 1)
 interface TokensAmount {
   amount0: number;
