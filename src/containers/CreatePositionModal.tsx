@@ -360,8 +360,18 @@ const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
   const isSwap0 = swap0 > 0;
   const tokenA = isSwap0 ? state.token0 : state.token1;
   const tokenB = isSwap0 ? state.token1 : state.token0;
+
+  // Step 1
   const srcTokenSwapAmount = isSwap0 ? swap0 : swap1;
   const destTokenSwapAmount = srcTokenSwapAmount * (isSwap0 ? 1 / P : P);
+
+  // Step 2
+  const srcTokenFinalAmount = isSwap0
+    ? amt0 + (amount0 - swap0)
+    : amt1 + (amount1 - swap1);
+  const destTokenFinalAmount =
+    (isSwap0 ? amt1 + (amount1 - swap1) : amt0 + (amount0 - swap0)) +
+    destTokenSwapAmount;
 
   return (
     <>
@@ -420,25 +430,37 @@ const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
         <li>
           <a href="#!">
             <span className="circle">2</span>
-            <span className="label">Final Deposit Amounts</span>
+            <span className="label">Total Tokens Amount (After Swap)</span>
           </a>
 
           <div className="step-content">
             <Table>
               <Token>
-                <img alt={state.token0?.name} src={state.token0?.logoURI} />{" "}
-                <span>{state.token0?.symbol}</span>
+                <img alt={tokenA?.name} src={tokenA?.logoURI} />{" "}
+                <span>{tokenA?.symbol}</span>
               </Token>
-              <div>100</div>
-              <div>COPY</div>
+              <div>{round(srcTokenFinalAmount, 6)}</div>
+              <div
+                onClick={() =>
+                  navigator.clipboard.writeText(`${srcTokenFinalAmount}`)
+                }
+              >
+                COPY
+              </div>
             </Table>
             <Table>
               <Token>
-                <img alt={state.token1?.name} src={state.token1?.logoURI} />{" "}
-                <span>{state.token1?.symbol}</span>
+                <img alt={tokenB?.name} src={tokenB?.logoURI} />{" "}
+                <span>{tokenB?.symbol}</span>
               </Token>
-              <div>100</div>
-              <div>COPY</div>
+              <div>{round(destTokenFinalAmount, 6)}</div>
+              <div
+                onClick={() =>
+                  navigator.clipboard.writeText(`${destTokenFinalAmount}`)
+                }
+              >
+                COPY
+              </div>
             </Table>
           </div>
         </li>
