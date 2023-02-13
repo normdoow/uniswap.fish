@@ -3,14 +3,17 @@ import Modal from "react-modal";
 import { useModalContext } from "../context/modal/modalContext";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faQuestionCircle, faTimes } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowDown,
+  faQuestionCircle,
+  faTimes,
+} from "@fortawesome/free-solid-svg-icons";
 import { ModalActionType } from "../context/modal/modalReducer";
 import ReactTooltip from "react-tooltip";
 import {
   Br,
   PrimaryButton,
   PrimaryDarkBlockButton,
-  Table,
 } from "../common/components/atomic";
 import { useAppContext } from "../context/app/appContext";
 import {
@@ -18,6 +21,7 @@ import {
   getPriceFromTick,
 } from "../utils/uniswapv3/math";
 import { round } from "../utils/math";
+import { getCurrentNetwork } from "../common/network";
 
 const ModalStyle = {
   overlay: {
@@ -111,6 +115,35 @@ const InputGroup = styled.div`
         margin-right: 5px;
         border-radius: 50%;
       }
+    }
+  }
+`;
+export const Table = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 3.5rem;
+  grid-gap: 8px;
+
+  padding: 6px 12px;
+  margin-top: 7px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #aaa;
+
+  & > div:nth-child(2) {
+    text-align: right;
+  }
+  & > div:nth-child(3) {
+    text-align: left;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 5rem;
+    text-align: center;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
     }
   }
 `;
@@ -233,6 +266,7 @@ const Stepper = styled.ul`
       margin-top: 0;
       margin-left: 35px;
       padding: 8px 0;
+      margin-bottom: 8px;
       box-sizing: inherit;
     }
   }
@@ -256,6 +290,21 @@ const Stepper = styled.ul`
       color: #4c82fb;
       font-weight: bold;
       font-size: 0.875rem;
+    }
+  }
+
+  & .swap-container {
+    margin-top: 12px;
+    margin-bottom: 8px;
+    position: relative;
+
+    & svg {
+      color: #ddd;
+      position: absolute;
+      font-size: 0.8rem;
+
+      top: 27.5px;
+      left: 10.5px;
     }
   }
 `;
@@ -321,7 +370,8 @@ const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
           <a href="#!">
             <span className="circle">1</span>
             <span className="label">
-              Swap {tokenA?.symbol} to {tokenB?.symbol}
+              Swap {tokenA?.symbol} to {tokenB?.symbol} on{" "}
+              {getCurrentNetwork().name}
             </span>
           </a>
 
@@ -330,22 +380,37 @@ const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
               Swap the token below to get the correct deposit ratio for the
               position.
             </div>
-            <Table>
-              <Token>
-                <img alt={tokenA?.name} src={tokenA?.logoURI} />{" "}
-                <span>{tokenA?.symbol}</span>
-              </Token>
-              <div>{round(srcTokenSwapAmount, 6)}</div>
-              <div>COPY</div>
-            </Table>
-            <Table>
-              <Token>
-                <img alt={tokenB?.name} src={tokenB?.logoURI} />{" "}
-                <span>{tokenB?.symbol}</span>
-              </Token>
-              <div>{round(destTokenSwapAmount, 6)}</div>
-              <div>COPY</div>
-            </Table>
+            <div className="swap-container">
+              <FontAwesomeIcon icon={faArrowDown} />
+              <Table>
+                <Token>
+                  <img alt={tokenA?.name} src={tokenA?.logoURI} />{" "}
+                  <span>{tokenA?.symbol}</span>
+                </Token>
+                <div>{round(srcTokenSwapAmount, 6)}</div>
+                <div
+                  onClick={() =>
+                    navigator.clipboard.writeText(`${srcTokenSwapAmount}`)
+                  }
+                >
+                  COPY
+                </div>
+              </Table>
+              <Table>
+                <Token>
+                  <img alt={tokenB?.name} src={tokenB?.logoURI} />{" "}
+                  <span>{tokenB?.symbol}</span>
+                </Token>
+                <div>{round(destTokenSwapAmount, 6)}</div>
+                <div
+                  onClick={() =>
+                    navigator.clipboard.writeText(`${destTokenSwapAmount}`)
+                  }
+                >
+                  COPY
+                </div>
+              </Table>
+            </div>
             <a href="https://app.uniswap.org/#/swap" target="_blank">
               Swap on Uniswap V3
             </a>
