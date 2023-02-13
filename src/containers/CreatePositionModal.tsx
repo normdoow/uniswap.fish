@@ -515,6 +515,7 @@ const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
         </li>
 
         <li>
+          <ReactTooltip id="price-range" />
           <a href="#!">
             <span className="circle">3</span>
             <span className="label">Create Position</span>
@@ -523,9 +524,36 @@ const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
           <div className="step-content">
             <PriceRange>
               <div className="bar"></div>
-              <div className="lower"></div>
-              <div className="price"></div>
-              <div className="upper"></div>
+              <div
+                className="lower"
+                data-for="price-range"
+                data-place="bottom"
+                data-html={true}
+                data-tip={`Lower Price<br>${round(Pl, 6)} ${
+                  state.token0?.symbol
+                }/${state.token1?.symbol}<br><br>(Click to copy to clipboard)`}
+                onClick={() => navigator.clipboard.writeText(`${Pl}`)}
+              ></div>
+              <div
+                className="price"
+                data-for="price-range"
+                data-place="bottom"
+                data-html={true}
+                data-tip={`Current Price<br>${round(P, 6)} ${
+                  state.token0?.symbol
+                }/${state.token1?.symbol}<br><br>(Click to copy to clipboard)`}
+                onClick={() => navigator.clipboard.writeText(`${P}`)}
+              ></div>
+              <div
+                className="upper"
+                data-for="price-range"
+                data-place="bottom"
+                data-html={true}
+                data-tip={`Upper Price<br>${round(Pu, 6)} ${
+                  state.token0?.symbol
+                }/${state.token1?.symbol}<br><br>(Click to copy to clipboard)`}
+                onClick={() => navigator.clipboard.writeText(`${Pu}`)}
+              ></div>
 
               <div className="info">Hover to see the price range info</div>
             </PriceRange>
