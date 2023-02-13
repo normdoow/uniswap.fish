@@ -44,7 +44,6 @@ const ModalStyle = {
 const Container = styled.div`
   width: 370px;
   padding: 15px;
-  padding-bottom: 0;
 `;
 const Header = styled.h1`
   color: white;
@@ -234,6 +233,7 @@ const Stepper = styled.ul`
   flex-direction: column;
   padding: 0;
   margin-top: 0;
+  margin-bottom: 0;
 
   & li {
     display: flex;
