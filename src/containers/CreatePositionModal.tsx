@@ -17,6 +17,7 @@ import {
   getPositionTokensDepositRatio,
   getPriceFromTick,
 } from "../utils/uniswapv3/math";
+import { round } from "../utils/math";
 
 const ModalStyle = {
   overlay: {
@@ -307,13 +308,21 @@ const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
   // Derived from: depositRatio = (swap1 * P) / (remaining1 - swap1)
   const swap1 = (depositRatio * remaining1) / (P + depositRatio);
 
+  const isSwap0 = swap0 > 0;
+  const tokenA = isSwap0 ? state.token0 : state.token1;
+  const tokenB = isSwap0 ? state.token1 : state.token0;
+  const srcTokenSwapAmount = isSwap0 ? swap0 : swap1;
+  const destTokenSwapAmount = srcTokenSwapAmount * (isSwap0 ? 1 / P : P);
+
   return (
     <>
       <Stepper>
         <li>
           <a href="#!">
             <span className="circle">1</span>
-            <span className="label">Swap ETH to USDC</span>
+            <span className="label">
+              Swap {tokenA?.symbol} to {tokenB?.symbol}
+            </span>
           </a>
 
           <div className="step-content step1">
@@ -321,21 +330,20 @@ const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
               Swap the token below to get the correct deposit ratio for the
               position.
             </div>
-            Debug: {amount0} {amount1}
             <Table>
               <Token>
-                <img alt={state.token0?.name} src={state.token0?.logoURI} />{" "}
-                <span>{state.token0?.symbol}</span>
+                <img alt={tokenA?.name} src={tokenA?.logoURI} />{" "}
+                <span>{tokenA?.symbol}</span>
               </Token>
-              <div>100</div>
+              <div>{round(srcTokenSwapAmount, 6)}</div>
               <div>COPY</div>
             </Table>
             <Table>
               <Token>
-                <img alt={state.token1?.name} src={state.token1?.logoURI} />{" "}
-                <span>{state.token1?.symbol}</span>
+                <img alt={tokenB?.name} src={tokenB?.logoURI} />{" "}
+                <span>{tokenB?.symbol}</span>
               </Token>
-              <div>100</div>
+              <div>{round(destTokenSwapAmount, 6)}</div>
               <div>COPY</div>
             </Table>
             <a href="https://app.uniswap.org/#/swap" target="_blank">
