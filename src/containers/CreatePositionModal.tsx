@@ -319,6 +319,55 @@ const Token = styled.div`
     transform: translateX(-5px);
   }
 `;
+const PriceRange = styled.div`
+  position: relative;
+  height: 35px;
+  margin-bottom: 8px;
+
+  & > .bar {
+    width: 100%;
+    height: 3px;
+    border-radius: 5rem;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(12.5px);
+  }
+  & > .lower,
+  .upper,
+  .price {
+    position: absolute;
+    width: 7px;
+    height: 22px;
+    cursor: zoom-in;
+    border-top-left-radius: 5rem;
+    border-top-right-radius: 5rem;
+    border-bottom-left-radius: 5rem;
+    border-bottom-right-radius: 5rem;
+  }
+
+  & > .lower {
+    left: 10px;
+    transform: translateX(50%);
+    background: #25af60;
+  }
+  & > .price {
+    left: 50%;
+    background: #f70377;
+    transform: translateX(-50%);
+  }
+  & > .upper {
+    right: 10px;
+    transform: translateX(-50%);
+    background: #25af60;
+  }
+
+  & > .info {
+    color: #999;
+    font-size: 0.675rem;
+    text-align: center;
+    margin-top: 24px;
+  }
+`;
+
 interface InstructionSectionProps {
   amount0: number;
   amount1: number;
@@ -472,9 +521,16 @@ const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
           </a>
 
           <div className="step-content">
+            <PriceRange>
+              <div className="bar"></div>
+              <div className="lower"></div>
+              <div className="price"></div>
+              <div className="upper"></div>
+
+              <div className="info">Hover to see the price range info</div>
+            </PriceRange>
             <div className="desc">
-              Once visit the create position page, please switch the network to
-              "Optimism" before doing any transaction.
+              Warning: switch to chain and make sure everything is correct.
             </div>
             <div>
               <a
