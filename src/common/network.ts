@@ -1,5 +1,6 @@
 import { Network } from "./interfaces/uniswap.interface";
 
+// NOTE: also update CreatePositionModal, isNative function.
 export const NETWORKS: Network[] = [
   {
     id: "ethereum",

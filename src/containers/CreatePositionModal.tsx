@@ -22,6 +22,7 @@ import {
 } from "../utils/uniswapv3/math";
 import { round } from "../utils/math";
 import { getCurrentNetwork } from "../common/network";
+import { Token as TokenType } from "../common/interfaces/uniswap.interface";
 
 const ModalStyle = {
   overlay: {
@@ -434,6 +435,22 @@ const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
     (isSwap0 ? amt1 + (amount1 - swap1) : amt0 + (amount0 - swap0)) +
     destTokenSwapAmount;
 
+  const isNative = (token: TokenType | null) => {
+    if (!token) return false;
+
+    const platform = getCurrentNetwork().id;
+    if (
+      ["ethereum", "optimism", "arbitrum"].includes(platform) &&
+      token.symbol === "ETH"
+    ) {
+      return true;
+    }
+    if (platform === "polygon" && token.symbol === "MATIC") {
+      return true;
+    }
+    return false;
+  };
+
   return (
     <>
       <Stepper>
@@ -575,7 +592,11 @@ const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
             </div>
             <div>
               <a
-                href={`https://app.uniswap.org/#/add/ETH/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/${state.pool?.feeTier}`}
+                href={`https://app.uniswap.org/#/add/${
+                  isNative(state.token1) ? "ETH" : state.token1?.id
+                }/${isNative(state.token0) ? "ETH" : state.token0?.id}/${
+                  state.pool?.feeTier
+                }${state.isFullRange ? "" : `?minPrice=${Pl}&maxPrice=${Pu}`}`}
                 target="_blank"
               >
                 <PrimaryButton style={{ width: "100%" }}>
