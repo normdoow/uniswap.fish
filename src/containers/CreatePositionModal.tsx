@@ -44,6 +44,7 @@ const ModalStyle = {
 const Container = styled.div`
   width: 370px;
   padding: 15px;
+  padding-bottom: 0;
 `;
 const Header = styled.h1`
   color: white;
@@ -307,6 +308,17 @@ const Stepper = styled.ul`
       left: 10.5px;
     }
   }
+
+  & .step-content .warning {
+    color: #fd4040;
+    background: rgba(253, 64, 64, 0.1);
+    border-radius: 8px;
+    padding: 8px 3px;
+    margin-top: 24px;
+    margin-bottom: 8px;
+    text-align: center;
+    font-size: 0.675rem;
+  }
 `;
 const Token = styled.div`
   display: flex;
@@ -521,7 +533,7 @@ const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
             <span className="label">Create Position</span>
           </a>
 
-          <div className="step-content">
+          <div className="step-content" style={{ marginBottom: 0 }}>
             <PriceRange>
               <div className="bar"></div>
               <div
@@ -557,15 +569,18 @@ const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
 
               <div className="info">Hover to see the price range info</div>
             </PriceRange>
-            <div className="desc">
-              Warning: switch to chain and make sure everything is correct.
+            <div className="warning">
+              Please switch the network to {getCurrentNetwork().name} and ensure
+              all information is correct before creating the position.
             </div>
             <div>
               <a
                 href={`https://app.uniswap.org/#/add/ETH/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/${state.pool?.feeTier}`}
                 target="_blank"
               >
-                <PrimaryButton>Create Position on Uniswap V3</PrimaryButton>
+                <PrimaryButton style={{ width: "100%" }}>
+                  Create Position on Uniswap V3
+                </PrimaryButton>
               </a>
             </div>
           </div>
