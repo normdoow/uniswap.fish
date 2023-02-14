@@ -187,6 +187,16 @@ const DepositAmountSection = ({ onSubmit }: DepositAmountSectionProps) => {
       });
 
       onSubmit(token0Amount || 0, token1Amount || 0);
+
+      // Plausible Feature Tracking
+      const props = {
+        featureId: "Create Position",
+      };
+      if (typeof window.plausible !== "undefined") {
+        window.plausible("FeatureUsage", {
+          props,
+        });
+      }
     } else {
       console.error("Error: poolId not found", appContext.state.pool);
     }
