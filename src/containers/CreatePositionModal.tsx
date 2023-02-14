@@ -181,10 +181,25 @@ const DepositAmountSection = ({ onSubmit }: DepositAmountSectionProps) => {
     const poolId = appContext.state.pool?.id;
     if (poolId) {
       const currentTick = await getCurrentTick(poolId);
+      const priceRangeValue = appContext.state.priceRangeValue;
+      const priceAssumptionValue = appContext.state.priceAssumptionValue;
+
       appContext.dispatch({
         type: AppActionType.UPDATE_POOL_TICK,
         payload: currentTick,
       });
+
+      // Reset to prev state
+      setTimeout(() => {
+        appContext.dispatch({
+          type: AppActionType.UPDATE_PRICE_RANGE,
+          payload: priceRangeValue,
+        });
+        appContext.dispatch({
+          type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE,
+          payload: priceAssumptionValue,
+        });
+      }, 1000);
 
       onSubmit(token0Amount || 0, token1Amount || 0);
 
