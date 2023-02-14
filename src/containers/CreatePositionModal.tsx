@@ -422,8 +422,14 @@ const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
     state.token0?.decimals || "18",
     state.token1?.decimals || "18"
   );
-  const Pl = state.priceRangeValue[0];
-  const Pu = state.priceRangeValue[1];
+  let Pl = state.priceRangeValue[0];
+  let Pu = state.priceRangeValue[1];
+  if (state.isFullRange && state.poolTicks) {
+    const firstTick = state.poolTicks[0];
+    const lastTick = state.poolTicks[state.poolTicks.length - 1];
+    Pl = Number(firstTick.price0);
+    Pu = Number(lastTick.price0);
+  }
   const depositRatio = getPositionTokensDepositRatio(P, Pl, Pu);
 
   // An amount that no need to swap
@@ -592,15 +598,44 @@ const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
             <PriceRange>
               <div className="bar"></div>
               <div
+                style={{ opacity: state.isFullRange ? 0.4 : 1 }}
                 className="lower"
                 data-for="price-range"
                 data-place="bottom"
                 data-html={true}
-                data-tip={`Lower Price<br>${round(Pl, 6)} ${
-                  state.token0?.symbol
-                }/${state.token1?.symbol}<br><br>(Click to copy to clipboard)`}
-                onClick={() => navigator.clipboard.writeText(`${Pl}`)}
+                data-tip={
+                  state.isFullRange
+                    ? `Lower Price: 0`
+                    : `Lower Price<br>${round(Pl, 6)} ${state.token0?.symbol}/${
+                        state.token1?.symbol
+                      }<br><br>(Click to copy to clipboard)`
+                }
+                onClick={() =>
+                  state.isFullRange
+                    ? ""
+                    : navigator.clipboard.writeText(`${Pl}`)
+                }
               ></div>
+              <div
+                style={{ opacity: state.isFullRange ? 0.4 : 1 }}
+                className="upper"
+                data-for="price-range"
+                data-place="bottom"
+                data-html={true}
+                data-tip={
+                  state.isFullRange
+                    ? `Upper Price: ∞`
+                    : `Upper Price<br>${round(Pu, 6)} ${state.token0?.symbol}/${
+                        state.token1?.symbol
+                      }<br><br>(Click to copy to clipboard)`
+                }
+                onClick={() =>
+                  state.isFullRange
+                    ? ""
+                    : navigator.clipboard.writeText(`${Pu}`)
+                }
+              ></div>
+
               <div
                 className="price"
                 data-for="price-range"
@@ -610,16 +645,6 @@ const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
                   state.token0?.symbol
                 }/${state.token1?.symbol}<br><br>(Click to copy to clipboard)`}
                 onClick={() => navigator.clipboard.writeText(`${P}`)}
-              ></div>
-              <div
-                className="upper"
-                data-for="price-range"
-                data-place="bottom"
-                data-html={true}
-                data-tip={`Upper Price<br>${round(Pu, 6)} ${
-                  state.token0?.symbol
-                }/${state.token1?.symbol}<br><br>(Click to copy to clipboard)`}
-                onClick={() => navigator.clipboard.writeText(`${Pu}`)}
               ></div>
 
               <div className="info">Hover to see the price range info</div>
