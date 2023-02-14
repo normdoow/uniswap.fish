@@ -453,16 +453,25 @@ const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
   const tokenB = isSwap0 ? state.token1 : state.token0;
 
   // Step 1
-  const srcTokenSwapAmount = isSwap0 ? swap0 : swap1;
-  const destTokenSwapAmount = srcTokenSwapAmount * (isSwap0 ? 1 / P : P);
+  const srcTokenSwapAmount = round(
+    isSwap0 ? swap0 : swap1,
+    Number(tokenA?.decimals || 18)
+  );
+  const destTokenSwapAmount = round(
+    srcTokenSwapAmount * (isSwap0 ? 1 / P : P),
+    Number(tokenB?.decimals || 18)
+  );
 
   // Step 2
-  const srcTokenFinalAmount = isSwap0
-    ? amt0 + (amount0 - swap0)
-    : amt1 + (amount1 - swap1);
-  const destTokenFinalAmount =
+  const srcTokenFinalAmount = round(
+    isSwap0 ? amt0 + (amount0 - swap0) : amt1 + (amount1 - swap1),
+    Number(tokenA?.decimals || 18)
+  );
+  const destTokenFinalAmount = round(
     (isSwap0 ? amt1 + (amount1 - swap1) : amt0 + (amount0 - swap0)) +
-    destTokenSwapAmount;
+      destTokenSwapAmount,
+    Number(tokenB?.decimals || 18)
+  );
 
   const isNative = (token: TokenType | null) => {
     if (!token) return false;
