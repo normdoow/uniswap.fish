@@ -156,6 +156,15 @@ export const getPoolFromPair = async (
   return pools as Pool[];
 };
 
+export const getCurrentTick = async (poolId: string): Promise<string> => {
+  const { pool } = await _queryUniswap(`{
+    pool(id: "${poolId}") {
+      tick
+    }
+  }`);
+  return pool.tick;
+};
+
 // private helper functions
 const _queryUniswap = async (query: string): Promise<any> => {
   const { data } = await axios({

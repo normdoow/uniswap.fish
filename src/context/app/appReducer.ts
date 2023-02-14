@@ -16,6 +16,7 @@ export enum AppActionType {
   UPDATE_PRICE_RANGE = "UPDATE_PRICE_RANGE",
   UPDATE_DEPOSIT_AMOUNT = "UPDATE_DEPOSIT_AMOUNT",
   UPDATE_PRICE_ASSUMPTION_VALUE = "UPDATE_PRICE_ASSUMPTION_VALUE",
+  UPDATE_POOL_TICK = "UPDATE_POOL_TICK",
 
   SET_FUTURE_PRICE = "SET_FUTURE_PRICE",
   SET_CURRENT_PRICE = "SET_CURRENT_PRICE",
@@ -48,7 +49,8 @@ export type AppAction =
   | { type: AppActionType.TOGGLE_CURRENT_PAIR }
   | { type: AppActionType.UPDATE_PRICE_ASSUMPTION_VALUE; payload: number }
   | { type: AppActionType.UPDATE_PRICE_RANGE; payload: number[] }
-  | { type: AppActionType.UPDATE_DEPOSIT_AMOUNT; payload: number };
+  | { type: AppActionType.UPDATE_DEPOSIT_AMOUNT; payload: number }
+  | { type: AppActionType.UPDATE_POOL_TICK; payload: string };
 
 export const appReducer = (
   state: AppContextState,
@@ -78,6 +80,12 @@ export const appReducer = (
     }
     case AppActionType.RESET_TOKEN_LIST: {
       return { ...state, tokenList: action.payload.tokenList };
+    }
+    case AppActionType.UPDATE_POOL_TICK: {
+      return {
+        ...state,
+        pool: { ...state.pool, tick: action.payload } as Pool,
+      };
     }
     case AppActionType.RESET_PAIR: {
       const {

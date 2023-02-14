@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ReactLoading from "react-loading";
 import Modal from "react-modal";
 import { useModalContext } from "../context/modal/modalContext";
 import styled from "styled-components";
@@ -23,6 +24,8 @@ import {
 import { round } from "../utils/math";
 import { getCurrentNetwork } from "../common/network";
 import { Token as TokenType } from "../common/interfaces/uniswap.interface";
+import { getCurrentTick } from "../repos/uniswap";
+import { AppActionType } from "../context/app/appReducer";
 
 const ModalStyle = {
   overlay: {
@@ -156,6 +159,7 @@ const DepositAmountSection = ({ onSubmit }: DepositAmountSectionProps) => {
   const appContext = useAppContext();
   const [token0Amount, setToken0Amount] = useState<number | null>(null);
   const [token1Amount, setToken1Amount] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const token0USDValue =
     (token0Amount || 0) *
@@ -167,11 +171,26 @@ const DepositAmountSection = ({ onSubmit }: DepositAmountSectionProps) => {
   const isFormDisabled =
     (token0Amount || 0) < 0 ||
     (token1Amount || 0) < 0 ||
-    token0USDValue + token1USDValue === 0;
+    token0USDValue + token1USDValue === 0 ||
+    isLoading;
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isFormDisabled) return;
-    onSubmit(token0Amount || 0, token1Amount || 0);
+
+    setIsLoading(true);
+    const poolId = appContext.state.pool?.id;
+    if (poolId) {
+      const currentTick = await getCurrentTick(poolId);
+      appContext.dispatch({
+        type: AppActionType.UPDATE_POOL_TICK,
+        payload: currentTick,
+      });
+
+      onSubmit(token0Amount || 0, token1Amount || 0);
+    } else {
+      console.error("Error: poolId not found", appContext.state.pool);
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -185,6 +204,7 @@ const DepositAmountSection = ({ onSubmit }: DepositAmountSectionProps) => {
         <div className="amount">
           <input
             type="number"
+            disabled={isLoading}
             placeholder="0"
             onChange={(e) => setToken0Amount(Number(e.target.value))}
           />
@@ -199,6 +219,7 @@ const DepositAmountSection = ({ onSubmit }: DepositAmountSectionProps) => {
         <div className="amount">
           <input
             type="number"
+            disabled={isLoading}
             placeholder="0"
             onChange={(e) => setToken1Amount(Number(e.target.value))}
           />
@@ -223,7 +244,15 @@ const DepositAmountSection = ({ onSubmit }: DepositAmountSectionProps) => {
             : {}
         }
       >
-        Calculate Swap Route
+        {isLoading && (
+          <ReactLoading
+            type="spin"
+            color="rgba(34, 114, 229, 1)"
+            height={18}
+            width={18}
+          />
+        )}
+        {!isLoading && <>Calculate Swap Route</>}
       </PrimaryDarkBlockButton>
     </>
   );
