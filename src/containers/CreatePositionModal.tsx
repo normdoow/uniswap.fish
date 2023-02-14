@@ -611,7 +611,7 @@ const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
                 style={{ opacity: state.isFullRange ? 0.4 : 1 }}
                 className="lower"
                 data-for="price-range"
-                data-place="bottom"
+                data-place="right"
                 data-html={true}
                 data-tip={
                   state.isFullRange
@@ -630,7 +630,7 @@ const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
                 style={{ opacity: state.isFullRange ? 0.4 : 1 }}
                 className="upper"
                 data-for="price-range"
-                data-place="bottom"
+                data-place="left"
                 data-html={true}
                 data-tip={
                   state.isFullRange
@@ -707,11 +707,15 @@ const CreatePositionModal = () => {
                 data-for="create-position"
                 data-place="bottom"
                 data-html={true}
-                data-tip={`This feature will instruct you how to create a position and help you calculate the deposit tokens amount for current price range setting.
-                <br><br>
-                Noted that there is no smart contract risk evolve since you will be the one who creates a new position yourself on the official Uniswap interface. This feature only gives you "Instruction."
-                <br><br>
-                Disclaimer: we will not take any responsibility of your funds, so please ensure that all the information is correct, as you will, before performing any transactions.`}
+                data-tip={`
+                <div style="width: 250px;">
+                  This feature will instruct you how to create a position and help you calculate the deposit tokens amount for current price range setting.
+                  <br><br>
+                  Noted that <b>there is no smart contract risk evolve</b> since you will be the one who creates a new position yourself on the official Uniswap interface. This feature only gives you "Instruction."
+                  <br><br>
+                  Disclaimer: <b>we will not take any responsibility of your funds</b>, so please ensure that all the information is correct, as you will, before performing any transactions.
+                </div>
+                `}
                 icon={faQuestionCircle}
               />
             </span>
