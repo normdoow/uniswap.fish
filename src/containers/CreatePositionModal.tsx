@@ -708,8 +708,10 @@ const CreatePositionModal = () => {
                 data-place="bottom"
                 data-html={true}
                 data-tip={`This feature will instruct you how to create a position and help you calculate the deposit tokens amount for current price range setting.
-                <br>
-                Noted that there is no smart contract risk evolve using this feature since you will be the one who creates a new position yourself on the official Uniswap interface. This feature only gives you "Instruction."`}
+                <br><br>
+                Noted that there is no smart contract risk evolve since you will be the one who creates a new position yourself on the official Uniswap interface. This feature only gives you "Instruction."
+                <br><br>
+                Disclaimer: we will not take any responsibility of your funds, so please ensure that all the information is correct, as you will, before performing any transactions.`}
                 icon={faQuestionCircle}
               />
             </span>
