@@ -1,5 +1,10 @@
 export const ANNOUNCEMENTS = [
   {
+    message: "deposit tokens amount calculator",
+    tweetId: "1625464573452242944",
+    tag: "feature-update",
+  },
+  {
     message: "arbitrum chain integration",
     tweetId: "1622215298727411715",
     tag: "feature-update",
