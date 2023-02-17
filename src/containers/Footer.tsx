@@ -39,7 +39,7 @@ const Footer = () => {
           rel="noreferrer"
           href="https://mirror.xyz/devi731.eth/Dy705L0V2MufftJ-x4zgAhfILw2yE18RY0lNsVN3mEA"
         >
-          Uniswap Foudation
+          Uniswap Foundation
         </a>
         . Crafted with <FontAwesomeIcon icon={faHeart} /> by{" "}
         <a
