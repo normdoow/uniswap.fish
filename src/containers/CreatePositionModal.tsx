@@ -568,7 +568,12 @@ const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
                 </div>
               </Table>
             </div>
-            <a href="https://app.uniswap.org/#/swap" target="_blank">
+            <a
+              href={`https://app.uniswap.org/#/swap?exactField=input&exactAmount=${srcTokenSwapAmount}&inputCurrency=${
+                isNative(tokenA) ? "ETH" : tokenA?.id
+              }&outputCurrency=${isNative(tokenB) ? "ETH" : tokenB?.id}`}
+              target="_blank"
+            >
               Swap on Uniswap V3
             </a>
           </div>
