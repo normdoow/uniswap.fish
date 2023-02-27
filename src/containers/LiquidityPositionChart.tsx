@@ -100,7 +100,7 @@ const LiquidityPositionChart = () => {
       return;
 
     let width = 500;
-    let height = 290;
+    let height = 294;
     if (refElement.current) {
       width = refElement.current.offsetWidth;
     }
