@@ -1,13 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import {
-  Br,
-  Heading,
-  PrimaryDarkBlockButton,
-} from "../common/components/atomic";
+import { Heading } from "../common/components/atomic";
 import { useModalContext } from "../context/modal/modalContext";
 import { ModalActionType } from "../context/modal/modalReducer";
 import { ScreenWidth } from "../utils/styled";
+import { Badge, ConfigProvider, Space, Table, Tag, theme } from "antd";
+import type { ColumnsType } from "antd/es/table";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -43,6 +41,91 @@ const Total = styled.div`
   }
 `;
 
+interface PositionColumnDataType {
+  key: string;
+  name: string;
+  age: number;
+  address: string;
+  tags: string[];
+}
+const columns: ColumnsType<PositionColumnDataType> = [
+  {
+    title: "Name",
+    dataIndex: "name",
+    key: "name",
+    render: (text) => (
+      <a>
+        <Badge status="success" text={text} />
+      </a>
+    ),
+    fixed: "left",
+  },
+  {
+    title: "Age",
+    dataIndex: "age",
+    key: "age",
+  },
+  {
+    title: "Address",
+    dataIndex: "address",
+    key: "address",
+  },
+  {
+    title: "Tags",
+    key: "tags",
+    dataIndex: "tags",
+    render: (_, { tags }) => (
+      <>
+        {tags.map((tag) => {
+          let color = tag.length > 5 ? "geekblue" : "green";
+          if (tag === "loser") {
+            color = "volcano";
+          }
+          return (
+            <Tag color={color} key={tag}>
+              {tag.toUpperCase()}
+            </Tag>
+          );
+        })}
+      </>
+    ),
+  },
+  {
+    title: "Action",
+    key: "action",
+    render: (_, record) => (
+      <Space size="middle">
+        <a>Invite {record.name}</a>
+        <a>Delete</a>
+      </Space>
+    ),
+  },
+];
+
+const data: PositionColumnDataType[] = [
+  {
+    key: "1",
+    name: "John Brown",
+    age: 32,
+    address: "New York No. 1 Lake Park",
+    tags: ["nice", "developer"],
+  },
+  {
+    key: "2",
+    name: "Jim Green",
+    age: 42,
+    address: "London No. 1 Lake Park",
+    tags: ["loser"],
+  },
+  {
+    key: "3",
+    name: "Joe Black",
+    age: 32,
+    address: "Sydney No. 1 Lake Park",
+    tags: ["cool", "teacher"],
+  },
+];
+
 const TopPosition = () => {
   const modalContext = useModalContext();
 
@@ -52,7 +135,20 @@ const TopPosition = () => {
         <Heading>Top Positions</Heading>
         <Total>Total: 1250 positions</Total>
       </WrappedHeader>
-      <PrimaryDarkBlockButton
+
+      <ConfigProvider
+        theme={{
+          algorithm: theme.darkAlgorithm,
+          token: {
+            borderRadius: 6,
+            colorBgBase: "#0d0d0d",
+          },
+        }}
+      >
+        <Table columns={columns} dataSource={data} scroll={{ x: 100 }} />
+      </ConfigProvider>
+
+      {/* <PrimaryDarkBlockButton
         onClick={() => {
           modalContext.dispatch({
             type: ModalActionType.SET_CREATE_POSITION_MODAL_STATE,
@@ -60,8 +156,8 @@ const TopPosition = () => {
           });
         }}
       >
-        Calculate Top Positions
-      </PrimaryDarkBlockButton>
+        Create Position
+      </PrimaryDarkBlockButton> */}
     </Container>
   );
 };
