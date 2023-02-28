@@ -41,18 +41,28 @@ const Total = styled.div`
   }
 `;
 
+enum PositionStrategy {
+  LONG = "LONG",
+  SHORT = "SHORT",
+}
 interface PositionColumnDataType {
   key: string;
-  name: string;
-  age: number;
-  address: string;
-  tags: string[];
+  positionId: string;
+  strategy: PositionStrategy;
+  roi: number;
+  pnl: number;
+  liquidity: number;
+  priceRange: {
+    lower: number;
+    upper: number;
+  };
+  timestamp: number;
 }
 const columns: ColumnsType<PositionColumnDataType> = [
   {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
+    title: "ID",
+    dataIndex: "positionId",
+    key: "positionId",
     render: (text) => (
       <a>
         <Badge status="success" text={text} />
@@ -61,42 +71,41 @@ const columns: ColumnsType<PositionColumnDataType> = [
     fixed: "left",
   },
   {
+    title: "Strategy",
+    dataIndex: "strategy",
+    key: "strategy",
+  },
+  {
+    title: "ROI",
+    dataIndex: "roi",
+    key: "roi",
+  },
+  {
+    title: "PnL",
+    dataIndex: "pnl",
+    key: "pnl",
+  },
+  {
+    title: "Liquidity",
+    dataIndex: "liquidity",
+    key: "liquidity",
+  },
+  {
+    title: "Price Range",
+    dataIndex: "priceRange",
+    key: "priceRange",
+  },
+  {
     title: "Age",
-    dataIndex: "age",
-    key: "age",
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-  },
-  {
-    title: "Tags",
-    key: "tags",
-    dataIndex: "tags",
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? "geekblue" : "green";
-          if (tag === "loser") {
-            color = "volcano";
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
+    dataIndex: "timestamp",
+    key: "timestamp",
   },
   {
     title: "Action",
     key: "action",
     render: (_, record) => (
       <Space size="middle">
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
+        <a>Apply</a>
       </Space>
     ),
   },
@@ -105,24 +114,16 @@ const columns: ColumnsType<PositionColumnDataType> = [
 const data: PositionColumnDataType[] = [
   {
     key: "1",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-    tags: ["nice", "developer"],
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: ["loser"],
-  },
-  {
-    key: "3",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
+    positionId: "123456789",
+    strategy: PositionStrategy.LONG,
+    roi: 0.123,
+    pnl: 123.456,
+    liquidity: 123456,
+    priceRange: {
+      lower: 123,
+      upper: 456,
+    },
+    timestamp: 123456789,
   },
 ];
 
@@ -145,7 +146,12 @@ const TopPosition = () => {
           },
         }}
       >
-        <Table columns={columns} dataSource={data} scroll={{ x: 100 }} />
+        <Table
+          columns={columns}
+          dataSource={data}
+          scroll={{ x: 100 }}
+          size="middle"
+        />
       </ConfigProvider>
 
       {/* <PrimaryDarkBlockButton
