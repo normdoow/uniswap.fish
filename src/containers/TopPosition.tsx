@@ -6,6 +6,8 @@ import { ModalActionType } from "../context/modal/modalReducer";
 import { ScreenWidth } from "../utils/styled";
 import { Badge, ConfigProvider, Space, Table, Tag, theme } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -63,20 +65,36 @@ const columns: ColumnsType<PositionColumnDataType> = [
     title: "ID",
     dataIndex: "positionId",
     key: "positionId",
-    render: (text) => (
-      <a>
-        <Badge status="success" text={text} />
+    render: (positionId) => (
+      <a
+        href={`https://app.uniswap.org/#/pool/${positionId}`}
+        target="_blank"
+        style={{
+          fontWeight: 600,
+        }}
+      >
+        <Badge
+          status={Math.random() > 0.5 ? "success" : "default"}
+          text={positionId}
+        />
+        <div
+          style={{
+            display: "inline-block",
+            color: "#999",
+            fontSize: "0.6rem",
+            position: "relative",
+            top: -3,
+            marginLeft: 3,
+          }}
+        >
+          <FontAwesomeIcon icon={faExternalLinkAlt} />
+        </div>
       </a>
     ),
     fixed: "left",
   },
   {
-    title: "Strategy",
-    dataIndex: "strategy",
-    key: "strategy",
-  },
-  {
-    title: "ROI",
+    title: "Fee ROI",
     dataIndex: "roi",
     key: "roi",
   },
@@ -89,6 +107,11 @@ const columns: ColumnsType<PositionColumnDataType> = [
     title: "Liquidity",
     dataIndex: "liquidity",
     key: "liquidity",
+  },
+  {
+    title: "Strategy",
+    dataIndex: "strategy",
+    key: "strategy",
   },
   {
     title: "Price Range",
@@ -111,21 +134,35 @@ const columns: ColumnsType<PositionColumnDataType> = [
   },
 ];
 
-const data: PositionColumnDataType[] = [
-  {
-    key: "1",
-    positionId: "123456789",
-    strategy: PositionStrategy.LONG,
-    roi: 0.123,
-    pnl: 123.456,
-    liquidity: 123456,
-    priceRange: {
-      lower: 123,
-      upper: 456,
-    },
-    timestamp: 123456789,
-  },
-];
+// generate mock data of PositionColumnDataType
+const randomNumber = (digit: number) => {
+  let result = "";
+  for (let i = 0; i < digit; i++) {
+    result += Math.floor(Math.random() * 10);
+  }
+  return result;
+};
+const generateMockData = (count: number): PositionColumnDataType[] => {
+  const result: PositionColumnDataType[] = [];
+  for (let i = 0; i < count; i++) {
+    result.push({
+      key: i.toString(),
+      positionId: `${randomNumber(5)}`,
+      strategy:
+        Math.random() > 0.5 ? PositionStrategy.LONG : PositionStrategy.SHORT,
+      roi: Math.random() * 100,
+      pnl: Math.random() * 100,
+      liquidity: Math.round(Math.random() * 100000),
+      priceRange: {
+        lower: Math.random() * 1000,
+        upper: Math.random() * 1000 + 200,
+      },
+      timestamp: Math.floor(Math.random() * 1000000000),
+    });
+  }
+  return result;
+};
+const data: PositionColumnDataType[] = generateMockData(100);
 
 const TopPosition = () => {
   const modalContext = useModalContext();
