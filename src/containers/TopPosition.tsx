@@ -102,6 +102,7 @@ enum PositionStrategy {
 interface PositionColumnDataType {
   key: string;
   positionId: string;
+  isActive: boolean;
   strategy: PositionStrategy;
   roi: number;
   apr: number;
@@ -119,7 +120,7 @@ const columns: ColumnsType<PositionColumnDataType> = [
     dataIndex: "positionId",
     key: "positionId",
     width: 100,
-    render: (positionId) => (
+    render: (positionId, record) => (
       <a
         href={`https://app.uniswap.org/#/pool/${positionId}`}
         target="_blank"
@@ -128,7 +129,7 @@ const columns: ColumnsType<PositionColumnDataType> = [
         }}
       >
         <Badge
-          status={Math.random() > 0.5 ? "success" : "default"}
+          status={record.isActive ? "success" : "default"}
           text={positionId}
         />
         <div
@@ -292,6 +293,7 @@ const generateMockData = (count: number): PositionColumnDataType[] => {
     result.push({
       key: i.toString(),
       positionId: `${randomNumber(5)}`,
+      isActive: Math.random() > 0.5,
       strategy:
         Math.random() > 0.33
           ? PositionStrategy.LONG
