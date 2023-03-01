@@ -115,6 +115,16 @@ const columns: ColumnsType<PositionColumnDataType> = [
     title: "Strategy",
     dataIndex: "strategy",
     key: "strategy",
+    render: (strategy) => (
+      <div
+        style={{
+          fontWeight: 600,
+          fontStyle: "italic",
+        }}
+      >
+        {strategy}
+      </div>
+    ),
   },
   {
     title: "Price Range",
@@ -164,7 +174,11 @@ const generateMockData = (count: number): PositionColumnDataType[] => {
       key: i.toString(),
       positionId: `${randomNumber(5)}`,
       strategy:
-        Math.random() > 0.5 ? PositionStrategy.LONG : PositionStrategy.SHORT,
+        Math.random() > 0.33
+          ? PositionStrategy.LONG
+          : Math.random() > 0.5
+          ? PositionStrategy.SHORT
+          : PositionStrategy.MIDDLE,
       roi: Math.random() * 100,
       pnl: Math.random() * 100,
       liquidity: Math.round(Math.random() * 100000),
