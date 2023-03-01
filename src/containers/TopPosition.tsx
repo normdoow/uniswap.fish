@@ -104,6 +104,7 @@ interface PositionColumnDataType {
   positionId: string;
   strategy: PositionStrategy;
   roi: number;
+  apr: number;
   pnl: number;
   liquidity: number;
   priceRange: {
@@ -150,6 +151,11 @@ const columns: ColumnsType<PositionColumnDataType> = [
     title: "Fee ROI",
     dataIndex: "roi",
     key: "roi",
+  },
+  {
+    title: "Fee APR",
+    dataIndex: "apr",
+    key: "apr",
   },
   {
     title: "PnL",
@@ -292,6 +298,7 @@ const generateMockData = (count: number): PositionColumnDataType[] => {
           : Math.random() > 0.5
           ? PositionStrategy.SHORT
           : PositionStrategy.MIDDLE,
+      apr: Math.random() * 100,
       roi: Math.random() * 100,
       pnl: Math.random() * 100,
       liquidity: Math.round(Math.random() * 100000),
@@ -329,7 +336,7 @@ const TopPosition = () => {
         <Table
           columns={columns}
           dataSource={data}
-          scroll={{ x: 1500 }}
+          scroll={{ x: 1400 }}
           size="middle"
         />
       </ConfigProvider>
