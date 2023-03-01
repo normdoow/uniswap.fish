@@ -44,6 +44,55 @@ const Total = styled.div`
     display: none;
   }
 `;
+const PriceRange = styled.div`
+  position: relative;
+  height: 35px;
+  margin-bottom: 8px;
+
+  & > .bar {
+    width: 100%;
+    height: 3px;
+    border-radius: 5rem;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(12.5px);
+  }
+  & > .lower,
+  .upper,
+  .price {
+    position: absolute;
+    width: 5px;
+    height: 22px;
+    cursor: zoom-in;
+    border-top-left-radius: 5rem;
+    border-top-right-radius: 5rem;
+    border-bottom-left-radius: 5rem;
+    border-bottom-right-radius: 5rem;
+  }
+
+  & > .lower {
+    left: 10px;
+    transform: translateX(50%);
+    background: #25af60;
+  }
+  & > .price {
+    left: 50%;
+    background: #f70377;
+    transform: translateX(-50%);
+  }
+  & > .upper {
+    right: 10px;
+    transform: translateX(-50%);
+    background: #25af60;
+  }
+
+  & > .info {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    font-size: 0.675rem;
+    color: #999;
+  }
+`;
 
 enum PositionStrategy {
   LONG = "LONG",
@@ -68,6 +117,7 @@ const columns: ColumnsType<PositionColumnDataType> = [
     title: "ID",
     dataIndex: "positionId",
     key: "positionId",
+    width: 100,
     render: (positionId) => (
       <a
         href={`https://app.uniswap.org/#/pool/${positionId}`}
@@ -115,6 +165,7 @@ const columns: ColumnsType<PositionColumnDataType> = [
     title: "Strategy",
     dataIndex: "strategy",
     key: "strategy",
+    width: 100,
     render: (strategy) => (
       <div
         style={{
@@ -130,11 +181,71 @@ const columns: ColumnsType<PositionColumnDataType> = [
     title: "Price Range",
     dataIndex: "priceRange",
     key: "priceRange",
+    width: 250,
+    render: (strategy) => (
+      <div>
+        <PriceRange>
+          <div className="bar"></div>
+          <div
+            style={{ opacity: true ? 0.4 : 1 }}
+            className="lower"
+            data-for="price-range"
+            data-place="right"
+            data-html={true}
+            // data-tip={
+            //   state.isFullRange
+            //     ? `Lower Price: 0`
+            //     : `Lower Price<br>${round(Pl, 6)} ${state.token0?.symbol}/${
+            //         state.token1?.symbol
+            //       }<br><br>(Click to copy to clipboard)`
+            // }
+            // onClick={() =>
+            //   state.isFullRange
+            //     ? ""
+            //     : navigator.clipboard.writeText(`${Pl}`)
+            // }
+          ></div>
+          <div
+            style={{ opacity: true ? 0.4 : 1 }}
+            className="upper"
+            data-for="price-range"
+            data-place="left"
+            data-html={true}
+            // data-tip={
+            //   state.isFullRange
+            //     ? `Upper Price: ∞`
+            //     : `Upper Price<br>${round(Pu, 6)} ${state.token0?.symbol}/${
+            //         state.token1?.symbol
+            //       }<br><br>(Click to copy to clipboard)`
+            // }
+            // onClick={() =>
+            //   state.isFullRange
+            //     ? ""
+            //     : navigator.clipboard.writeText(`${Pu}`)
+            // }
+          ></div>
+
+          <div
+            className="price"
+            data-for="price-range"
+            data-place="bottom"
+            data-html={true}
+            // data-tip={`Current Price<br>${round(P, 6)} ${
+            //   state.token0?.symbol
+            // }/${state.token1?.symbol}<br><br>(Click to copy to clipboard)`}
+            // onClick={() => navigator.clipboard.writeText(`${P}`)}
+          ></div>
+
+          <div className="info">Out of Range</div>
+        </PriceRange>
+      </div>
+    ),
   },
   {
     title: "Age",
     dataIndex: "createdAt",
     key: "createdAt",
+    width: 80,
     render: (createdAt) => (
       <div
         data-for="top-position"
@@ -153,6 +264,8 @@ const columns: ColumnsType<PositionColumnDataType> = [
   {
     title: "Action",
     key: "action",
+    fixed: "right",
+    width: 100,
     render: (_, record) => (
       <Button style={{ fontSize: "0.875rem" }}>Apply</Button>
     ),
@@ -216,7 +329,7 @@ const TopPosition = () => {
         <Table
           columns={columns}
           dataSource={data}
-          scroll={{ x: 100 }}
+          scroll={{ x: 1500 }}
           size="middle"
         />
       </ConfigProvider>
