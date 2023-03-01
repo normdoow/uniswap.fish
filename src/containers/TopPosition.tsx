@@ -8,6 +8,8 @@ import { Badge, ConfigProvider, Space, Table, Tag, theme } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
+import { getAge, getReadableDateTime } from "../utils/datetime";
+import ReactTooltip from "react-tooltip";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -45,6 +47,7 @@ const Total = styled.div`
 
 enum PositionStrategy {
   LONG = "LONG",
+  MIDDLE = "MIDDLE",
   SHORT = "SHORT",
 }
 interface PositionColumnDataType {
@@ -122,6 +125,20 @@ const columns: ColumnsType<PositionColumnDataType> = [
     title: "Age",
     dataIndex: "timestamp",
     key: "timestamp",
+    render: (timestamp) => (
+      <div
+        data-for="top-position"
+        data-place="right"
+        data-html={true}
+        data-tip={`${getReadableDateTime(
+          timestamp
+        )}<br><br>(Click to copy timestamp)`}
+        onClick={() => navigator.clipboard.writeText(`${timestamp}`)}
+        style={{ cursor: "pointer" }}
+      >
+        {getAge(timestamp)}
+      </div>
+    ),
   },
   {
     title: "Action",
@@ -169,6 +186,7 @@ const TopPosition = () => {
 
   return (
     <Container>
+      <ReactTooltip id="top-position" />
       <WrappedHeader>
         <Heading>Top Positions</Heading>
         <Total>Total: 1250 positions</Total>
@@ -190,17 +208,6 @@ const TopPosition = () => {
           size="middle"
         />
       </ConfigProvider>
-
-      {/* <PrimaryDarkBlockButton
-        onClick={() => {
-          modalContext.dispatch({
-            type: ModalActionType.SET_CREATE_POSITION_MODAL_STATE,
-            payload: true,
-          });
-        }}
-      >
-        Create Position
-      </PrimaryDarkBlockButton> */}
     </Container>
   );
 };
