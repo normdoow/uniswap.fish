@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Heading } from "../common/components/atomic";
+import { Button, Heading } from "../common/components/atomic";
 import { useModalContext } from "../context/modal/modalContext";
 import { ModalActionType } from "../context/modal/modalReducer";
 import { ScreenWidth } from "../utils/styled";
@@ -61,7 +61,7 @@ interface PositionColumnDataType {
     lower: number;
     upper: number;
   };
-  timestamp: number;
+  createdAt: number;
 }
 const columns: ColumnsType<PositionColumnDataType> = [
   {
@@ -123,20 +123,20 @@ const columns: ColumnsType<PositionColumnDataType> = [
   },
   {
     title: "Age",
-    dataIndex: "timestamp",
-    key: "timestamp",
-    render: (timestamp) => (
+    dataIndex: "createdAt",
+    key: "createdAt",
+    render: (createdAt) => (
       <div
         data-for="top-position"
         data-place="right"
         data-html={true}
         data-tip={`${getReadableDateTime(
-          timestamp
-        )}<br><br>(Click to copy timestamp)`}
-        onClick={() => navigator.clipboard.writeText(`${timestamp}`)}
+          createdAt
+        )}<br><br>(click to copy timestamp)`}
+        onClick={() => navigator.clipboard.writeText(`${createdAt}`)}
         style={{ cursor: "pointer" }}
       >
-        {getAge(timestamp)}
+        {getAge(createdAt)}
       </div>
     ),
   },
@@ -144,9 +144,7 @@ const columns: ColumnsType<PositionColumnDataType> = [
     title: "Action",
     key: "action",
     render: (_, record) => (
-      <Space size="middle">
-        <a>Apply</a>
-      </Space>
+      <Button style={{ fontSize: "0.875rem" }}>Apply</Button>
     ),
   },
 ];
@@ -174,7 +172,7 @@ const generateMockData = (count: number): PositionColumnDataType[] => {
         lower: Math.random() * 1000,
         upper: Math.random() * 1000 + 200,
       },
-      timestamp: Math.floor(Math.random() * 1000000000),
+      createdAt: Math.floor(Math.random() * 1000000000),
     });
   }
   return result;
