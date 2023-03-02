@@ -210,60 +210,72 @@ const TopPosition = () => {
       dataIndex: "priceRange",
       key: "priceRange",
       width: 250,
-      render: (priceRange) => (
-        <div>
-          <PriceRange>
-            <div className="bar"></div>
-            <div
-              style={{ opacity: 1 }}
-              className="lower"
-              data-for="top-position_price_range"
-              data-place="right"
-              data-html={true}
-              data-tip={`Lower Price<br>${round(priceRange.lower, 6)} ${
-                appContext.state.token0?.symbol
-              }/${
-                appContext.state.token1?.symbol
-              }<br><br>(click to copy to clipboard)`}
-              onClick={() =>
-                navigator.clipboard.writeText(`${priceRange.lower}`)
-              }
-            ></div>
-            <div
-              style={{ opacity: 1 }}
-              className="upper"
-              data-for="top-position_price_range"
-              data-place="right"
-              data-html={true}
-              data-tip={`Upper Price<br>${round(priceRange.upper, 6)} ${
-                appContext.state.token0?.symbol
-              }/${
-                appContext.state.token1?.symbol
-              }<br><br>(click to copy to clipboard)`}
-              onClick={() =>
-                navigator.clipboard.writeText(`${priceRange.upper}`)
-              }
-            ></div>
+      render: (priceRange, record) => {
+        const isActive = record.isActive;
 
-            <div
-              className="price"
-              data-for="top-position_price_range"
-              data-place="right"
-              data-html={true}
-              data-tip={`Current Price<br>${round(priceRange.current, 6)} ${
-                appContext.state.token0?.symbol
-              }/${
-                appContext.state.token1?.symbol
-              }<br><br>(click to copy to clipboard)`}
-              onClick={() =>
-                navigator.clipboard.writeText(`${priceRange.current}`)
-              }
-            ></div>
+        return (
+          <div>
+            <PriceRange>
+              <div className="bar"></div>
+              <div
+                style={{
+                  opacity: isActive ? 1 : 0.6,
+                  ...(!isActive ? { left: "20%" } : {}),
+                }}
+                className="lower"
+                data-for="top-position_price_range"
+                data-place="right"
+                data-html={true}
+                data-tip={`Lower Price<br>${round(priceRange.lower, 6)} ${
+                  appContext.state.token0?.symbol
+                }/${
+                  appContext.state.token1?.symbol
+                }<br><br>(click to copy to clipboard)`}
+                onClick={() =>
+                  navigator.clipboard.writeText(`${priceRange.lower}`)
+                }
+              ></div>
+              <div
+                style={{
+                  opacity: isActive ? 1 : 0.6,
+                  ...(!isActive ? { right: "20%" } : {}),
+                }}
+                className="upper"
+                data-for="top-position_price_range"
+                data-place="right"
+                data-html={true}
+                data-tip={`Upper Price<br>${round(priceRange.upper, 6)} ${
+                  appContext.state.token0?.symbol
+                }/${
+                  appContext.state.token1?.symbol
+                }<br><br>(click to copy to clipboard)`}
+                onClick={() =>
+                  navigator.clipboard.writeText(`${priceRange.upper}`)
+                }
+              ></div>
 
-            <div className="info">Hover to see price range info</div>
-          </PriceRange>
-        </div>
-      ),
+              {isActive && (
+                <div
+                  className="price"
+                  data-for="top-position_price_range"
+                  data-place="right"
+                  data-html={true}
+                  data-tip={`Current Price<br>${round(priceRange.current, 6)} ${
+                    appContext.state.token0?.symbol
+                  }/${
+                    appContext.state.token1?.symbol
+                  }<br><br>(click to copy to clipboard)`}
+                  onClick={() =>
+                    navigator.clipboard.writeText(`${priceRange.current}`)
+                  }
+                ></div>
+              )}
+
+              <div className="info">Hover to see price range info</div>
+            </PriceRange>
+          </div>
+        );
+      },
     },
     {
       title: "Age",
