@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Button, Heading } from "../common/components/atomic";
 import { useModalContext } from "../context/modal/modalContext";
-import { ModalActionType } from "../context/modal/modalReducer";
 import { ScreenWidth } from "../utils/styled";
-import { Badge, ConfigProvider, Space, Table, Tag, theme } from "antd";
+import { Badge, ConfigProvider, message, Table, theme } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
@@ -16,6 +15,7 @@ import { Position } from "../common/interfaces/uniswap.interface";
 import { getPriceFromTick } from "../utils/uniswapv3/math";
 import { round } from "../utils/math";
 import { formatNumberToUSD } from "../utils/format";
+import { AppActionType } from "../context/app/appReducer";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -127,6 +127,7 @@ const TopPosition = () => {
   const appContext = useAppContext();
   const [positions, setPositions] = useState<PositionColumnDataType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [messageApi, contextHolder] = message.useMessage();
 
   const columns: ColumnsType<PositionColumnDataType> = [
     {
@@ -310,7 +311,21 @@ const TopPosition = () => {
       fixed: "right",
       width: 100,
       render: (_, record) => (
-        <Button style={{ fontSize: "0.875rem" }}>Apply</Button>
+        <Button
+          style={{ fontSize: "0.875rem" }}
+          onClick={() => {
+            appContext.dispatch({
+              type: AppActionType.UPDATE_PRICE_RANGE,
+              payload: [record.priceRange.lower, record.priceRange.upper],
+            });
+            messageApi.open({
+              type: "success",
+              content: `Price range setting has been updated`,
+            });
+          }}
+        >
+          Apply
+        </Button>
       ),
     },
   ];
@@ -411,6 +426,7 @@ const TopPosition = () => {
         <Total>Total: {positions.length} positions</Total>
       </WrappedHeader>
 
+      {contextHolder}
       {positions.length > 0 && <ReactTooltip id="top-position" />}
       {positions.length > 0 && <ReactTooltip id="top-position_price_range" />}
 
