@@ -208,7 +208,7 @@ const columns: ColumnsType<PositionColumnDataType> = [
           <div
             style={{ opacity: true ? 0.4 : 1 }}
             className="lower"
-            data-for="price-range"
+            data-for="top-position"
             data-place="right"
             data-html={true}
             // data-tip={
@@ -227,7 +227,7 @@ const columns: ColumnsType<PositionColumnDataType> = [
           <div
             style={{ opacity: true ? 0.4 : 1 }}
             className="upper"
-            data-for="price-range"
+            data-for="top-position"
             data-place="left"
             data-html={true}
             // data-tip={
@@ -246,7 +246,7 @@ const columns: ColumnsType<PositionColumnDataType> = [
 
           <div
             className="price"
-            data-for="price-range"
+            data-for="top-position"
             data-place="bottom"
             data-html={true}
             // data-tip={`Current Price<br>${round(P, 6)} ${
@@ -295,9 +295,11 @@ const TopPosition = () => {
   const modalContext = useModalContext();
   const appContext = useAppContext();
   const [positions, setPositions] = useState<PositionColumnDataType[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchTopPosition = async () => {
     if (!appContext.state.pool) return;
+    setIsLoading(true);
 
     const {
       pool,
@@ -368,11 +370,12 @@ const TopPosition = () => {
 
     console.log("debug", { topPositions });
     setPositions(topPositions);
+    setIsLoading(false);
   };
 
   useEffect(() => {
     fetchTopPosition();
-  }, []);
+  }, [appContext.state.pool]);
 
   return (
     <Container>
@@ -396,6 +399,7 @@ const TopPosition = () => {
           dataSource={positions}
           scroll={{ x: 1400 }}
           size="middle"
+          loading={isLoading}
         />
       </ConfigProvider>
     </Container>

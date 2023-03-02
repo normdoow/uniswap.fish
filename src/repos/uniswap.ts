@@ -180,6 +180,12 @@ const _queryUniswap = async (query: string): Promise<any> => {
     },
   });
 
+  const errors = data.errors;
+  if (errors && errors.length > 0) {
+    console.error("Uniswap Subgraph Errors, Retrying...", { errors, query });
+    return await _queryUniswap(query);
+  }
+
   return data.data;
 };
 
