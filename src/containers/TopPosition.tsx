@@ -361,7 +361,7 @@ const TopPosition = () => {
             lower: 0,
             upper: 0,
           },
-          createdAt: Number(p.transaction.timestamp),
+          createdAt: Number(p.transaction.timestamp) * 1000,
         } as PositionColumnDataType;
       }
     );
