@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Button, Heading } from "../common/components/atomic";
 import { useModalContext } from "../context/modal/modalContext";
@@ -10,6 +10,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { getAge, getReadableDateTime } from "../utils/datetime";
 import ReactTooltip from "react-tooltip";
+import { getPoolPositions } from "../repos/uniswap";
+import { useAppContext } from "../context/app/appContext";
+import { Position } from "../common/interfaces/uniswap.interface";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -279,51 +282,60 @@ const columns: ColumnsType<PositionColumnDataType> = [
   },
 ];
 
-// generate mock data of PositionColumnDataType
-const randomNumber = (digit: number) => {
-  let result = "";
-  for (let i = 0; i < digit; i++) {
-    result += Math.floor(Math.random() * 10);
-  }
-  return result;
-};
-const generateMockData = (count: number): PositionColumnDataType[] => {
-  const result: PositionColumnDataType[] = [];
-  for (let i = 0; i < count; i++) {
-    result.push({
-      key: i.toString(),
-      positionId: `${randomNumber(5)}`,
-      isActive: Math.random() > 0.5,
-      strategy:
-        Math.random() > 0.33
-          ? PositionStrategy.LONG
-          : Math.random() > 0.5
-          ? PositionStrategy.SHORT
-          : PositionStrategy.MIDDLE,
-      apr: Math.random() * 100,
-      roi: Math.random() * 100,
-      pnl: Math.random() * 100,
-      liquidity: Math.round(Math.random() * 100000),
-      priceRange: {
-        lower: Math.random() * 1000,
-        upper: Math.random() * 1000 + 200,
-      },
-      createdAt: Math.floor(Math.random() * 1000000000),
-    });
-  }
-  return result;
-};
-const data: PositionColumnDataType[] = generateMockData(100);
-
 const TopPosition = () => {
   const modalContext = useModalContext();
+  const appContext = useAppContext();
+  const [positions, setPositions] = useState<PositionColumnDataType[]>([]);
+
+  const fetchTopPosition = async () => {
+    if (!appContext.state.pool) return;
+
+    const { pool, token0PriceChart, token1PriceChart } = appContext.state;
+    const token0Price = token0PriceChart?.currentPriceUSD || 0;
+    const token1Price = token1PriceChart?.currentPriceUSD || 0;
+
+    const allPositions = await getPoolPositions(pool.id);
+    const validPositions = allPositions.filter(
+      (p: Position) =>
+        Number(p.depositedToken0) * token0Price +
+          Number(p.depositedToken1) * token1Price >=
+        500
+    );
+
+    const topPositions: PositionColumnDataType[] = validPositions.map(
+      (p: Position) => {
+        return {
+          key: p.id,
+          positionId: p.id,
+          isActive: true,
+          strategy: PositionStrategy.LONG,
+          apr: 0,
+          roi: 0,
+          pnl: 0,
+          liquidity: 0,
+          priceRange: {
+            lower: 0,
+            upper: 0,
+          },
+          createdAt: Number(p.transaction.timestamp),
+        } as PositionColumnDataType;
+      }
+    );
+
+    console.log("debug", { topPositions });
+    setPositions(topPositions);
+  };
+
+  useEffect(() => {
+    fetchTopPosition();
+  }, []);
 
   return (
     <Container>
       <ReactTooltip id="top-position" />
       <WrappedHeader>
         <Heading>Top Positions</Heading>
-        <Total>Total: 1250 positions</Total>
+        <Total>Total: {positions.length} positions</Total>
       </WrappedHeader>
 
       <ConfigProvider
@@ -337,7 +349,7 @@ const TopPosition = () => {
       >
         <Table
           columns={columns}
-          dataSource={data}
+          dataSource={positions}
           scroll={{ x: 1400 }}
           size="middle"
         />

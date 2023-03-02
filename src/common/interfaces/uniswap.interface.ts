@@ -33,3 +33,19 @@ export interface Pool {
   token0Price: string;
   token1Price: string;
 }
+
+export interface Position {
+  id: string;
+  tickLower: {
+    tickIdx: string;
+  };
+  tickUpper: {
+    tickIdx: string;
+  };
+  depositedToken0: string;
+  depositedToken1: string;
+  liquidity: string;
+  transaction: {
+    timestamp: string;
+  };
+}

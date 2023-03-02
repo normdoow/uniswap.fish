@@ -2,7 +2,12 @@ import axios from "axios";
 import { getCurrentNetwork } from "../common/network";
 import { getTokenLogoURL, sortTokens } from "../utils/uniswapv3/helper";
 import lscache from "../utils/lscache";
-import { Pool, Tick, Token } from "../common/interfaces/uniswap.interface";
+import {
+  Pool,
+  Position,
+  Tick,
+  Token,
+} from "../common/interfaces/uniswap.interface";
 import { averageArray } from "../utils/math";
 
 export const getAvgTradingVolume = async (
@@ -176,4 +181,49 @@ const _queryUniswap = async (query: string): Promise<any> => {
   });
 
   return data.data;
+};
+
+const _getPoolPositionsByPage = async (
+  poolAddress: string,
+  page: number
+): Promise<Position[]> => {
+  const res = await _queryUniswap(`{
+    positions(where: {
+      pool: "${poolAddress}",
+      liquidity_gt: 0,
+    }, first: 1000, skip: ${page * 1000}) {
+      id
+      tickLower {tickIdx}
+      tickUpper {tickIdx}
+      depositedToken0
+      depositedToken1
+      liquidity
+      transaction {
+        timestamp
+      }
+    }
+  }`);
+
+  return res.positions;
+};
+export const getPoolPositions = async (
+  poolAddress: string
+): Promise<Position[]> => {
+  const PAGE_SIZE = 3;
+  let result: Position[] = [];
+  let page = 0;
+  while (true) {
+    const [p1, p2, p3] = await Promise.all([
+      _getPoolPositionsByPage(poolAddress, page),
+      _getPoolPositionsByPage(poolAddress, page + 1),
+      _getPoolPositionsByPage(poolAddress, page + 2),
+    ]);
+
+    result = [...result, ...p1, ...p2, ...p3];
+    if (p1.length === 0 || p2.length === 0 || p3.length === 0) {
+      break;
+    }
+    page += PAGE_SIZE;
+  }
+  return result;
 };
