@@ -13,6 +13,7 @@ import ReactTooltip from "react-tooltip";
 import { getPoolPositions } from "../repos/uniswap";
 import { useAppContext } from "../context/app/appContext";
 import { Position } from "../common/interfaces/uniswap.interface";
+import { getPriceFromTick } from "../utils/uniswapv3/math";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -123,6 +124,15 @@ const columns: ColumnsType<PositionColumnDataType> = [
     dataIndex: "positionId",
     key: "positionId",
     width: 100,
+    fixed: "left",
+    filters: [
+      {
+        text: "Active Position",
+        value: "isActive",
+      },
+    ],
+    onFilter: (_, record) => record.isActive,
+    sorter: (a, b) => Number(a.positionId) - Number(b.positionId),
     render: (positionId, record) => (
       <a
         href={`https://app.uniswap.org/#/pool/${positionId}`}
@@ -149,7 +159,6 @@ const columns: ColumnsType<PositionColumnDataType> = [
         </div>
       </a>
     ),
-    fixed: "left",
   },
   {
     title: "Fee ROI",
@@ -290,7 +299,14 @@ const TopPosition = () => {
   const fetchTopPosition = async () => {
     if (!appContext.state.pool) return;
 
-    const { pool, token0PriceChart, token1PriceChart } = appContext.state;
+    const {
+      pool,
+      token0PriceChart,
+      token1PriceChart,
+      token0,
+      token1,
+      isPairToggled,
+    } = appContext.state;
     const token0Price = token0PriceChart?.currentPriceUSD || 0;
     const token1Price = token1PriceChart?.currentPriceUSD || 0;
 
@@ -304,10 +320,38 @@ const TopPosition = () => {
 
     const topPositions: PositionColumnDataType[] = validPositions.map(
       (p: Position) => {
+        // let lowerPrice = getPriceFromTick(
+        //   Number(p.tickLower.tickIdx),
+        //   token0?.decimals || "18",
+        //   token1?.decimals || "18"
+        // );
+        // let upperPrice = getPriceFromTick(
+        //   Number(p.tickUpper.tickIdx),
+        //   token0?.decimals || "18",
+        //   token1?.decimals || "18"
+        // );
+        // if (isPairToggled) {
+        //   lowerPrice = getPriceFromTick(
+        //     -Number(p.tickLower.tickIdx),
+        //     token0?.decimals || "18",
+        //     token1?.decimals || "18"
+        //   );
+        //   upperPrice = getPriceFromTick(
+        //     -Number(p.tickUpper.tickIdx),
+        //     token0?.decimals || "18",
+        //     token1?.decimals || "18"
+        //   );
+        // }
+        const lowerTick = Number(p.tickLower.tickIdx);
+        const upperTick = Number(p.tickUpper.tickIdx);
+        const currentTick = Number(pool.tick);
+
+        const isActive = currentTick >= lowerTick && currentTick <= upperTick;
+
         return {
           key: p.id,
           positionId: p.id,
-          isActive: true,
+          isActive,
           strategy: PositionStrategy.LONG,
           apr: 0,
           roi: 0,
