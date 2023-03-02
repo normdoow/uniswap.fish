@@ -14,6 +14,7 @@ import { getPoolPositions } from "../repos/uniswap";
 import { useAppContext } from "../context/app/appContext";
 import { Position } from "../common/interfaces/uniswap.interface";
 import { getPriceFromTick } from "../utils/uniswapv3/math";
+import { round } from "../utils/math";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -115,187 +116,185 @@ interface PositionColumnDataType {
   priceRange: {
     lower: number;
     upper: number;
+    current: number;
   };
   createdAt: number;
 }
-const columns: ColumnsType<PositionColumnDataType> = [
-  {
-    title: "ID",
-    dataIndex: "positionId",
-    key: "positionId",
-    width: 100,
-    fixed: "left",
-    filters: [
-      {
-        text: "Active Position",
-        value: "isActive",
-      },
-    ],
-    onFilter: (_, record) => record.isActive,
-    sorter: (a, b) => Number(a.positionId) - Number(b.positionId),
-    render: (positionId, record) => (
-      <a
-        href={`https://app.uniswap.org/#/pool/${positionId}`}
-        target="_blank"
-        style={{
-          fontWeight: 600,
-        }}
-      >
-        <Badge
-          status={record.isActive ? "success" : "default"}
-          text={positionId}
-        />
-        <div
-          style={{
-            display: "inline-block",
-            color: "#999",
-            fontSize: "0.6rem",
-            position: "relative",
-            top: -3,
-            marginLeft: 3,
-          }}
-        >
-          <FontAwesomeIcon icon={faExternalLinkAlt} />
-        </div>
-      </a>
-    ),
-  },
-  {
-    title: "Fee ROI",
-    dataIndex: "roi",
-    key: "roi",
-  },
-  {
-    title: "Fee APR",
-    dataIndex: "apr",
-    key: "apr",
-  },
-  {
-    title: "PnL",
-    dataIndex: "pnl",
-    key: "pnl",
-  },
-  {
-    title: "Liquidity",
-    dataIndex: "liquidity",
-    key: "liquidity",
-  },
-  {
-    title: "Strategy",
-    dataIndex: "strategy",
-    key: "strategy",
-    width: 100,
-    render: (strategy) => (
-      <div
-        style={{
-          fontWeight: 600,
-          fontStyle: "italic",
-        }}
-      >
-        {strategy}
-      </div>
-    ),
-  },
-  {
-    title: "Price Range",
-    dataIndex: "priceRange",
-    key: "priceRange",
-    width: 250,
-    render: (strategy) => (
-      <div>
-        <PriceRange>
-          <div className="bar"></div>
-          <div
-            style={{ opacity: true ? 0.4 : 1 }}
-            className="lower"
-            data-for="top-position"
-            data-place="right"
-            data-html={true}
-            // data-tip={
-            //   state.isFullRange
-            //     ? `Lower Price: 0`
-            //     : `Lower Price<br>${round(Pl, 6)} ${state.token0?.symbol}/${
-            //         state.token1?.symbol
-            //       }<br><br>(Click to copy to clipboard)`
-            // }
-            // onClick={() =>
-            //   state.isFullRange
-            //     ? ""
-            //     : navigator.clipboard.writeText(`${Pl}`)
-            // }
-          ></div>
-          <div
-            style={{ opacity: true ? 0.4 : 1 }}
-            className="upper"
-            data-for="top-position"
-            data-place="left"
-            data-html={true}
-            // data-tip={
-            //   state.isFullRange
-            //     ? `Upper Price: ∞`
-            //     : `Upper Price<br>${round(Pu, 6)} ${state.token0?.symbol}/${
-            //         state.token1?.symbol
-            //       }<br><br>(Click to copy to clipboard)`
-            // }
-            // onClick={() =>
-            //   state.isFullRange
-            //     ? ""
-            //     : navigator.clipboard.writeText(`${Pu}`)
-            // }
-          ></div>
-
-          <div
-            className="price"
-            data-for="top-position"
-            data-place="bottom"
-            data-html={true}
-            // data-tip={`Current Price<br>${round(P, 6)} ${
-            //   state.token0?.symbol
-            // }/${state.token1?.symbol}<br><br>(Click to copy to clipboard)`}
-            // onClick={() => navigator.clipboard.writeText(`${P}`)}
-          ></div>
-
-          <div className="info">Out of Range</div>
-        </PriceRange>
-      </div>
-    ),
-  },
-  {
-    title: "Age",
-    dataIndex: "createdAt",
-    key: "createdAt",
-    width: 80,
-    render: (createdAt) => (
-      <div
-        data-for="top-position"
-        data-place="right"
-        data-html={true}
-        data-tip={`${getReadableDateTime(
-          createdAt
-        )}<br><br>(click to copy timestamp)`}
-        onClick={() => navigator.clipboard.writeText(`${createdAt}`)}
-        style={{ cursor: "pointer" }}
-      >
-        {getAge(createdAt)}
-      </div>
-    ),
-  },
-  {
-    title: "Action",
-    key: "action",
-    fixed: "right",
-    width: 100,
-    render: (_, record) => (
-      <Button style={{ fontSize: "0.875rem" }}>Apply</Button>
-    ),
-  },
-];
 
 const TopPosition = () => {
   const modalContext = useModalContext();
   const appContext = useAppContext();
   const [positions, setPositions] = useState<PositionColumnDataType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const columns: ColumnsType<PositionColumnDataType> = [
+    {
+      title: "ID",
+      dataIndex: "positionId",
+      key: "positionId",
+      width: 100,
+      fixed: "left",
+      filters: [
+        {
+          text: "Active Position",
+          value: "isActive",
+        },
+      ],
+      onFilter: (_, record) => record.isActive,
+      sorter: (a, b) => Number(a.positionId) - Number(b.positionId),
+      render: (positionId, record) => (
+        <a
+          href={`https://app.uniswap.org/#/pool/${positionId}`}
+          target="_blank"
+          style={{
+            fontWeight: 600,
+          }}
+        >
+          <Badge
+            status={record.isActive ? "success" : "default"}
+            text={positionId}
+          />
+          <div
+            style={{
+              display: "inline-block",
+              color: "#999",
+              fontSize: "0.6rem",
+              position: "relative",
+              top: -3,
+              marginLeft: 3,
+            }}
+          >
+            <FontAwesomeIcon icon={faExternalLinkAlt} />
+          </div>
+        </a>
+      ),
+    },
+    {
+      title: "Fee ROI",
+      dataIndex: "roi",
+      key: "roi",
+    },
+    {
+      title: "Fee APR",
+      dataIndex: "apr",
+      key: "apr",
+    },
+    {
+      title: "PnL",
+      dataIndex: "pnl",
+      key: "pnl",
+    },
+    {
+      title: "Liquidity",
+      dataIndex: "liquidity",
+      key: "liquidity",
+    },
+    {
+      title: "Strategy",
+      dataIndex: "strategy",
+      key: "strategy",
+      width: 100,
+      render: (strategy) => (
+        <div
+          style={{
+            fontWeight: 600,
+            fontStyle: "italic",
+          }}
+        >
+          {strategy}
+        </div>
+      ),
+    },
+    {
+      title: "Price Range",
+      dataIndex: "priceRange",
+      key: "priceRange",
+      width: 250,
+      render: (priceRange) => (
+        <div>
+          <PriceRange>
+            <div className="bar"></div>
+            <div
+              style={{ opacity: 1 }}
+              className="lower"
+              data-for="top-position_price_range"
+              data-place="right"
+              data-html={true}
+              data-tip={`Lower Price<br>${round(priceRange.lower, 6)} ${
+                appContext.state.token0?.symbol
+              }/${
+                appContext.state.token1?.symbol
+              }<br><br>(click to copy to clipboard)`}
+              onClick={() =>
+                navigator.clipboard.writeText(`${priceRange.lower}`)
+              }
+            ></div>
+            <div
+              style={{ opacity: 1 }}
+              className="upper"
+              data-for="top-position_price_range"
+              data-place="right"
+              data-html={true}
+              data-tip={`Upper Price<br>${round(priceRange.upper, 6)} ${
+                appContext.state.token0?.symbol
+              }/${
+                appContext.state.token1?.symbol
+              }<br><br>(click to copy to clipboard)`}
+              onClick={() =>
+                navigator.clipboard.writeText(`${priceRange.upper}`)
+              }
+            ></div>
+
+            <div
+              className="price"
+              data-for="top-position_price_range"
+              data-place="right"
+              data-html={true}
+              data-tip={`Current Price<br>${round(priceRange.current, 6)} ${
+                appContext.state.token0?.symbol
+              }/${
+                appContext.state.token1?.symbol
+              }<br><br>(click to copy to clipboard)`}
+              onClick={() =>
+                navigator.clipboard.writeText(`${priceRange.current}`)
+              }
+            ></div>
+
+            <div className="info">Hover to see price range info</div>
+          </PriceRange>
+        </div>
+      ),
+    },
+    {
+      title: "Age",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      width: 80,
+      render: (createdAt) => (
+        <div
+          data-for="top-position"
+          data-place="right"
+          data-html={true}
+          data-tip={`${getReadableDateTime(
+            createdAt
+          )}<br><br>(click to copy timestamp)`}
+          onClick={() => navigator.clipboard.writeText(`${createdAt}`)}
+          style={{ cursor: "pointer" }}
+        >
+          {getAge(createdAt)}
+        </div>
+      ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      fixed: "right",
+      width: 100,
+      render: (_, record) => (
+        <Button style={{ fontSize: "0.875rem" }}>Apply</Button>
+      ),
+    },
+  ];
 
   const fetchTopPosition = async () => {
     if (!appContext.state.pool) return;
@@ -320,33 +319,39 @@ const TopPosition = () => {
         500
     );
 
+    const currentTick = Number(pool.tick);
+    let currentPrice = getPriceFromTick(
+      currentTick,
+      token0?.decimals || "18",
+      token1?.decimals || "18"
+    );
     const topPositions: PositionColumnDataType[] = validPositions.map(
       (p: Position) => {
-        // let lowerPrice = getPriceFromTick(
-        //   Number(p.tickLower.tickIdx),
-        //   token0?.decimals || "18",
-        //   token1?.decimals || "18"
-        // );
-        // let upperPrice = getPriceFromTick(
-        //   Number(p.tickUpper.tickIdx),
-        //   token0?.decimals || "18",
-        //   token1?.decimals || "18"
-        // );
+        const lowerTick = Number(p.tickLower.tickIdx);
+        const upperTick = Number(p.tickUpper.tickIdx);
+
+        let lowerPrice = getPriceFromTick(
+          upperTick,
+          token0?.decimals || "18",
+          token1?.decimals || "18"
+        );
+        let upperPrice = getPriceFromTick(
+          lowerTick,
+          token0?.decimals || "18",
+          token1?.decimals || "18"
+        );
         // if (isPairToggled) {
         //   lowerPrice = getPriceFromTick(
-        //     -Number(p.tickLower.tickIdx),
+        //     -lowerTick,
         //     token0?.decimals || "18",
         //     token1?.decimals || "18"
         //   );
         //   upperPrice = getPriceFromTick(
-        //     -Number(p.tickUpper.tickIdx),
+        //     -upperTick,
         //     token0?.decimals || "18",
         //     token1?.decimals || "18"
         //   );
         // }
-        const lowerTick = Number(p.tickLower.tickIdx);
-        const upperTick = Number(p.tickUpper.tickIdx);
-        const currentTick = Number(pool.tick);
 
         const isActive = currentTick >= lowerTick && currentTick <= upperTick;
 
@@ -360,15 +365,15 @@ const TopPosition = () => {
           pnl: 0,
           liquidity: 0,
           priceRange: {
-            lower: 0,
-            upper: 0,
+            lower: lowerPrice,
+            upper: upperPrice,
+            current: currentPrice,
           },
           createdAt: Number(p.transaction.timestamp) * 1000,
         } as PositionColumnDataType;
       }
     );
 
-    console.log("debug", { topPositions });
     setPositions(topPositions);
     setIsLoading(false);
   };
@@ -385,6 +390,7 @@ const TopPosition = () => {
       </WrappedHeader>
 
       {positions.length > 0 && <ReactTooltip id="top-position" />}
+      {positions.length > 0 && <ReactTooltip id="top-position_price_range" />}
 
       <ConfigProvider
         theme={{
