@@ -15,6 +15,7 @@ import { useAppContext } from "../context/app/appContext";
 import { Position } from "../common/interfaces/uniswap.interface";
 import { getPriceFromTick } from "../utils/uniswapv3/math";
 import { round } from "../utils/math";
+import { formatNumberToUSD } from "../utils/format";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -188,6 +189,11 @@ const TopPosition = () => {
       title: "Liquidity",
       dataIndex: "liquidity",
       key: "liquidity",
+      width: 160,
+      sorter: (a, b) => a.liquidity - b.liquidity,
+      render: (liquidity) => (
+        <div>${formatNumberToUSD(round(liquidity, 2))}</div>
+      ),
     },
     {
       title: "Strategy",
@@ -367,6 +373,9 @@ const TopPosition = () => {
         // }
 
         const isActive = currentTick >= lowerTick && currentTick <= upperTick;
+        const liquidity =
+          Number(p.depositedToken0) * token0Price +
+          Number(p.depositedToken1) * token1Price;
 
         return {
           key: p.id,
@@ -376,7 +385,7 @@ const TopPosition = () => {
           apr: 0,
           roi: 0,
           pnl: 0,
-          liquidity: 0,
+          liquidity,
           priceRange: {
             lower: lowerPrice,
             upper: upperPrice,
