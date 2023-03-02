@@ -282,6 +282,7 @@ const TopPosition = () => {
       dataIndex: "createdAt",
       key: "createdAt",
       width: 80,
+      sorter: (a, b) => Number(a.createdAt) - Number(b.createdAt),
       render: (createdAt) => (
         <div
           data-for="top-position"
