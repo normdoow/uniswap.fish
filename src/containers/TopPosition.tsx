@@ -379,11 +379,12 @@ const TopPosition = () => {
 
   return (
     <Container>
-      <ReactTooltip id="top-position" />
       <WrappedHeader>
         <Heading>Top Positions</Heading>
         <Total>Total: {positions.length} positions</Total>
       </WrappedHeader>
+
+      {positions.length > 0 && <ReactTooltip id="top-position" />}
 
       <ConfigProvider
         theme={{
