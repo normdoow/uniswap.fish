@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Button, Heading } from "../common/components/atomic";
 import { useModalContext } from "../context/modal/modalContext";
 import { ScreenWidth } from "../utils/styled";
-import { Badge, ConfigProvider, message, Table, theme } from "antd";
+import { Badge, ConfigProvider, message, Table, theme, Tooltip } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
@@ -125,6 +125,10 @@ interface PositionColumnDataType {
     current: number;
   };
   createdAt: number;
+
+  // Additional data
+  maxDailyPriceFluctuation: number;
+  maxWeeklyPriceFluctuation: number;
 }
 
 const TopPosition = () => {
@@ -221,16 +225,32 @@ const TopPosition = () => {
         },
       ],
       onFilter: (value, record) => record.strategy.includes(String(value)),
-      render: (strategy) => (
-        <div
-          style={{
-            fontWeight: 600,
-            fontStyle: "italic",
-          }}
-        >
-          {strategy}
-        </div>
-      ),
+      render: (strategy, record) => {
+        const currency = `${appContext.state.token0?.symbol}/${appContext.state.token1?.symbol}`;
+        const amount =
+          strategy === PositionStrategy.LONG ||
+          strategy === PositionStrategy.MIDDLE
+            ? record.maxWeeklyPriceFluctuation
+            : record.maxDailyPriceFluctuation;
+        const symbol = strategy === PositionStrategy.LONG ? ">" : "≤";
+
+        return (
+          <div
+            style={{
+              fontWeight: 600,
+              fontStyle: "italic",
+            }}
+          >
+            <Tooltip
+              placement="right"
+              color="rgba(0,0,0,0.675)"
+              title={`Price Range ${symbol} ${round(amount, 6)} ${currency}`}
+            >
+              {strategy}
+            </Tooltip>
+          </div>
+        );
+      },
     },
     {
       title: "Price Range",
@@ -461,6 +481,9 @@ const TopPosition = () => {
             current: currentPrice,
           },
           createdAt: Number(p.transaction.timestamp) * 1000,
+
+          maxDailyPriceFluctuation,
+          maxWeeklyPriceFluctuation,
         } as PositionColumnDataType;
       }
     );
