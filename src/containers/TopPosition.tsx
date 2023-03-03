@@ -13,7 +13,12 @@ import { getPoolPositions } from "../repos/uniswap";
 import { useAppContext } from "../context/app/appContext";
 import { Position } from "../common/interfaces/uniswap.interface";
 import { getPriceFromTick } from "../utils/uniswapv3/math";
-import { round } from "../utils/math";
+import {
+  groupPricePointsMinMaxByDay,
+  groupPricePointsMinMaxByWeek,
+  processPriceChartData,
+  round,
+} from "../utils/math";
 import { formatNumberToUSD } from "../utils/format";
 import { AppActionType } from "../context/app/appReducer";
 
@@ -359,6 +364,33 @@ const TopPosition = () => {
       token0?.decimals || "18",
       token1?.decimals || "18"
     );
+
+    // calculate strategy based on price fluctuation
+    const priceDataPoints = processPriceChartData(
+      token0PriceChart,
+      token1PriceChart
+    );
+    // Strategy short = 1d, calculate max daily price fluctuation
+    const dailyPricePoints = groupPricePointsMinMaxByDay(priceDataPoints);
+    const maxDailyPriceFluctuation =
+      dailyPricePoints.reduce((acc, cur) => {
+        const priceFluctuation = cur.max - cur.min;
+        if (priceFluctuation > acc) {
+          return priceFluctuation;
+        }
+        return acc;
+      }, 0) * 1.1;
+    // Strategy middle = 1w, calculate max weekly price fluctuation
+    const weeklyPricePoints = groupPricePointsMinMaxByWeek(priceDataPoints);
+    const maxWeeklyPriceFluctuation =
+      weeklyPricePoints.reduce((acc, cur) => {
+        const priceFluctuation = cur.max - cur.min;
+        if (priceFluctuation > acc) {
+          return priceFluctuation;
+        }
+        return acc;
+      }, 0) * 1.1;
+
     const topPositions: PositionColumnDataType[] = validPositions.map(
       (p: Position) => {
         const lowerTick = Number(p.tickLower.tickIdx);
@@ -392,14 +424,21 @@ const TopPosition = () => {
           Number(p.depositedToken0) * token0Price +
           Number(p.depositedToken1) * token1Price;
 
+        let strategy = PositionStrategy.LONG;
+        if (upperPrice - lowerPrice <= maxDailyPriceFluctuation) {
+          strategy = PositionStrategy.SHORT;
+        } else if (upperPrice - lowerPrice <= maxWeeklyPriceFluctuation) {
+          strategy = PositionStrategy.MIDDLE;
+        }
+
         return {
           key: p.id,
           positionId: p.id,
           isActive,
-          strategy: PositionStrategy.LONG,
           apr: 0,
           roi: 0,
           pnl: 0,
+          strategy,
           liquidity,
           priceRange: {
             lower: lowerPrice,

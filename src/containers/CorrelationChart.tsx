@@ -3,9 +3,13 @@ import styled from "styled-components";
 import { Heading } from "../common/components/atomic";
 import D3CorrelationChart, { Point } from "./D3CorrelationChart";
 import { useAppContext } from "../context/app/appContext";
-import { averageArray, findMax, findMin } from "../utils/math";
+import {
+  averageArray,
+  findMax,
+  findMin,
+  processPriceChartData,
+} from "../utils/math";
 import { ScreenWidth } from "../utils/styled";
-import { PriceChart } from "../common/interfaces/coingecko.interface";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -88,33 +92,13 @@ const CorrelationChart = () => {
   const [data, setData] = useState<Point[]>([]);
   const refElement = useRef<HTMLDivElement>(null);
 
-  const processData = (
-    token0PriceChart: PriceChart | null,
-    token1PriceChart: PriceChart | null
-  ): Point[] => {
-    if (token0PriceChart === null || token1PriceChart === null) {
-      return [];
-    }
-
-    const points: Point[] = [];
-    const length = Math.min(
-      token0PriceChart.prices.length,
-      token1PriceChart.prices.length
-    );
-    for (let i = 0; i < length; ++i) {
-      points.push({
-        x: token0PriceChart.prices[i].timestamp,
-        y: token1PriceChart.prices[i].value / token0PriceChart.prices[i].value,
-      });
-    }
-
-    return points;
-  };
-
   useEffect(() => {
     if (!state.token0PriceChart || !state.token1PriceChart) return;
 
-    const data = processData(state.token0PriceChart, state.token1PriceChart);
+    const data = processPriceChartData(
+      state.token0PriceChart,
+      state.token1PriceChart
+    );
     setData(data);
 
     let width = 500;
