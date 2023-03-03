@@ -205,7 +205,22 @@ const TopPosition = () => {
       title: "Strategy",
       dataIndex: "strategy",
       key: "strategy",
-      width: 100,
+      width: 120,
+      filters: [
+        {
+          text: "SHORT",
+          value: "SHORT",
+        },
+        {
+          text: "MIDDLE",
+          value: "MIDDLE",
+        },
+        {
+          text: "LONG",
+          value: "LONG",
+        },
+      ],
+      onFilter: (value, record) => record.strategy.includes(String(value)),
       render: (strategy) => (
         <div
           style={{
