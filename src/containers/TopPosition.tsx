@@ -21,6 +21,9 @@ import {
 } from "../utils/math";
 import { formatNumberToUSD } from "../utils/format";
 import { AppActionType } from "../context/app/appReducer";
+import { Position as V3Position, Pool as V3Pool } from "@uniswap/v3-sdk";
+import { Token as V3Token } from "@uniswap/sdk-core";
+import { getCurrentNetwork } from "../common/network";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -386,12 +389,6 @@ const TopPosition = () => {
     const token1Price = token1PriceChart?.currentPriceUSD || 0;
 
     const allPositions = await getPoolPositions(pool.id);
-    const validPositions = allPositions.filter(
-      (p: Position) =>
-        Number(p.depositedToken0) * token0Price +
-          Number(p.depositedToken1) * token1Price >=
-        500
-    );
 
     const currentTick = Number(pool.tick);
     let currentPrice = getPriceFromTick(
@@ -426,7 +423,7 @@ const TopPosition = () => {
         return acc;
       }, 0) * 1.1;
 
-    const topPositions: PositionColumnDataType[] = validPositions.map(
+    const topPositions: PositionColumnDataType[] = allPositions.map(
       (p: Position) => {
         const lowerTick = Number(p.tickLower.tickIdx);
         const upperTick = Number(p.tickUpper.tickIdx);
@@ -455,9 +452,34 @@ const TopPosition = () => {
         // }
 
         const isActive = currentTick >= lowerTick && currentTick <= upperTick;
-        const liquidity =
-          Number(p.depositedToken0) * token0Price +
-          Number(p.depositedToken1) * token1Price;
+        const network = getCurrentNetwork();
+        const tokenA = new V3Token(
+          network.chainId,
+          token0?.id || "",
+          Number(token0?.decimals)
+        );
+        const tokenB = new V3Token(
+          network.chainId,
+          token1?.id || "",
+          Number(token1?.decimals)
+        );
+        const v3Pool = new V3Pool(
+          tokenA,
+          tokenB,
+          Number(pool.feeTier),
+          pool.sqrtPrice,
+          pool.liquidity,
+          Number(pool.tick)
+        );
+        const position = new V3Position({
+          pool: v3Pool,
+          liquidity: p.liquidity,
+          tickLower: lowerTick,
+          tickUpper: upperTick,
+        });
+        const amount0 = Number(position.amount0.toSignificant(4));
+        const amount1 = Number(position.amount1.toSignificant(4));
+        const liquidity = amount0 * token0Price + amount1 * token1Price;
 
         let strategy = PositionStrategy.LONG;
         if (upperPrice - lowerPrice <= maxDailyPriceFluctuation) {
@@ -488,7 +510,7 @@ const TopPosition = () => {
       }
     );
 
-    setPositions(topPositions);
+    setPositions(topPositions.filter((p) => p.liquidity >= 500));
     setIsLoading(false);
   };
 

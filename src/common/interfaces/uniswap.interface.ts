@@ -1,5 +1,6 @@
 export interface Network {
   id: string;
+  chainId: number;
   name: string;
   desc: string;
   logoURI: string;

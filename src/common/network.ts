@@ -1,9 +1,28 @@
 import { Network } from "./interfaces/uniswap.interface";
 
+// https://github.com/Uniswap/interface/blob/main/src/constants/chains.ts
+enum SupportedChainId {
+  MAINNET = 1,
+  GOERLI = 5,
+
+  ARBITRUM_ONE = 42161,
+  ARBITRUM_GOERLI = 421613,
+
+  OPTIMISM = 10,
+  OPTIMISM_GOERLI = 420,
+
+  POLYGON = 137,
+  POLYGON_MUMBAI = 80001,
+
+  CELO = 42220,
+  CELO_ALFAJORES = 44787,
+}
+
 // NOTE: also update CreatePositionModal, isNative function.
 export const NETWORKS: Network[] = [
   {
     id: "ethereum",
+    chainId: SupportedChainId.MAINNET,
     name: "Ethereum",
     desc: "Ethereum Mainnet",
     logoURI:
@@ -13,6 +32,7 @@ export const NETWORKS: Network[] = [
   },
   {
     id: "polygon",
+    chainId: SupportedChainId.POLYGON,
     name: "Polygon",
     desc: "Polygon Mainnet",
     logoURI:
@@ -22,6 +42,7 @@ export const NETWORKS: Network[] = [
   },
   {
     id: "optimism",
+    chainId: SupportedChainId.OPTIMISM,
     name: "Optimism",
     desc: "Optimism Mainnet (L2)",
     logoURI: "https://optimistic.etherscan.io/images/brandassets/optimism.svg",
@@ -30,6 +51,7 @@ export const NETWORKS: Network[] = [
   },
   {
     id: "celo",
+    chainId: SupportedChainId.CELO,
     name: "Celo",
     desc: "Celo Mainnet",
     disabled: false,
@@ -40,6 +62,7 @@ export const NETWORKS: Network[] = [
   },
   {
     id: "arbitrum",
+    chainId: SupportedChainId.ARBITRUM_ONE,
     name: "Arbitrum",
     desc: "Arbitrum Mainnet (L2)",
     disabled: false,
