@@ -170,7 +170,7 @@ const TopPosition = () => {
       title: "ID",
       dataIndex: "positionId",
       key: "positionId",
-      width: 100,
+      width: 110,
       fixed: "left",
       filters: [
         {
@@ -211,6 +211,8 @@ const TopPosition = () => {
       title: "Fee ROI",
       dataIndex: "roi",
       key: "roi",
+      sorter: (a, b) => a.roi - b.roi,
+      render: (roi, record) => <div>{roi.toFixed(2)}%</div>,
     },
     {
       title: "Fee APR",
@@ -513,7 +515,9 @@ const TopPosition = () => {
         //   );
         // }
 
+        // Calculate isActive
         const isActive = currentTick >= lowerTick && currentTick <= upperTick;
+        // Calculate liquidity
         const network = getCurrentNetwork();
         const tokenA = new V3Token(
           network.chainId,
@@ -542,7 +546,17 @@ const TopPosition = () => {
         const amount0 = Number(position.amount0.toSignificant(4));
         const amount1 = Number(position.amount1.toSignificant(4));
         const liquidity = amount0 * token0Price + amount1 * token1Price;
+        // Calculate earning fee
+        const claimedFee0 = Number(p.collectedFeesToken0);
+        const claimedFee1 = Number(p.collectedFeesToken1);
+        const unclaimedFee0 = 1;
+        const unclaimedFee1 = 1;
+        const totalFee0 = claimedFee0 + unclaimedFee0;
+        const totalFee1 = claimedFee1 + unclaimedFee1;
+        const totalFeeUSD = totalFee0 * token0Price + totalFee1 * token1Price;
+        const roi = 100 * (totalFeeUSD / liquidity);
 
+        // Calculate strategy
         let strategy = PositionStrategy.LONG;
         if (upperPrice - lowerPrice <= maxDailyPriceFluctuation) {
           strategy = PositionStrategy.SHORT;
@@ -554,8 +568,8 @@ const TopPosition = () => {
           key: p.id,
           positionId: p.id,
           isActive,
+          roi,
           apr: 0,
-          roi: 0,
           pnl: 0,
           strategy,
           liquidity,

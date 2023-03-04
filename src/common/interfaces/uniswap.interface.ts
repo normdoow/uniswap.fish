@@ -39,9 +39,13 @@ export interface Position {
   id: string;
   tickLower: {
     tickIdx: string;
+    feeGrowthOutside0X128: string;
+    feeGrowthOutside1X128: string;
   };
   tickUpper: {
     tickIdx: string;
+    feeGrowthOutside0X128: string;
+    feeGrowthOutside1X128: string;
   };
   depositedToken0: string;
   depositedToken1: string;
@@ -49,4 +53,8 @@ export interface Position {
   transaction: {
     timestamp: string;
   };
+  collectedFeesToken0: string;
+  collectedFeesToken1: string;
+  feeGrowthInside0LastX128: string;
+  feeGrowthInside1LastX128: string;
 }

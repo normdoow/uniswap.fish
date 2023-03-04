@@ -199,11 +199,23 @@ const _getPoolPositionsByPage = async (
       liquidity_gt: 0,
     }, first: 1000, skip: ${page * 1000}) {
       id
-      tickLower {tickIdx}
-      tickUpper {tickIdx}
+      tickLower {
+        tickIdx
+        feeGrowthOutside0X128
+        feeGrowthOutside1X128
+      }
+      tickUpper {
+        tickIdx
+        feeGrowthOutside0X128
+        feeGrowthOutside1X128
+      }
       depositedToken0
       depositedToken1
       liquidity
+      collectedFeesToken0
+      collectedFeesToken1
+      feeGrowthInside0LastX128
+      feeGrowthInside1LastX128
       transaction {
         timestamp
       }
