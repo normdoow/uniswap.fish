@@ -1,10 +1,138 @@
 import bn from "bignumber.js";
-import { Tick } from "../../common/interfaces/uniswap.interface";
+import {
+  Pool,
+  Position,
+  Tick,
+  Token,
+} from "../../common/interfaces/uniswap.interface";
 import { getFeeTierPercentage } from "./helper";
 
 bn.config({ EXPONENTIAL_AT: 999999, DECIMAL_PLACES: 40 });
 
 const Q96 = new bn(2).pow(96);
+const Q128 = new bn(2).pow(128);
+const Q256 = new bn(2).pow(256);
+const ZERO = new bn(0);
+
+// https://ethereum.stackexchange.com/a/144704
+export const calculatePositionFees = (
+  pool: Pool,
+  position: Position,
+  token0: Token | null,
+  token1: Token | null
+) => {
+  const tickCurrent = Number(pool.tick);
+  const tickLower = Number(position.tickLower.tickIdx);
+  const tickUpper = Number(position.tickUpper.tickIdx);
+  const liquidity = new bn(position.liquidity);
+  // Check out the relevant formulas below which are from Uniswap Whitepaper Section 6.3 and 6.4
+  // 𝑓𝑟 =𝑓𝑔−𝑓𝑏(𝑖𝑙)−𝑓𝑎(𝑖𝑢)
+  // 𝑓𝑢 =𝑙·(𝑓𝑟(𝑡1)−𝑓𝑟(𝑡0))
+  // Global fee growth per liquidity '𝑓𝑔' for both token 0 and token 1
+  let feeGrowthGlobal_0 = new bn(pool.feeGrowthGlobal0X128);
+  let feeGrowthGlobal_1 = new bn(pool.feeGrowthGlobal1X128);
+
+  // Fee growth outside '𝑓𝑜' of our lower tick for both token 0 and token 1
+  let tickLowerFeeGrowthOutside_0 = new bn(
+    position.tickLower.feeGrowthOutside0X128
+  );
+  let tickLowerFeeGrowthOutside_1 = new bn(
+    position.tickLower.feeGrowthOutside1X128
+  );
+
+  // Fee growth outside '𝑓𝑜' of our upper tick for both token 0 and token 1
+  let tickUpperFeeGrowthOutside_0 = new bn(
+    position.tickUpper.feeGrowthOutside0X128
+  );
+  let tickUpperFeeGrowthOutside_1 = new bn(
+    position.tickUpper.feeGrowthOutside1X128
+  );
+
+  // These are '𝑓𝑏(𝑖𝑙)' and '𝑓𝑎(𝑖𝑢)' from the formula
+  // for both token 0 and token 1
+  let tickLowerFeeGrowthBelow_0 = ZERO;
+  let tickLowerFeeGrowthBelow_1 = ZERO;
+  let tickUpperFeeGrowthAbove_0 = ZERO;
+  let tickUpperFeeGrowthAbove_1 = ZERO;
+
+  // These are the calculations for '𝑓𝑎(𝑖)' from the formula
+  // for both token 0 and token 1
+  if (tickCurrent >= tickUpper) {
+    tickUpperFeeGrowthAbove_0 = subIn256(
+      feeGrowthGlobal_0,
+      tickUpperFeeGrowthOutside_0
+    );
+    tickUpperFeeGrowthAbove_1 = subIn256(
+      feeGrowthGlobal_1,
+      tickUpperFeeGrowthOutside_1
+    );
+  } else {
+    tickUpperFeeGrowthAbove_0 = tickUpperFeeGrowthOutside_0;
+    tickUpperFeeGrowthAbove_1 = tickUpperFeeGrowthOutside_1;
+  }
+
+  // These are the calculations for '𝑓b(𝑖)' from the formula
+  // for both token 0 and token 1
+  if (tickCurrent >= tickLower) {
+    tickLowerFeeGrowthBelow_0 = tickLowerFeeGrowthOutside_0;
+    tickLowerFeeGrowthBelow_1 = tickLowerFeeGrowthOutside_1;
+  } else {
+    tickLowerFeeGrowthBelow_0 = subIn256(
+      feeGrowthGlobal_0,
+      tickLowerFeeGrowthOutside_0
+    );
+    tickLowerFeeGrowthBelow_1 = subIn256(
+      feeGrowthGlobal_1,
+      tickLowerFeeGrowthOutside_1
+    );
+  }
+
+  // Calculations for '𝑓𝑟(𝑡1)' part of the '𝑓𝑢 =𝑙·(𝑓𝑟(𝑡1)−𝑓𝑟(𝑡0))' formula
+  // for both token 0 and token 1
+  let fr_t1_0 = subIn256(
+    subIn256(feeGrowthGlobal_0, tickLowerFeeGrowthBelow_0),
+    tickUpperFeeGrowthAbove_0
+  );
+  let fr_t1_1 = subIn256(
+    subIn256(feeGrowthGlobal_1, tickLowerFeeGrowthBelow_1),
+    tickUpperFeeGrowthAbove_1
+  );
+
+  // '𝑓𝑟(𝑡0)' part of the '𝑓𝑢 =𝑙·(𝑓𝑟(𝑡1)−𝑓𝑟(𝑡0))' formula
+  // for both token 0 and token 1
+  let feeGrowthInsideLast_0 = new bn(position.feeGrowthInside0LastX128);
+  let feeGrowthInsideLast_1 = new bn(position.feeGrowthInside1LastX128);
+
+  // The final calculations for the '𝑓𝑢 =𝑙·(𝑓𝑟(𝑡1)−𝑓𝑟(𝑡0))' uncollected fees formula
+  // for both token 0 and token 1 since we now know everything that is needed to compute it
+  let uncollectedFees_0 = mulDiv(
+    liquidity,
+    subIn256(fr_t1_0, feeGrowthInsideLast_0),
+    Q128
+  );
+  let uncollectedFees_1 = mulDiv(
+    liquidity,
+    subIn256(fr_t1_1, feeGrowthInsideLast_1),
+    Q128
+  );
+
+  // Decimal adjustment to get final results
+  let uncollectedFeesAdjusted_0 = uncollectedFees_0.div(
+    expandDecimals(1, Number(token0?.decimals || 18)).toFixed(
+      Number(token0?.decimals || 18)
+    )
+  );
+  let uncollectedFeesAdjusted_1 = uncollectedFees_1.div(
+    expandDecimals(1, Number(token1?.decimals || 18)).toFixed(
+      Number(token1?.decimals || 18)
+    )
+  );
+
+  return [
+    uncollectedFeesAdjusted_0.toNumber(),
+    uncollectedFeesAdjusted_1.toNumber(),
+  ];
+};
 
 export const getTickFromPrice = (
   price: number,
@@ -203,4 +331,14 @@ const expandDecimals = (n: number | string | bn, exp: number): bn => {
 
 const mulDiv = (a: bn, b: bn, multiplier: bn) => {
   return a.multipliedBy(b).div(multiplier);
+};
+
+const subIn256 = (x: bn, y: bn) => {
+  const difference = x.minus(y);
+
+  if (difference.isLessThan(ZERO)) {
+    return Q256.plus(difference);
+  } else {
+    return difference;
+  }
 };

@@ -33,6 +33,8 @@ export interface Pool {
   sqrtPrice: string;
   token0Price: string;
   token1Price: string;
+  feeGrowthGlobal0X128: string;
+  feeGrowthGlobal1X128: string;
 }
 
 export interface Position {

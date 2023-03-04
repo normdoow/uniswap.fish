@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Button, Heading } from "../common/components/atomic";
-import { useModalContext } from "../context/modal/modalContext";
 import { ScreenWidth } from "../utils/styled";
 import {
   Badge,
@@ -20,7 +19,10 @@ import ReactTooltip from "react-tooltip";
 import { getPoolPositions } from "../repos/uniswap";
 import { useAppContext } from "../context/app/appContext";
 import { Position } from "../common/interfaces/uniswap.interface";
-import { getPriceFromTick } from "../utils/uniswapv3/math";
+import {
+  calculatePositionFees,
+  getPriceFromTick,
+} from "../utils/uniswapv3/math";
 import {
   groupPricePointsMinMaxByDay,
   groupPricePointsMinMaxByWeek,
@@ -156,10 +158,14 @@ interface PositionColumnDataType {
   token1Amount: number;
   token0Price: number;
   token1Price: number;
+  totalFeeUSD: number;
+  claimedFee0: number;
+  claimedFee1: number;
+  unclaimedFee0: number;
+  unclaimedFee1: number;
 }
 
 const TopPosition = () => {
-  const modalContext = useModalContext();
   const appContext = useAppContext();
   const [positions, setPositions] = useState<PositionColumnDataType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -218,6 +224,7 @@ const TopPosition = () => {
       title: "Fee APR",
       dataIndex: "apr",
       key: "apr",
+      sorter: (a, b) => a.apr - b.apr,
     },
     {
       title: "PnL",
@@ -549,8 +556,12 @@ const TopPosition = () => {
         // Calculate earning fee
         const claimedFee0 = Number(p.collectedFeesToken0);
         const claimedFee1 = Number(p.collectedFeesToken1);
-        const unclaimedFee0 = 1;
-        const unclaimedFee1 = 1;
+        const [unclaimedFee0, unclaimedFee1] = calculatePositionFees(
+          pool,
+          p,
+          token0,
+          token1
+        );
         const totalFee0 = claimedFee0 + unclaimedFee0;
         const totalFee1 = claimedFee1 + unclaimedFee1;
         const totalFeeUSD = totalFee0 * token0Price + totalFee1 * token1Price;
@@ -586,6 +597,11 @@ const TopPosition = () => {
           token1Amount: amount1,
           token0Price,
           token1Price,
+          totalFeeUSD,
+          claimedFee0,
+          claimedFee1,
+          unclaimedFee0,
+          unclaimedFee1,
         } as PositionColumnDataType;
       }
     );
