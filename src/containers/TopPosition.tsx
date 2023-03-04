@@ -159,10 +159,8 @@ interface PositionColumnDataType {
   token0Price: number;
   token1Price: number;
   totalFeeUSD: number;
-  claimedFee0: number;
-  claimedFee1: number;
-  unclaimedFee0: number;
-  unclaimedFee1: number;
+  totalFee0: number;
+  totalFee1: number;
 }
 
 const TopPosition = () => {
@@ -214,11 +212,54 @@ const TopPosition = () => {
       ),
     },
     {
-      title: "Fee ROI",
+      title: "ROI",
       dataIndex: "roi",
       key: "roi",
+      width: 110,
       sorter: (a, b) => a.roi - b.roi,
-      render: (roi, record) => <div>{roi.toFixed(2)}%</div>,
+      render: (roi, record) => (
+        <div>
+          <Popover
+            placement="right"
+            color="rgba(0,0,0,0.875)"
+            content={
+              <div>
+                <div style={{ color: "white" }}>
+                  Total fees earned: ${record.totalFeeUSD.toFixed(2)}
+                </div>
+                <Table>
+                  <Token>
+                    <img
+                      alt={appContext.state.token0?.name}
+                      src={appContext.state.token0?.logoURI}
+                    />{" "}
+                    <span>{appContext.state.token0?.symbol}</span>
+                  </Token>
+                  <div>{round(record.totalFee0, 6)}</div>
+                  <div>
+                    ${(record.totalFee0 * record.token0Price).toFixed(2)}
+                  </div>
+                </Table>
+                <Table>
+                  <Token>
+                    <img
+                      alt={appContext.state.token1?.name}
+                      src={appContext.state.token1?.logoURI}
+                    />{" "}
+                    <span>{appContext.state.token1?.symbol}</span>
+                  </Token>
+                  <div>{round(record.totalFee1, 6)}</div>
+                  <div>
+                    ${(record.totalFee1 * record.token1Price).toFixed(2)}
+                  </div>
+                </Table>
+              </div>
+            }
+          >
+            {roi.toFixed(2)}%
+          </Popover>
+        </div>
+      ),
     },
     {
       title: "Fee APR",
@@ -598,15 +639,13 @@ const TopPosition = () => {
           token0Price,
           token1Price,
           totalFeeUSD,
-          claimedFee0,
-          claimedFee1,
-          unclaimedFee0,
-          unclaimedFee1,
+          totalFee0,
+          totalFee1,
         } as PositionColumnDataType;
       }
     );
 
-    setPositions(topPositions.filter((p) => p.liquidity >= 500));
+    setPositions(topPositions.filter((p) => p.liquidity >= 500 && p.roi > 0));
     setIsLoading(false);
   };
 
