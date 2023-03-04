@@ -3,7 +3,15 @@ import styled from "styled-components";
 import { Button, Heading } from "../common/components/atomic";
 import { useModalContext } from "../context/modal/modalContext";
 import { ScreenWidth } from "../utils/styled";
-import { Badge, ConfigProvider, message, Table, theme, Tooltip } from "antd";
+import {
+  Badge,
+  ConfigProvider,
+  message,
+  Popover,
+  Table as AntdTable,
+  theme,
+  Tooltip,
+} from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
@@ -24,6 +32,7 @@ import { AppActionType } from "../context/app/appReducer";
 import { Position as V3Position, Pool as V3Pool } from "@uniswap/v3-sdk";
 import { Token as V3Token } from "@uniswap/sdk-core";
 import { getCurrentNetwork } from "../common/network";
+import { Table } from "../common/components/atomic";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -107,6 +116,17 @@ const PriceRange = styled.div`
     color: #999;
   }
 `;
+const Token = styled.div`
+  display: flex;
+  align-items: center;
+
+  & > img {
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    transform: translateX(-5px);
+  }
+`;
 
 enum PositionStrategy {
   LONG = "LONG",
@@ -132,6 +152,10 @@ interface PositionColumnDataType {
   // Additional data
   maxDailyPriceFluctuation: number;
   maxWeeklyPriceFluctuation: number;
+  token0Amount: number;
+  token1Amount: number;
+  token0Price: number;
+  token1Price: number;
 }
 
 const TopPosition = () => {
@@ -204,8 +228,46 @@ const TopPosition = () => {
       key: "liquidity",
       width: 160,
       sorter: (a, b) => a.liquidity - b.liquidity,
-      render: (liquidity) => (
-        <div>${formatNumberToUSD(round(liquidity, 2))}</div>
+      render: (liquidity, record) => (
+        <div>
+          <Popover
+            placement="right"
+            color="rgba(0,0,0,0.875)"
+            content={
+              <div>
+                {" "}
+                <Table style={{ marginTop: 0 }}>
+                  <Token>
+                    <img
+                      alt={appContext.state.token0?.name}
+                      src={appContext.state.token0?.logoURI}
+                    />{" "}
+                    <span>{appContext.state.token0?.symbol}</span>
+                  </Token>
+                  <div>{record.token0Amount}</div>
+                  <div>
+                    ${(record.token0Amount * record.token0Price).toFixed(2)}
+                  </div>
+                </Table>
+                <Table>
+                  <Token>
+                    <img
+                      alt={appContext.state.token1?.name}
+                      src={appContext.state.token1?.logoURI}
+                    />{" "}
+                    <span>{appContext.state.token1?.symbol}</span>
+                  </Token>
+                  <div>{record.token1Amount}</div>
+                  <div>
+                    ${(record.token1Amount * record.token1Price).toFixed(2)}
+                  </div>
+                </Table>
+              </div>
+            }
+          >
+            ${formatNumberToUSD(round(liquidity, 2))}
+          </Popover>
+        </div>
       ),
     },
     {
@@ -506,6 +568,10 @@ const TopPosition = () => {
 
           maxDailyPriceFluctuation,
           maxWeeklyPriceFluctuation,
+          token0Amount: amount0,
+          token1Amount: amount1,
+          token0Price,
+          token1Price,
         } as PositionColumnDataType;
       }
     );
@@ -538,7 +604,7 @@ const TopPosition = () => {
           },
         }}
       >
-        <Table
+        <AntdTable
           columns={columns}
           dataSource={positions}
           scroll={{ x: 1400 }}
