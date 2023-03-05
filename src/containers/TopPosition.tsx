@@ -215,6 +215,7 @@ const TopPosition = () => {
       dataIndex: "roi",
       key: "roi",
       width: 110,
+      defaultSortOrder: "ascend",
       sorter: (a, b) => a.roi - b.roi,
       render: (roi, record) => (
         <div>
