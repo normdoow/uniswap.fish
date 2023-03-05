@@ -58,12 +58,10 @@ export const calculatePositionFees = (
   // These are the calculations for '𝑓𝑎(𝑖)' from the formula
   // for both token 0 and token 1
   if (tickCurrent >= tickUpper) {
-    tickUpperFeeGrowthAbove_0 = subIn256(
-      feeGrowthGlobal_0,
+    tickUpperFeeGrowthAbove_0 = feeGrowthGlobal_0.minus(
       tickUpperFeeGrowthOutside_0
     );
-    tickUpperFeeGrowthAbove_1 = subIn256(
-      feeGrowthGlobal_1,
+    tickUpperFeeGrowthAbove_1 = feeGrowthGlobal_1.minus(
       tickUpperFeeGrowthOutside_1
     );
   } else {
@@ -77,26 +75,22 @@ export const calculatePositionFees = (
     tickLowerFeeGrowthBelow_0 = tickLowerFeeGrowthOutside_0;
     tickLowerFeeGrowthBelow_1 = tickLowerFeeGrowthOutside_1;
   } else {
-    tickLowerFeeGrowthBelow_0 = subIn256(
-      feeGrowthGlobal_0,
-      tickLowerFeeGrowthOutside_0
+    tickLowerFeeGrowthBelow_0 = feeGrowthGlobal_1.minus(
+      tickLowerFeeGrowthBelow_0
     );
-    tickLowerFeeGrowthBelow_1 = subIn256(
-      feeGrowthGlobal_1,
+    tickLowerFeeGrowthBelow_1 = feeGrowthGlobal_1.minus(
       tickLowerFeeGrowthOutside_1
     );
   }
 
   // Calculations for '𝑓𝑟(𝑡1)' part of the '𝑓𝑢 =𝑙·(𝑓𝑟(𝑡1)−𝑓𝑟(𝑡0))' formula
   // for both token 0 and token 1
-  let fr_t1_0 = subIn256(
-    subIn256(feeGrowthGlobal_0, tickLowerFeeGrowthBelow_0),
-    tickUpperFeeGrowthAbove_0
-  );
-  let fr_t1_1 = subIn256(
-    subIn256(feeGrowthGlobal_1, tickLowerFeeGrowthBelow_1),
-    tickUpperFeeGrowthAbove_1
-  );
+  let fr_t1_0 = feeGrowthGlobal_0
+    .minus(tickLowerFeeGrowthBelow_0)
+    .minus(tickUpperFeeGrowthAbove_0);
+  let fr_t1_1 = feeGrowthGlobal_1
+    .minus(tickLowerFeeGrowthBelow_1)
+    .minus(tickUpperFeeGrowthAbove_1);
 
   // '𝑓𝑟(𝑡0)' part of the '𝑓𝑢 =𝑙·(𝑓𝑟(𝑡1)−𝑓𝑟(𝑡0))' formula
   // for both token 0 and token 1
@@ -107,12 +101,12 @@ export const calculatePositionFees = (
   // for both token 0 and token 1 since we now know everything that is needed to compute it
   let uncollectedFees_0 = mulDiv(
     liquidity,
-    subIn256(fr_t1_0, feeGrowthInsideLast_0),
+    fr_t1_0.minus(feeGrowthInsideLast_0),
     Q128
   );
   let uncollectedFees_1 = mulDiv(
     liquidity,
-    subIn256(fr_t1_1, feeGrowthInsideLast_1),
+    fr_t1_1.minus(feeGrowthInsideLast_1),
     Q128
   );
 
@@ -331,14 +325,4 @@ const expandDecimals = (n: number | string | bn, exp: number): bn => {
 
 const mulDiv = (a: bn, b: bn, multiplier: bn) => {
   return a.multipliedBy(b).div(multiplier);
-};
-
-const subIn256 = (x: bn, y: bn) => {
-  const difference = x.minus(y);
-
-  if (difference.isLessThan(ZERO)) {
-    return Q256.plus(difference);
-  } else {
-    return difference;
-  }
 };

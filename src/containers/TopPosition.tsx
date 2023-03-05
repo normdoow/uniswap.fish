@@ -215,7 +215,7 @@ const TopPosition = () => {
       dataIndex: "roi",
       key: "roi",
       width: 110,
-      defaultSortOrder: "ascend",
+      defaultSortOrder: "descend",
       sorter: (a, b) => a.roi - b.roi,
       render: (roi, record) => (
         <div>
@@ -253,6 +253,11 @@ const TopPosition = () => {
                     ${(record.totalFee1 * record.token1Price).toFixed(2)}
                   </div>
                 </Table>
+                <div
+                  style={{ marginTop: 14, color: "#777", fontSize: "0.675rem" }}
+                >
+                  Total fee earned = claimed token + unclaimed token
+                </div>
               </div>
             }
           >
