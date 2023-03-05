@@ -184,8 +184,8 @@ const _queryUniswap = async (query: string): Promise<any> => {
 
   const errors = data.errors;
   if (errors && errors.length > 0) {
-    console.error("Uniswap Subgraph Errors, Retrying...", { errors, query });
-    return await _queryUniswap(query);
+    console.error("Uniswap Subgraph Errors", { errors, query });
+    throw new Error(`Uniswap Subgraph Errors: ${JSON.stringify(errors)}`);
   }
 
   return data.data;
@@ -195,7 +195,8 @@ const _getPoolPositionsByPage = async (
   poolAddress: string,
   page: number
 ): Promise<Position[]> => {
-  const res = await _queryUniswap(`{
+  try {
+    const res = await _queryUniswap(`{
     positions(where: {
       pool: "${poolAddress}",
       liquidity_gt: 0,
@@ -224,7 +225,10 @@ const _getPoolPositionsByPage = async (
     }
   }`);
 
-  return res.positions;
+    return res.positions;
+  } catch (e) {
+    return [];
+  }
 };
 export const getPoolPositions = async (
   poolAddress: string

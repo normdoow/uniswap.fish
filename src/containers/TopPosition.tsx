@@ -192,22 +192,30 @@ const TopPosition = () => {
             fontWeight: 600,
           }}
         >
-          <Badge
-            status={record.isActive ? "success" : "default"}
-            text={positionId}
-          />
-          <div
-            style={{
-              display: "inline-block",
-              color: "#999",
-              fontSize: "0.6rem",
-              position: "relative",
-              top: -3,
-              marginLeft: 3,
-            }}
+          <Tooltip
+            placement="right"
+            color="rgba(0,0,0,0.675)"
+            title={`Switch the network to "${
+              getCurrentNetwork().name
+            }" before viewing the position`}
           >
-            <FontAwesomeIcon icon={faExternalLinkAlt} />
-          </div>
+            <Badge
+              status={record.isActive ? "success" : "default"}
+              text={positionId}
+            />
+            <div
+              style={{
+                display: "inline-block",
+                color: "#999",
+                fontSize: "0.6rem",
+                position: "relative",
+                top: -3,
+                marginLeft: 3,
+              }}
+            >
+              <FontAwesomeIcon icon={faExternalLinkAlt} />
+            </div>
+          </Tooltip>
         </a>
       ),
     },
@@ -596,8 +604,6 @@ const TopPosition = () => {
         }
         return acc;
       }, 0) * 1.1;
-
-    console.log("debug", maxDailyPriceFluctuation, maxWeeklyPriceFluctuation);
 
     const topPositions: PositionColumnDataType[] = allPositions.map(
       (p: Position) => {
