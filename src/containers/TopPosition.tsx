@@ -142,7 +142,6 @@ interface PositionColumnDataType {
   strategy: PositionStrategy;
   roi: number;
   apr: number;
-  pnl: number;
   liquidity: number;
   priceRange: {
     lower: number;
@@ -161,6 +160,7 @@ interface PositionColumnDataType {
   totalFeeUSD: number;
   totalFee0: number;
   totalFee1: number;
+  hourlyFeeUSD: number;
 }
 
 const TopPosition = () => {
@@ -267,6 +267,53 @@ const TopPosition = () => {
       key: "apr",
       width: 110,
       sorter: (a, b) => a.apr - b.apr,
+      render: (apr, record) => (
+        <div>
+          <Popover
+            placement="right"
+            color="rgba(0,0,0,0.875)"
+            content={
+              <div>
+                <Table style={{ marginTop: 0 }}>
+                  <div>DAILY</div>
+                  <div>${(record.hourlyFeeUSD * 24).toFixed(2)}</div>
+                  <div>
+                    {(
+                      (100 * (record.hourlyFeeUSD * 24)) /
+                      record.liquidity
+                    ).toFixed(2)}{" "}
+                    {`%`}
+                  </div>
+                </Table>
+                <Table>
+                  <div>MONTHLY</div>
+                  <div>${(record.hourlyFeeUSD * 24 * 30).toFixed(2)}</div>
+                  <div>
+                    {(
+                      (100 * (record.hourlyFeeUSD * 24 * 30)) /
+                      record.liquidity
+                    ).toFixed(2)}{" "}
+                    {`%`}
+                  </div>
+                </Table>
+                <Table>
+                  <div>YEARLY (APR)</div>
+                  <div>${(record.hourlyFeeUSD * 24 * 365).toFixed(2)}</div>
+                  <div>
+                    {(
+                      (100 * (record.hourlyFeeUSD * 24 * 365)) /
+                      record.liquidity
+                    ).toFixed(2)}{" "}
+                    {`%`}
+                  </div>
+                </Table>
+              </div>
+            }
+          >
+            {apr.toFixed(2)}%
+          </Popover>
+        </div>
+      ),
     },
     {
       title: "Liquidity",
@@ -605,7 +652,10 @@ const TopPosition = () => {
         const totalFee1 = claimedFee1 + unclaimedFee1;
         const totalFeeUSD = totalFee0 * token0Price + totalFee1 * token1Price;
         const roi = 100 * (totalFeeUSD / liquidity);
-
+        // Calculate APR
+        const ageInHours = (Date.now() - createdAt) / 1000 / 60 / 60;
+        const hourlyFeeUSD = totalFeeUSD / ageInHours;
+        const apr = (hourlyFeeUSD * 24 * 365 * 100) / liquidity;
         // Calculate strategy
         let strategy = PositionStrategy.LONG;
         if (upperPrice - lowerPrice <= maxDailyPriceFluctuation) {
@@ -619,8 +669,7 @@ const TopPosition = () => {
           positionId: p.id,
           isActive,
           roi,
-          apr: 0,
-          pnl: 0,
+          apr,
           strategy,
           liquidity,
           priceRange: {
@@ -639,6 +688,7 @@ const TopPosition = () => {
           totalFeeUSD,
           totalFee0,
           totalFee1,
+          hourlyFeeUSD,
         } as PositionColumnDataType;
       }
     );
