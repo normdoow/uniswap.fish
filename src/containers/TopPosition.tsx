@@ -489,17 +489,17 @@ const TopPosition = () => {
       width: 80,
       sorter: (a, b) => Number(a.createdAt) - Number(b.createdAt),
       render: (createdAt) => (
-        <div
-          data-for="top-position"
-          data-place="right"
-          data-html={true}
-          data-tip={`${getReadableDateTime(
-            createdAt
-          )}<br><br>(click to copy timestamp)`}
-          onClick={() => navigator.clipboard.writeText(`${createdAt}`)}
-          style={{ cursor: "pointer" }}
-        >
-          {getAge(createdAt)}
+        <div onClick={() => navigator.clipboard.writeText(`${createdAt}`)}>
+          <Tooltip
+            placement="right"
+            color="rgba(0,0,0,0.675)"
+            overlayStyle={{ whiteSpace: "pre-line" }}
+            title={`${getReadableDateTime(
+              createdAt
+            )}\r\n(click to copy timestamp)`}
+          >
+            {getAge(createdAt)}
+          </Tooltip>
         </div>
       ),
     },
