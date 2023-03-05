@@ -561,6 +561,8 @@ const TopPosition = () => {
 
         // Calculate isActive
         const isActive = currentTick >= lowerTick && currentTick <= upperTick;
+        // Calculate createdAt
+        const createdAt = Number(p.transaction.timestamp) * 1000;
         // Calculate liquidity
         const network = getCurrentNetwork();
         const tokenA = new V3Token(
@@ -626,7 +628,7 @@ const TopPosition = () => {
             upper: upperPrice,
             current: currentPrice,
           },
-          createdAt: Number(p.transaction.timestamp) * 1000,
+          createdAt,
 
           maxDailyPriceFluctuation,
           maxWeeklyPriceFluctuation,
@@ -641,7 +643,12 @@ const TopPosition = () => {
       }
     );
 
-    setPositions(topPositions.filter((p) => p.liquidity >= 500 && p.roi > 0));
+    setPositions(
+      topPositions.filter(
+        (p) =>
+          p.liquidity >= 500 && p.roi > 0 && Date.now() - p.createdAt >= 3600000
+      )
+    );
     setIsLoading(false);
   };
 
