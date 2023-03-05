@@ -224,7 +224,6 @@ const TopPosition = () => {
       dataIndex: "roi",
       key: "roi",
       width: 110,
-      defaultSortOrder: "descend",
       sorter: (a, b) => a.roi - b.roi,
       render: (roi, record) => (
         <div>
@@ -510,6 +509,7 @@ const TopPosition = () => {
       dataIndex: "createdAt",
       key: "createdAt",
       width: 80,
+      defaultSortOrder: "descend",
       sorter: (a, b) => Number(a.createdAt) - Number(b.createdAt),
       render: (createdAt) => (
         <div onClick={() => navigator.clipboard.writeText(`${createdAt}`)}>
