@@ -265,12 +265,8 @@ const TopPosition = () => {
       title: "Fee APR",
       dataIndex: "apr",
       key: "apr",
+      width: 110,
       sorter: (a, b) => a.apr - b.apr,
-    },
-    {
-      title: "PnL",
-      dataIndex: "pnl",
-      key: "pnl",
     },
     {
       title: "Liquidity",
@@ -676,7 +672,7 @@ const TopPosition = () => {
         <AntdTable
           columns={columns}
           dataSource={positions}
-          scroll={{ x: 1400 }}
+          scroll={{ x: 1000 }}
           size="middle"
           loading={isLoading}
         />
