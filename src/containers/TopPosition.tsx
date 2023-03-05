@@ -15,7 +15,6 @@ import type { ColumnsType } from "antd/es/table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { getAge, getReadableDateTime } from "../utils/datetime";
-import ReactTooltip from "react-tooltip";
 import { getPoolPositions } from "../repos/uniswap";
 import { useAppContext } from "../context/app/appContext";
 import { Position } from "../common/interfaces/uniswap.interface";
@@ -422,58 +421,67 @@ const TopPosition = () => {
           <div>
             <PriceRange>
               <div className="bar"></div>
-              <div
-                style={{
-                  opacity: isActive ? 1 : 0.6,
-                  ...(!isActive ? { left: "20%" } : {}),
-                }}
-                className="lower"
-                data-for="top-position_price_range"
-                data-place="right"
-                data-html={true}
-                data-tip={`Lower Price<br>${round(priceRange.lower, 6)} ${
+              <Tooltip
+                placement="right"
+                color="rgba(0,0,0,0.675)"
+                overlayStyle={{ whiteSpace: "pre-line" }}
+                title={`Lower Price\r\n${round(priceRange.lower, 6)} ${
                   appContext.state.token0?.symbol
                 }/${
                   appContext.state.token1?.symbol
-                }<br><br>(click to copy to clipboard)`}
-                onClick={() =>
-                  navigator.clipboard.writeText(`${priceRange.lower}`)
-                }
-              ></div>
-              <div
-                style={{
-                  opacity: isActive ? 1 : 0.6,
-                  ...(!isActive ? { right: "20%" } : {}),
-                }}
-                className="upper"
-                data-for="top-position_price_range"
-                data-place="right"
-                data-html={true}
-                data-tip={`Upper Price<br>${round(priceRange.upper, 6)} ${
+                }\r\n\r\n(click to copy the price)`}
+              >
+                <div
+                  style={{
+                    opacity: isActive ? 1 : 0.6,
+                    ...(!isActive ? { left: "20%" } : {}),
+                  }}
+                  className="lower"
+                  onClick={() =>
+                    navigator.clipboard.writeText(`${priceRange.lower}`)
+                  }
+                ></div>
+              </Tooltip>
+              <Tooltip
+                placement="right"
+                color="rgba(0,0,0,0.675)"
+                overlayStyle={{ whiteSpace: "pre-line" }}
+                title={`Upper Price\r\n${round(priceRange.upper, 6)} ${
                   appContext.state.token0?.symbol
                 }/${
                   appContext.state.token1?.symbol
-                }<br><br>(click to copy to clipboard)`}
-                onClick={() =>
-                  navigator.clipboard.writeText(`${priceRange.upper}`)
-                }
-              ></div>
+                }\r\n\r\n(click to copy the price)`}
+              >
+                <div
+                  style={{
+                    opacity: isActive ? 1 : 0.6,
+                    ...(!isActive ? { right: "20%" } : {}),
+                  }}
+                  className="upper"
+                  onClick={() =>
+                    navigator.clipboard.writeText(`${priceRange.upper}`)
+                  }
+                ></div>
+              </Tooltip>
 
               {isActive && (
-                <div
-                  className="price"
-                  data-for="top-position_price_range"
-                  data-place="right"
-                  data-html={true}
-                  data-tip={`Current Price<br>${round(priceRange.current, 6)} ${
+                <Tooltip
+                  placement="right"
+                  color="rgba(0,0,0,0.675)"
+                  overlayStyle={{ whiteSpace: "pre-line" }}
+                  title={`Current Price\r\n${round(priceRange.current, 6)} ${
                     appContext.state.token0?.symbol
                   }/${
                     appContext.state.token1?.symbol
-                  }<br><br>(click to copy to clipboard)`}
-                  onClick={() =>
-                    navigator.clipboard.writeText(`${priceRange.current}`)
-                  }
-                ></div>
+                  }\r\n\r\n(click to copy the price)`}
+                >
+                  <div
+                    className="price"
+                    onClick={() =>
+                      navigator.clipboard.writeText(`${priceRange.current}`)
+                    }
+                  ></div>
+                </Tooltip>
               )}
 
               <div className="info">Hover to see price range info</div>
@@ -714,8 +722,6 @@ const TopPosition = () => {
       </WrappedHeader>
 
       {contextHolder}
-      {positions.length > 0 && <ReactTooltip id="top-position" />}
-      {positions.length > 0 && <ReactTooltip id="top-position_price_range" />}
 
       <ConfigProvider
         theme={{
