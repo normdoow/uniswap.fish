@@ -17,7 +17,7 @@ import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { getAge, getReadableDateTime } from "../utils/datetime";
 import { getPoolPositions } from "../repos/uniswap";
 import { useAppContext } from "../context/app/appContext";
-import { Position } from "../common/interfaces/uniswap.interface";
+import { Pool, Position } from "../common/interfaces/uniswap.interface";
 import {
   calculatePositionFees,
   getPriceFromTick,
@@ -164,6 +164,7 @@ interface PositionColumnDataType {
 
 const TopPosition = () => {
   const appContext = useAppContext();
+  const [allPositions, setAllPositions] = useState<Position[]>([]);
   const [positions, setPositions] = useState<PositionColumnDataType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [messageApi, contextHolder] = message.useMessage();
@@ -542,10 +543,7 @@ const TopPosition = () => {
     },
   ];
 
-  const fetchTopPosition = async () => {
-    if (!appContext.state.pool) return;
-    setIsLoading(true);
-
+  const processTopPositions = (allPositions: Position[]) => {
     const {
       pool,
       token0PriceChart,
@@ -557,7 +555,7 @@ const TopPosition = () => {
     const token0Price = token0PriceChart?.currentPriceUSD || 0;
     const token1Price = token1PriceChart?.currentPriceUSD || 0;
 
-    const allPositions = await getPoolPositions(pool.id);
+    if (!pool) return;
 
     const currentTick = Number(pool.tick);
     let currentPrice = getPriceFromTick(
@@ -565,6 +563,13 @@ const TopPosition = () => {
       token0?.decimals || "18",
       token1?.decimals || "18"
     );
+    if (isPairToggled) {
+      currentPrice = getPriceFromTick(
+        -currentTick,
+        token0?.decimals || "18",
+        token1?.decimals || "18"
+      );
+    }
 
     // calculate strategy based on price fluctuation
     const priceDataPoints = processPriceChartData(
@@ -592,6 +597,8 @@ const TopPosition = () => {
         return acc;
       }, 0) * 1.1;
 
+    console.log("debug", maxDailyPriceFluctuation, maxWeeklyPriceFluctuation);
+
     const topPositions: PositionColumnDataType[] = allPositions.map(
       (p: Position) => {
         const lowerTick = Number(p.tickLower.tickIdx);
@@ -607,18 +614,18 @@ const TopPosition = () => {
           token0?.decimals || "18",
           token1?.decimals || "18"
         );
-        // if (isPairToggled) {
-        //   lowerPrice = getPriceFromTick(
-        //     -lowerTick,
-        //     token0?.decimals || "18",
-        //     token1?.decimals || "18"
-        //   );
-        //   upperPrice = getPriceFromTick(
-        //     -upperTick,
-        //     token0?.decimals || "18",
-        //     token1?.decimals || "18"
-        //   );
-        // }
+        if (isPairToggled) {
+          lowerPrice = getPriceFromTick(
+            -lowerTick,
+            token0?.decimals || "18",
+            token1?.decimals || "18"
+          );
+          upperPrice = getPriceFromTick(
+            -upperTick,
+            token0?.decimals || "18",
+            token1?.decimals || "18"
+          );
+        }
 
         // Calculate isActive
         const isActive = currentTick >= lowerTick && currentTick <= upperTick;
@@ -652,16 +659,29 @@ const TopPosition = () => {
         });
         const amount0 = Number(position.amount0.toSignificant(4));
         const amount1 = Number(position.amount1.toSignificant(4));
-        const liquidity = amount0 * token0Price + amount1 * token1Price;
+        const token0Amount = isPairToggled ? amount1 : amount0;
+        const token1Amount = isPairToggled ? amount0 : amount1;
+        const liquidity =
+          token0Amount * token0Price + token1Amount * token1Price;
         // Calculate earning fee
-        const claimedFee0 = Number(p.collectedFeesToken0);
-        const claimedFee1 = Number(p.collectedFeesToken1);
-        const [unclaimedFee0, unclaimedFee1] = calculatePositionFees(
+        const claimedFee0 = isPairToggled
+          ? Number(p.collectedFeesToken1)
+          : Number(p.collectedFeesToken0);
+        const claimedFee1 = isPairToggled
+          ? Number(p.collectedFeesToken0)
+          : Number(p.collectedFeesToken1);
+        const unclaimedFees = calculatePositionFees(
           pool,
           p,
-          token0,
-          token1
+          isPairToggled ? token1 : token0,
+          isPairToggled ? token0 : token1
         );
+        const unclaimedFee0 = isPairToggled
+          ? unclaimedFees[1]
+          : unclaimedFees[0];
+        const unclaimedFee1 = isPairToggled
+          ? unclaimedFees[0]
+          : unclaimedFees[1];
         const totalFee0 = claimedFee0 + unclaimedFee0;
         const totalFee1 = claimedFee1 + unclaimedFee1;
         const totalFeeUSD = totalFee0 * token0Price + totalFee1 * token1Price;
@@ -695,8 +715,8 @@ const TopPosition = () => {
 
           maxDailyPriceFluctuation,
           maxWeeklyPriceFluctuation,
-          token0Amount: amount0,
-          token1Amount: amount1,
+          token0Amount,
+          token1Amount,
           token0Price,
           token1Price,
           totalFeeUSD,
@@ -713,12 +733,24 @@ const TopPosition = () => {
           p.liquidity >= 500 && p.roi > 0 && Date.now() - p.createdAt >= 3600000
       )
     );
-    setIsLoading(false);
   };
 
   useEffect(() => {
-    fetchTopPosition();
-  }, [appContext.state.pool]);
+    if (!appContext.state.pool) return;
+
+    setIsLoading(true);
+    getPoolPositions(appContext.state.pool.id).then((allPositions) => {
+      processTopPositions(allPositions);
+      setAllPositions(allPositions);
+      setIsLoading(false);
+    });
+  }, [appContext.state?.pool?.id]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    processTopPositions(allPositions);
+    setIsLoading(false);
+  }, [appContext.state.isPairToggled]);
 
   return (
     <Container>
