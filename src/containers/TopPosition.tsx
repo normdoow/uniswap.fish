@@ -767,6 +767,20 @@ const TopPosition = () => {
 
       {contextHolder}
 
+      <div
+        style={{
+          color: "#999",
+          marginTop: 10,
+          marginBottom: 20,
+          fontSize: "0.875rem",
+        }}
+      >
+        The top positions feature is still in beta version and only available on
+        the "Ethereum" network. A few improvements will be released over time.
+        If you have any feedback, please report us via our email
+        (hello@uniswap.fish) or Twitter DMs (@uniswapdotfish).
+      </div>
+
       <ConfigProvider
         theme={{
           algorithm: theme.darkAlgorithm,
