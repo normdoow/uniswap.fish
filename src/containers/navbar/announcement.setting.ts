@@ -1,5 +1,10 @@
 export const ANNOUNCEMENTS = [
   {
+    message: "top positions",
+    tweetId: "1632749787983532034",
+    tag: "feature-update",
+  },
+  {
     message: "deposit tokens amount calculator",
     tweetId: "1625464573452242944",
     tag: "feature-update",
