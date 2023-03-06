@@ -178,12 +178,8 @@ function App() {
           </div>
         </ContentContainer>
 
-        {getCurrentNetwork().id === "ethereum" && (
-          <>
-            <Br />
-            <TopPosition />
-          </>
-        )}
+        <Br />
+        <TopPosition />
 
         <Footer />
       </BodyContainer>

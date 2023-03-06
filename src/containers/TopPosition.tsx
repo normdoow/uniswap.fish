@@ -194,6 +194,9 @@ interface PositionColumnDataType {
   unclaimedFee0: number;
   unclaimedFee1: number;
   hourlyFeeUSD: number;
+
+  // Filtering data
+  unclaimedROI: number;
 }
 
 const TopPosition = () => {
@@ -791,6 +794,10 @@ const TopPosition = () => {
         } else if (upperPrice - lowerPrice <= maxWeeklyPriceFluctuation) {
           strategy = PositionStrategy.MIDDLE;
         }
+        // unclaimedROI, use to filter out outliers
+        const unclaimedROI =
+          (100 * (unclaimedFee0 * token0Price + unclaimedFee1 * token1Price)) /
+          liquidity;
 
         return {
           key: p.id,
@@ -819,35 +826,55 @@ const TopPosition = () => {
           unclaimedFee0,
           unclaimedFee1,
           hourlyFeeUSD,
+
+          unclaimedROI,
         } as PositionColumnDataType;
       }
     );
 
+    let validTopPositions = topPositions
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .filter(
+        (p) =>
+          p.liquidity >= 500 && p.roi > 0 && Date.now() - p.createdAt >= 3600000
+      )
+      .filter(
+        // filter out positions that ROI is greater than 100,000% (high possiblity of wrong data)
+        (p) => p.roi <= 100000
+      )
+      .filter(
+        // filter out positions that unclaimedFee < 0 (high possiblity of wrong data)
+        (p) => p.unclaimedFee0 >= 0 && p.unclaimedFee1 >= 0
+      );
+
+    // filter out outliers (unclaimedROI > 5 * average consecutive unclaimedROI)
+    const unclaimedROIs = validTopPositions.map((p) => p.unclaimedROI);
+    const consecutive = 7;
+    const averageUnclaimedROIs: number[] = [];
+    for (let i = 0; i < unclaimedROIs.length; i++) {
+      const consecutiveUnclaimedROIsAfter = unclaimedROIs.slice(
+        Math.min(i + 1, unclaimedROIs.length - 1),
+        Math.min(i + consecutive + 1, unclaimedROIs.length - 1)
+      );
+      const consecutiveUnclaimedROIsBefore = unclaimedROIs.slice(
+        Math.max(i - consecutive - 1, 0),
+        Math.max(i - 1, 0)
+      );
+      const consecutiveUnclaimedROIs = [
+        ...consecutiveUnclaimedROIsAfter,
+        ...consecutiveUnclaimedROIsBefore,
+      ];
+
+      const averageUnclaimedROI =
+        consecutiveUnclaimedROIs.reduce((a, b) => a + b, 0) /
+        consecutiveUnclaimedROIs.length;
+      averageUnclaimedROIs.push(averageUnclaimedROI);
+    }
+
     setPositions(
-      topPositions
-        .filter(
-          (p) =>
-            p.liquidity >= 500 &&
-            p.roi > 0 &&
-            Date.now() - p.createdAt >= 3600000
-        )
-        .filter(
-          // filter out positions that unclaimed fees is greater than 500% of liquidity (high possiblity of wrong data)
-          (p) =>
-            (100 *
-              (p.unclaimedFee0 * p.token0Price +
-                p.unclaimedFee1 * p.token1Price)) /
-              p.liquidity <=
-            500
-        )
-        .filter(
-          // filter out positions that ROI is greater than 100,000% (high possiblity of wrong data)
-          (p) => p.roi <= 100000
-        )
-        .filter(
-          // filter out positions that unclaimedFee < 0 (high possiblity of wrong data)
-          (p) => p.unclaimedFee0 >= 0 && p.unclaimedFee1 >= 0
-        )
+      validTopPositions.filter(
+        (p, i) => p.unclaimedROI / averageUnclaimedROIs[i] <= 5
+      )
     );
   };
 
