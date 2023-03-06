@@ -844,6 +844,10 @@ const TopPosition = () => {
           // filter out positions that ROI is greater than 100,000% (high possiblity of wrong data)
           (p) => p.roi <= 100000
         )
+        .filter(
+          // filter out positions that unclaimedFee < 0 (high possiblity of wrong data)
+          (p) => p.unclaimedFee0 >= 0 && p.unclaimedFee1 >= 0
+        )
     );
   };
 
