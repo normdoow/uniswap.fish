@@ -358,7 +358,7 @@ const TopPosition = () => {
                     </div>
                     <div>
                       <div>Claimed Fee</div>
-                      <div>0</div>
+                      <div></div>
                       <div>
                         $
                         {(
