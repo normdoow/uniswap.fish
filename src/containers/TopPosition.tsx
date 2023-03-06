@@ -357,6 +357,12 @@ const TopPosition = () => {
                     </div>
                   </ROITable>
                 )}
+
+                <div
+                  style={{ fontSize: "0.675rem", color: "#777", marginTop: 14 }}
+                >
+                  ROI = Total Fee Earned / Total Liquidity
+                </div>
               </div>
             }
           >
@@ -411,6 +417,12 @@ const TopPosition = () => {
                     {`%`}
                   </div>
                 </Table>
+
+                <div
+                  style={{ fontSize: "0.675rem", color: "#777", marginTop: 14 }}
+                >
+                  Fee APR = 365 * Daily Total Fee Earned / Total Liquidity
+                </div>
               </div>
             }
           >
@@ -503,13 +515,28 @@ const TopPosition = () => {
               fontStyle: "italic",
             }}
           >
-            <Tooltip
+            <Popover
               placement="right"
-              color="rgba(0,0,0,0.675)"
-              title={`Price Range ${symbol} ${round(amount, 6)} ${currency}`}
+              color="rgba(0,0,0,0.875)"
+              content={
+                <div>
+                  Price Range {symbol} {round(amount, 6)} {currency}
+                  <div
+                    style={{
+                      fontSize: "0.675rem",
+                      color: "#777",
+                      marginTop: 14,
+                    }}
+                  >
+                    Strategy is calculated based on the price
+                    <br />
+                    fluctuation over the past 30 days.
+                  </div>
+                </div>
+              }
             >
               {strategy}
-            </Tooltip>
+            </Popover>
           </div>
         );
       },
@@ -636,7 +663,13 @@ const TopPosition = () => {
             });
           }}
         >
-          Apply
+          <Tooltip
+            placement="right"
+            color="rgba(0,0,0,0.675)"
+            title={`Apply this position's price range to the setting`}
+          >
+            Apply
+          </Tooltip>
         </Button>
       ),
     },
