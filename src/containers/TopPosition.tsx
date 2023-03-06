@@ -912,10 +912,8 @@ const TopPosition = () => {
           fontSize: "0.875rem",
         }}
       >
-        The top positions feature is still in beta version and only available on
-        the "Ethereum" network. A few improvements will be released over time.
-        If you have any feedback, please report us via our email
-        (hello@uniswap.fish) or Twitter DMs (@uniswapdotfish).
+        We only display positions that meet the requirements of having pooled
+        assets of at least $500 and being more than one hour old.
       </div>
 
       <ConfigProvider
