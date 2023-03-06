@@ -13,6 +13,7 @@ const Q96 = new bn(2).pow(96);
 const Q128 = new bn(2).pow(128);
 const ZERO = new bn(0);
 
+// Ref: https://ethereum.stackexchange.com/a/144704
 export const calculatePositionFees = (
   pool: Pool,
   position: Position,
