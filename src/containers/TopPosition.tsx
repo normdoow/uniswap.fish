@@ -128,6 +128,38 @@ const Token = styled.div`
     transform: translateX(-5px);
   }
 `;
+export const ROITable = styled.div`
+  width: 100%;
+  display: grid;
+  grid-gap: 5px;
+  margin-top: 7px;
+
+  padding: 6px 12px;
+  &.adjust-padding-right {
+    padding-right: 6px;
+  }
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #aaa;
+
+  & > div {
+    display: grid;
+    grid-template-columns: 100px 1fr 6rem;
+    grid-gap: 7px;
+
+    & > div:nth-child(2) {
+      text-align: right;
+    }
+    & > div:nth-child(3) {
+      text-align: left;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 5rem;
+      text-align: center;
+    }
+  }
+`;
 
 enum PositionStrategy {
   LONG = "LONG",
@@ -157,8 +189,10 @@ interface PositionColumnDataType {
   token0Price: number;
   token1Price: number;
   totalFeeUSD: number;
-  totalFee0: number;
-  totalFee1: number;
+  claimedFee0: number;
+  claimedFee1: number;
+  unclaimedFee0: number;
+  unclaimedFee1: number;
   hourlyFeeUSD: number;
 }
 
@@ -235,37 +269,91 @@ const TopPosition = () => {
                 <div style={{ color: "white" }}>
                   Total fees earned: ${record.totalFeeUSD.toFixed(2)}
                 </div>
-                <Table>
-                  <Token>
-                    <img
-                      alt={appContext.state.token0?.name}
-                      src={appContext.state.token0?.logoURI}
-                    />{" "}
-                    <span>{appContext.state.token0?.symbol}</span>
-                  </Token>
-                  <div>{round(record.totalFee0, 6)}</div>
-                  <div>
-                    ${(record.totalFee0 * record.token0Price).toFixed(2)}
-                  </div>
-                </Table>
-                <Table>
-                  <Token>
-                    <img
-                      alt={appContext.state.token1?.name}
-                      src={appContext.state.token1?.logoURI}
-                    />{" "}
-                    <span>{appContext.state.token1?.symbol}</span>
-                  </Token>
-                  <div>{round(record.totalFee1, 6)}</div>
-                  <div>
-                    ${(record.totalFee1 * record.token1Price).toFixed(2)}
-                  </div>
-                </Table>
-                <div
-                  style={{ marginTop: 14, color: "#777", fontSize: "0.675rem" }}
-                >
-                  Total fee earned = claimed token + unclaimed token
-                </div>
+                {(record.unclaimedFee0 > 0 || record.unclaimedFee1 > 0) && (
+                  <ROITable className="adjust-padding-right">
+                    <div>
+                      <Token>
+                        <img
+                          alt={appContext.state.token0?.name}
+                          src={appContext.state.token0?.logoURI}
+                        />{" "}
+                        <span>{appContext.state.token0?.symbol}</span>
+                      </Token>
+                      <div>{round(record.unclaimedFee0, 6)}</div>
+                      <div>
+                        $
+                        {(record.unclaimedFee0 * record.token0Price).toFixed(2)}
+                      </div>
+                    </div>
+                    <div>
+                      <Token>
+                        <img
+                          alt={appContext.state.token1?.name}
+                          src={appContext.state.token1?.logoURI}
+                        />{" "}
+                        <span>{appContext.state.token1?.symbol}</span>
+                      </Token>
+                      <div>{round(record.unclaimedFee1, 6)}</div>
+                      <div>
+                        $
+                        {(record.unclaimedFee1 * record.token1Price).toFixed(2)}
+                      </div>
+                    </div>
+                    <div>
+                      <div>Unclaimed Fee</div>
+                      <div></div>
+                      <div>
+                        $
+                        {(
+                          record.unclaimedFee0 * record.token0Price +
+                          record.unclaimedFee1 * record.token1Price
+                        ).toFixed(2)}
+                      </div>
+                    </div>
+                  </ROITable>
+                )}
+
+                {(record.claimedFee0 > 0 || record.claimedFee1 > 0) && (
+                  <ROITable className="adjust-padding-right">
+                    <div>
+                      <Token>
+                        <img
+                          alt={appContext.state.token0?.name}
+                          src={appContext.state.token0?.logoURI}
+                        />{" "}
+                        <span>{appContext.state.token0?.symbol}</span>
+                      </Token>
+                      <div>{round(record.claimedFee0, 6)}</div>
+                      <div>
+                        ${(record.claimedFee0 * record.token0Price).toFixed(2)}
+                      </div>
+                    </div>
+                    <div>
+                      <Token>
+                        <img
+                          alt={appContext.state.token1?.name}
+                          src={appContext.state.token1?.logoURI}
+                        />{" "}
+                        <span>{appContext.state.token1?.symbol}</span>
+                      </Token>
+                      <div>{round(record.claimedFee1, 6)}</div>
+                      <div>
+                        ${(record.claimedFee1 * record.token1Price).toFixed(2)}
+                      </div>
+                    </div>
+                    <div>
+                      <div>Claimed Fee</div>
+                      <div>0</div>
+                      <div>
+                        $
+                        {(
+                          record.claimedFee0 * record.token0Price +
+                          record.claimedFee1 * record.token1Price
+                        ).toFixed(2)}
+                      </div>
+                    </div>
+                  </ROITable>
+                )}
               </div>
             }
           >
@@ -332,7 +420,7 @@ const TopPosition = () => {
       title: "Liquidity",
       dataIndex: "liquidity",
       key: "liquidity",
-      width: 160,
+      width: 150,
       sorter: (a, b) => a.liquidity - b.liquidity,
       render: (liquidity, record) => (
         <div>
@@ -380,7 +468,7 @@ const TopPosition = () => {
       title: "Strategy",
       dataIndex: "strategy",
       key: "strategy",
-      width: 120,
+      width: 110,
       filters: [
         {
           text: "SHORT",
@@ -726,8 +814,10 @@ const TopPosition = () => {
           token0Price,
           token1Price,
           totalFeeUSD,
-          totalFee0,
-          totalFee1,
+          claimedFee0,
+          claimedFee1,
+          unclaimedFee0,
+          unclaimedFee1,
           hourlyFeeUSD,
         } as PositionColumnDataType;
       }

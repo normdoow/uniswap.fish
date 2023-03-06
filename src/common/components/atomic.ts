@@ -159,7 +159,7 @@ export const Table = styled.div`
   & > div:nth-child(2) {
     text-align: right;
   }
-  & > div:nth-child(3) {
+  & > div:nth-child(3n) {
     text-align: left;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 5rem;
