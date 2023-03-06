@@ -14,7 +14,6 @@ const Q128 = new bn(2).pow(128);
 const Q256 = new bn(2).pow(256);
 const ZERO = new bn(0);
 
-// https://ethereum.stackexchange.com/a/144704
 export const calculatePositionFees = (
   pool: Pool,
   position: Position,
@@ -75,7 +74,7 @@ export const calculatePositionFees = (
     tickLowerFeeGrowthBelow_0 = tickLowerFeeGrowthOutside_0;
     tickLowerFeeGrowthBelow_1 = tickLowerFeeGrowthOutside_1;
   } else {
-    tickLowerFeeGrowthBelow_0 = feeGrowthGlobal_1.minus(
+    tickLowerFeeGrowthBelow_0 = feeGrowthGlobal_0.minus(
       tickLowerFeeGrowthBelow_0
     );
     tickLowerFeeGrowthBelow_1 = feeGrowthGlobal_1.minus(
