@@ -205,6 +205,18 @@ const TopPosition = () => {
   const [positions, setPositions] = useState<PositionColumnDataType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [messageApi, contextHolder] = message.useMessage();
+  const [isTablet, setIsTablet] = useState<boolean>(false);
+
+  const handleResize = () => {
+    if (window.innerWidth <= ScreenWidth.TABLET) {
+      setIsTablet(true);
+    } else {
+      setIsTablet(false);
+    }
+  };
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+  });
 
   const columns: ColumnsType<PositionColumnDataType> = [
     {
@@ -212,7 +224,7 @@ const TopPosition = () => {
       dataIndex: "positionId",
       key: "positionId",
       width: 110,
-      fixed: "left",
+      fixed: isTablet ? false : "left",
       filters: [
         {
           text: "Active Position",
@@ -647,7 +659,7 @@ const TopPosition = () => {
     {
       title: "Action",
       key: "action",
-      fixed: "right",
+      fixed: isTablet ? false : "right",
       width: 100,
       render: (_, record) => (
         <Button
