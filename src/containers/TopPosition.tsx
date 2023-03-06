@@ -824,10 +824,26 @@ const TopPosition = () => {
     );
 
     setPositions(
-      topPositions.filter(
-        (p) =>
-          p.liquidity >= 500 && p.roi > 0 && Date.now() - p.createdAt >= 3600000
-      )
+      topPositions
+        .filter(
+          (p) =>
+            p.liquidity >= 500 &&
+            p.roi > 0 &&
+            Date.now() - p.createdAt >= 3600000
+        )
+        .filter(
+          // filter out positions that unclaimed fees is greater than 500% of liquidity (high possiblity of wrong data)
+          (p) =>
+            (100 *
+              (p.unclaimedFee0 * p.token0Price +
+                p.unclaimedFee1 * p.token1Price)) /
+              p.liquidity <=
+            500
+        )
+        .filter(
+          // filter out positions that ROI is greater than 100,000% (high possiblity of wrong data)
+          (p) => p.roi <= 100000
+        )
     );
   };
 

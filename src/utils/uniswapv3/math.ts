@@ -11,7 +11,6 @@ bn.config({ EXPONENTIAL_AT: 999999, DECIMAL_PLACES: 40 });
 
 const Q96 = new bn(2).pow(96);
 const Q128 = new bn(2).pow(128);
-const Q256 = new bn(2).pow(256);
 const ZERO = new bn(0);
 
 export const calculatePositionFees = (
@@ -24,6 +23,7 @@ export const calculatePositionFees = (
   const tickLower = Number(position.tickLower.tickIdx);
   const tickUpper = Number(position.tickUpper.tickIdx);
   const liquidity = new bn(position.liquidity);
+
   // Check out the relevant formulas below which are from Uniswap Whitepaper Section 6.3 and 6.4
   // 𝑓𝑟 =𝑓𝑔−𝑓𝑏(𝑖𝑙)−𝑓𝑎(𝑖𝑢)
   // 𝑓𝑢 =𝑙·(𝑓𝑟(𝑡1)−𝑓𝑟(𝑡0))
@@ -54,20 +54,6 @@ export const calculatePositionFees = (
   let tickUpperFeeGrowthAbove_0 = ZERO;
   let tickUpperFeeGrowthAbove_1 = ZERO;
 
-  // These are the calculations for '𝑓𝑎(𝑖)' from the formula
-  // for both token 0 and token 1
-  if (tickCurrent >= tickUpper) {
-    tickUpperFeeGrowthAbove_0 = feeGrowthGlobal_0.minus(
-      tickUpperFeeGrowthOutside_0
-    );
-    tickUpperFeeGrowthAbove_1 = feeGrowthGlobal_1.minus(
-      tickUpperFeeGrowthOutside_1
-    );
-  } else {
-    tickUpperFeeGrowthAbove_0 = tickUpperFeeGrowthOutside_0;
-    tickUpperFeeGrowthAbove_1 = tickUpperFeeGrowthOutside_1;
-  }
-
   // These are the calculations for '𝑓b(𝑖)' from the formula
   // for both token 0 and token 1
   if (tickCurrent >= tickLower) {
@@ -75,10 +61,24 @@ export const calculatePositionFees = (
     tickLowerFeeGrowthBelow_1 = tickLowerFeeGrowthOutside_1;
   } else {
     tickLowerFeeGrowthBelow_0 = feeGrowthGlobal_0.minus(
-      tickLowerFeeGrowthBelow_0
+      tickLowerFeeGrowthOutside_0
     );
     tickLowerFeeGrowthBelow_1 = feeGrowthGlobal_1.minus(
       tickLowerFeeGrowthOutside_1
+    );
+  }
+
+  // These are the calculations for '𝑓𝑎(𝑖)' from the formula
+  // for both token 0 and token 1
+  if (tickCurrent < tickUpper) {
+    tickUpperFeeGrowthAbove_0 = tickUpperFeeGrowthOutside_0;
+    tickUpperFeeGrowthAbove_1 = tickUpperFeeGrowthOutside_1;
+  } else {
+    tickUpperFeeGrowthAbove_0 = feeGrowthGlobal_0.minus(
+      tickUpperFeeGrowthOutside_0
+    );
+    tickUpperFeeGrowthAbove_1 = feeGrowthGlobal_1.minus(
+      tickUpperFeeGrowthOutside_1
     );
   }
 
