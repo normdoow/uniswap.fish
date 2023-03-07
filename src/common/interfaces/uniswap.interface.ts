@@ -6,6 +6,7 @@ export interface Network {
   logoURI: string;
   disabled?: boolean;
   isNew?: boolean;
+  error?: string;
   subgraphEndpoint: string;
 }
 

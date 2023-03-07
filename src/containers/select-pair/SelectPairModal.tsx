@@ -530,7 +530,8 @@ const SelectPairModal = () => {
                   <img src={network.logoURI} alt={network.name} />
                   <div>
                     <h5>
-                      {network.name} {network.isNew && <span>NEW</span>}
+                      {network.name} {network.isNew && <span>NEW</span>}{" "}
+                      {network.error && <span>{network.error}</span>}
                     </h5>
                     <span>{network.desc}</span>
                   </div>
