@@ -66,7 +66,7 @@ export const NETWORKS: Network[] = [
     name: "Arbitrum",
     desc: "Arbitrum Mainnet (L2)",
     disabled: false,
-    isNew: true,
+    isNew: false,
     logoURI:
       "https://assets.website-files.com/5f973c970bea5548ad4287ef/60a320b472858ace6700df76_arb-icon.svg",
     subgraphEndpoint:
