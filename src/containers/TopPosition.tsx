@@ -228,10 +228,15 @@ const TopPosition = () => {
       filters: [
         {
           text: "Active Position",
-          value: "isActive",
+          value: "active",
+        },
+        {
+          text: "Out of Range Position",
+          value: "out-of-range",
         },
       ],
-      onFilter: (_, record) => record.isActive,
+      onFilter: (value, record) =>
+        (record.isActive ? "active" : "out-of-range").includes(String(value)),
       sorter: (a, b) => Number(a.positionId) - Number(b.positionId),
       render: (positionId, record) => (
         <a
