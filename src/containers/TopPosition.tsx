@@ -678,6 +678,16 @@ const TopPosition = () => {
               type: "success",
               content: `Price range setting has been updated`,
             });
+
+            // Plausible Feature Tracking
+            const props = {
+              featureId: "Top Positions Apply",
+            };
+            if (typeof window.plausible !== "undefined") {
+              window.plausible("FeatureUsage", {
+                props,
+              });
+            }
           }}
         >
           <Tooltip
