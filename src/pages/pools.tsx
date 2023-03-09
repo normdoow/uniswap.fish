@@ -1,13 +1,15 @@
 import React from "react";
 import styled from "styled-components";
 import Footer from "../containers/Footer";
-import Header from "../containers/Header";
+import { DownOutlined } from "@ant-design/icons";
 import Navbar from "../containers/navbar/Navbar";
 import { ScreenWidth } from "../utils/styled";
 import { useAppContext } from "../context/app/appContext";
-import { Br, Heading } from "../common/components/atomic";
+import { Br } from "../common/components/atomic";
 import FavoritePools from "../containers/pools/FavoritePools";
 import TopPools from "../containers/pools/TopPools";
+import { Dropdown, Space } from "antd";
+import { NETWORKS } from "../common/network";
 
 const BodyContainer = styled.div`
   max-width: 900px;
@@ -31,6 +33,13 @@ const HeaderContainer = styled.div`
   }
 `;
 
+const items = NETWORKS.map((network) => {
+  return {
+    key: network.id,
+    label: <div>{network.name}</div>,
+  };
+});
+
 function App() {
   const { state } = useAppContext();
 
@@ -40,7 +49,23 @@ function App() {
       <BodyContainer>
         <HeaderContainer>
           <h2>Pool Overview</h2>
+          <Dropdown
+            menu={{
+              items,
+              selectable: true,
+              defaultSelectedKeys: ["ethereum"],
+            }}
+            placement="bottomRight"
+          >
+            <a onClick={(e) => e.preventDefault()}>
+              <Space>
+                Hover me
+                <DownOutlined />
+              </Space>
+            </a>
+          </Dropdown>
         </HeaderContainer>
+        <Br />
 
         <FavoritePools />
         <Br />
