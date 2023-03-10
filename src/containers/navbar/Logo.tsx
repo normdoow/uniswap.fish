@@ -3,6 +3,7 @@ import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
+import { Link } from "gatsby";
 
 const Container = styled.div`
   position: relative;
@@ -203,6 +204,14 @@ const LINKS = [
     href: "/",
     icon: "🏠",
     text: "Home",
+    useGatsbyLink: true,
+  },
+  {
+    target: undefined,
+    href: "/pools",
+    icon: "🦄",
+    text: "Pool Overview",
+    useGatsbyLink: true,
   },
   {
     target: "_blank",
@@ -270,6 +279,21 @@ const Logo = () => {
       <NavPopup className={`${isOpenNavPopup ? "opened" : ""}`}>
         <div className={`${isOpenNavPopup ? "animatedContainer" : ""}`}>
           {LINKS.map((link, i) => {
+            if (link.useGatsbyLink) {
+              return (
+                <Link
+                  key={`nav_${link.text}`}
+                  target={link.target}
+                  className={isOpenNavPopup ? "fadeIn" : ""}
+                  style={{ animationDelay: `${i * 0.075}s` }}
+                  to={link.href}
+                >
+                  <span>{link.icon}</span>
+                  <span>{link.text}</span>
+                </Link>
+              );
+            }
+
             return (
               <a
                 key={`nav_${link.text}`}
