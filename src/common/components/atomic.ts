@@ -134,6 +134,13 @@ export const Heading = styled.h3`
   margin-bottom: 12px;
   font-weight: 500;
 `;
+export const H2 = styled.h2`
+  color: white;
+  margin: 0;
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+  font-weight: 500;
+`;
 export const Br = styled.div`
   height: 20px;
 `;

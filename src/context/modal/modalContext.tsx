@@ -9,7 +9,7 @@ export interface ModalContextState {
   isCreatePositionModalOpen: boolean;
 }
 const initialState: ModalContextState = {
-  isSelectPairModalOpen: true,
+  isSelectPairModalOpen: false,
   isDonateModalOpen: false,
   isImportantMessageModalOpen: false,
   isImpermanentLossModalOpen: false,

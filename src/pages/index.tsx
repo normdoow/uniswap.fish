@@ -1,13 +1,15 @@
 import React from "react";
 import styled from "styled-components";
-import { Br } from "../common/components/atomic";
+import { Br, H2 } from "../common/components/atomic";
 import CorrelationChart from "../containers/CorrelationChart";
 import Footer from "../containers/Footer";
 import EstimatedFees from "../containers/EstimatedFees";
 import Header from "../containers/Header";
 import Navbar from "../containers/navbar/Navbar";
 import LiquidityPositionChart from "../containers/LiquidityPositionChart";
-import SelectPairModal from "../containers/select-pair/SelectPairModal";
+import SelectPairModal, {
+  SelectPair,
+} from "../containers/select-pair/SelectPairModal";
 import Setting from "../containers/setting/Setting";
 import { ScreenWidth } from "../utils/styled";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,9 +20,6 @@ import { getCurrentNetwork } from "../common/network";
 import ImpermanentLossModal from "../containers/ImpermanentLossModal";
 import CreatePositionModal from "../containers/CreatePositionModal";
 import TopPosition from "../containers/TopPosition";
-// import { useModalContext } from "./context/modal/modalContext";
-// import AnnoucementModal from "./containers/AnnoucementModal";
-// import { ModalActionType } from "./context/modal/modalReducer";
 
 const BodyContainer = styled.div`
   max-width: 900px;
@@ -43,27 +42,41 @@ const ContentContainer = styled.div`
     grid-gap: 15px;
   }
 `;
+const LandingContainer = styled.div`
+  max-width: 750px;
+  margin: auto;
+  padding-top: 80px;
+
+  display: grid;
+  grid-template-columns: 5fr 370px;
+  grid-gap: 25px;
+  margin-top: 25px;
+
+  & > .select-pair {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    position: relative;
+  }
+
+  @media only screen and (max-width: ${ScreenWidth.TABLET}px) {
+    margin: auto 15px;
+    padding-top: 85px;
+  }
+`;
+const Landing = styled.div`
+  & p {
+    color: #999;
+  }
+`;
 
 function App() {
   const { state } = useAppContext();
-  // const { state, dispatch } = useModalContext();
-
-  // useEffect(() => {
-  //   if (localStorage.getItem("metamask-phishing-detection") === "OK") return;
-
-  //   dispatch({
-  //     type: ModalActionType.SET_ANNOUCEMENT_MODAL_STATE,
-  //     payload: true,
-  //   });
-  // }, []);
 
   return (
     <>
       <SelectPairModal />
       <ImpermanentLossModal />
       <CreatePositionModal />
-      {/* <AnnoucementModal /> */}
-      {/* <DonateModal /> */}
 
       <FeedbackButton
         onClick={() => {
@@ -91,26 +104,45 @@ function App() {
       </FeedbackButton>
 
       <Navbar />
-      <BodyContainer>
-        <Header />
-        <ContentContainer>
-          <div>
-            <EstimatedFees />
-            <Br />
-            <Setting />
-          </div>
-          <div>
-            <LiquidityPositionChart />
-            <Br />
-            <CorrelationChart />
-          </div>
-        </ContentContainer>
 
-        <Br />
-        <TopPosition />
+      {!state.pool && (
+        <LandingContainer>
+          <Landing>
+            <H2>Welcome to Uniswap.fish</H2>
+            <p>
+              Uniswap.fish is an all-in-one workspace for Uniswap liquidity
+              providers — calculate, discover, analyze, manage & track
+              positions, and more.
+            </p>
+          </Landing>
+          <div className="select-pair">
+            <SelectPair />
+          </div>
+        </LandingContainer>
+      )}
 
-        <Footer />
-      </BodyContainer>
+      {state.pool && (
+        <BodyContainer>
+          <Header />
+          <ContentContainer>
+            <div>
+              <EstimatedFees />
+              <Br />
+              <Setting />
+            </div>
+            <div>
+              <LiquidityPositionChart />
+              <Br />
+              <CorrelationChart />
+            </div>
+          </ContentContainer>
+
+          <Br />
+          <TopPosition />
+        </BodyContainer>
+      )}
+
+      <Footer />
     </>
   );
 }
