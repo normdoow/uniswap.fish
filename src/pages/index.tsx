@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Br, H2 } from "../common/components/atomic";
+import { Br, H2, Heading } from "../common/components/atomic";
 import CorrelationChart from "../containers/CorrelationChart";
 import Footer from "../containers/Footer";
 import EstimatedFees from "../containers/EstimatedFees";
@@ -15,11 +15,16 @@ import { ScreenWidth } from "../utils/styled";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FeedbackButton } from "../common/components/atomic";
 import { useAppContext } from "../context/app/appContext";
-import { faBug } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowRight,
+  faBug,
+  faExternalLinkAlt,
+} from "@fortawesome/free-solid-svg-icons";
 import { getCurrentNetwork } from "../common/network";
 import ImpermanentLossModal from "../containers/ImpermanentLossModal";
 import CreatePositionModal from "../containers/CreatePositionModal";
 import TopPosition from "../containers/TopPosition";
+import { Link } from "gatsby";
 
 const BodyContainer = styled.div`
   max-width: 900px;
@@ -65,7 +70,7 @@ const LandingContainer = styled.div`
 `;
 const Landing = styled.div`
   & p {
-    color: #999;
+    color: #bbb;
   }
 
   & .uniswap-foundation {
@@ -73,11 +78,45 @@ const Landing = styled.div`
     align-items: center;
     color: white;
     text-decoration: none;
+    margin-top: 20px;
+    font-size: 0.875rem;
 
     & img {
-      height: 60px;
+      height: 50px;
       margin-right: 12px;
       transform: translateY(2px);
+    }
+  }
+
+  & .top-pools {
+    display: block;
+    color: #bbb;
+    cursor: pointer;
+    font-size: 0.875rem;
+    padding: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.175);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    text-decoration: none;
+    transition: 0.3s;
+    margin-top: 18px;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    & > div:nth-child(1) {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+  }
+  & .calculator {
+    color: #bbb;
+    font-size: 0.875rem;
+    padding: 16px;
+
+    & svg {
+      margin-left: 5px;
     }
   }
 `;
@@ -127,6 +166,26 @@ function App() {
               providers — calculate, discover, analyze, manage & track
               positions, and more.
             </p>
+
+            <div>
+              <Heading style={{ marginTop: 20 }}>How do I get started?</Heading>
+              <Link className="top-pools" to="/pools">
+                <div>
+                  Top Pools{" "}
+                  <FontAwesomeIcon
+                    style={{ marginLeft: 5 }}
+                    icon={faExternalLinkAlt}
+                  />
+                </div>
+                <div>Explore top pools with Pool Overview feature</div>
+              </Link>
+              <div className="calculator">
+                If you already have the pool in mind, select the pool on the
+                Uniswap Calculator
+                <FontAwesomeIcon icon={faArrowRight} />
+              </div>
+            </div>
+
             <a
               className="uniswap-foundation"
               target="_blank"
