@@ -260,7 +260,10 @@ const FEE_TIER_STYLES = {
   },
 };
 
-export const SelectPair = () => {
+interface SelectPairProps {
+  fetchFromUrlParams?: boolean;
+}
+export const SelectPair = ({ fetchFromUrlParams }: SelectPairProps) => {
   const appContext = useAppContext();
   const modalContext = useModalContext();
 
@@ -285,6 +288,8 @@ export const SelectPair = () => {
   // load user's selection based on url query string
   // TODO: Refactor logic
   useEffect(() => {
+    if (!fetchFromUrlParams) return;
+
     if (
       selectedNetwork ||
       selectedTokens[0] ||
@@ -328,6 +333,8 @@ export const SelectPair = () => {
   }, []);
 
   useEffect(() => {
+    if (!fetchFromUrlParams) return;
+
     if (autoSubmit && !isSubmitLoading) {
       setAutoSubmit(false);
       handleSubmit();

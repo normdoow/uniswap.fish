@@ -230,7 +230,7 @@ function App() {
             </a>
           </Landing>
           <div className="select-pair">
-            <SelectPair />
+            <SelectPair fetchFromUrlParams={true} />
           </div>
         </LandingContainer>
       )}
