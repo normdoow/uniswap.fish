@@ -32,6 +32,24 @@ const HeaderContainer = styled.div`
     margin: 0;
   }
 `;
+const NetworkDropdown = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  & img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-right: 7px;
+  }
+  & svg {
+    font-size: 0.875rem;
+    margin-left: 7px;
+    transform: translateY(2px);
+  }
+`;
 
 const items = NETWORKS.map((network) => {
   return {
@@ -55,14 +73,14 @@ function App() {
               selectable: true,
               defaultSelectedKeys: ["ethereum"],
             }}
+            trigger={["click"]}
             placement="bottomRight"
           >
-            <a onClick={(e) => e.preventDefault()}>
-              <Space>
-                Hover me
-                <DownOutlined />
-              </Space>
-            </a>
+            <NetworkDropdown>
+              <img src="https://seeklogo.com/images/E/ethereum-logo-EC6CDBA45B-seeklogo.com.png" />
+              <span>Ethereum</span>
+              <DownOutlined />
+            </NetworkDropdown>
           </Dropdown>
         </HeaderContainer>
         <Br />
