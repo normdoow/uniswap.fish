@@ -16,6 +16,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FeedbackButton } from "../common/components/atomic";
 import { useAppContext } from "../context/app/appContext";
 import {
+  faArrowDown,
   faArrowRight,
   faBug,
   faExternalLinkAlt,
@@ -53,7 +54,7 @@ const LandingContainer = styled.div`
   padding-top: 80px;
 
   display: grid;
-  grid-template-columns: 5fr 370px;
+  grid-template-columns: 1fr 370px;
   grid-gap: 25px;
   margin-top: 25px;
 
@@ -63,9 +64,17 @@ const LandingContainer = styled.div`
     position: relative;
   }
 
-  @media only screen and (max-width: ${ScreenWidth.TABLET}px) {
+  @media only screen and (max-width: 800px) {
     margin: auto 15px;
     padding-top: 85px;
+  }
+  @media only screen and (max-width: 720px) {
+    grid-template-columns: 1fr;
+
+    & > .select-pair {
+      width: 370px;
+      margin: auto auto;
+    }
   }
 `;
 const Landing = styled.div`
@@ -117,6 +126,22 @@ const Landing = styled.div`
 
     & svg {
       margin-left: 5px;
+    }
+
+    & .down {
+      display: none;
+    }
+  }
+
+  @media only screen and (max-width: 720px) {
+    & .uniswap-foundation {
+      display: none;
+    }
+    & .calculator .right {
+      display: none;
+    }
+    & .calculator .down {
+      display: inline;
     }
   }
 `;
@@ -182,7 +207,12 @@ function App() {
               <div className="calculator">
                 If you already have the pool in mind, select the pool on the
                 Uniswap Calculator
-                <FontAwesomeIcon icon={faArrowRight} />
+                <span className="right">
+                  <FontAwesomeIcon icon={faArrowRight} />
+                </span>
+                <span className="down">
+                  <FontAwesomeIcon icon={faArrowDown} />
+                </span>
               </div>
             </div>
 
