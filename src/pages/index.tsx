@@ -67,6 +67,19 @@ const Landing = styled.div`
   & p {
     color: #999;
   }
+
+  & .uniswap-foundation {
+    display: flex;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+
+    & img {
+      height: 60px;
+      margin-right: 12px;
+      transform: translateY(2px);
+    }
+  }
 `;
 
 function App() {
@@ -114,6 +127,18 @@ function App() {
               providers — calculate, discover, analyze, manage & track
               positions, and more.
             </p>
+            <a
+              className="uniswap-foundation"
+              target="_blank"
+              href="https://twitter.com/UniswapFND"
+            >
+              <img src="/uniswap-foundation.png" />
+              <span>
+                Sponsored by
+                <br />
+                Uniswap Foundation
+              </span>
+            </a>
           </Landing>
           <div className="select-pair">
             <SelectPair />
