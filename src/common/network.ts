@@ -55,7 +55,7 @@ export const NETWORKS: Network[] = [
     name: "Celo",
     desc: "Celo Mainnet",
     disabled: false,
-    logoURI: "celo.svg",
+    logoURI: "/celo.svg",
     isNew: false,
     subgraphEndpoint:
       "https://api.thegraph.com/subgraphs/name/jesse-sawa/uniswap-celo",

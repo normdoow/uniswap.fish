@@ -50,11 +50,38 @@ const NetworkDropdown = styled.div`
     transform: translateY(2px);
   }
 `;
+const NetworkDropdownItem = styled.div`
+  display: flex;
+  align-items: center;
 
-const items = NETWORKS.map((network) => {
+  & img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 15px;
+  }
+  & .name {
+    color: black;
+  }
+  & .desc {
+    color: #555;
+    font-size: 0.8rem;
+    margin-top: -1px;
+  }
+`;
+
+const items = NETWORKS.filter((network) => !network.disabled).map((network) => {
   return {
     key: network.id,
-    label: <div>{network.name}</div>,
+    label: (
+      <NetworkDropdownItem>
+        <img src={network.logoURI} />
+        <div>
+          <div className="name">{network.name}</div>
+          <div className="desc">{network.desc}</div>
+        </div>
+      </NetworkDropdownItem>
+    ),
   };
 });
 
