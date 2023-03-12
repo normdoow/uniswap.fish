@@ -7,6 +7,8 @@ import { Heading } from "../../common/components/atomic";
 import { Pool, Token } from "../../common/interfaces/uniswap.interface";
 import { getPools } from "../../repos/uniswap";
 import { ScreenWidth } from "../../utils/styled";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -40,6 +42,51 @@ const Total = styled.div`
   @media only screen and (max-width: ${ScreenWidth.MOBILE}px) {
     display: none;
   }
+`;
+const PairToken = styled.a`
+  display: flex;
+  align-items: center;
+  color: white;
+  text-decoration: none;
+
+  &:hover {
+    opacity: 0.8;
+    color: white;
+  }
+
+  & > div {
+    margin-right: 7px;
+
+    & img {
+      height: 20px;
+      border-radius: 50%;
+      transform: translateY(2.5px);
+    }
+    & img:nth-child(2) {
+      margin-left: 0px;
+    }
+  }
+
+  & h3 {
+    margin: 0;
+    font-size: 0.875rem;
+    display: block;
+
+    & svg {
+      color: #999;
+      font-size: 0.675rem;
+      transform: translateX(7px) translateY(-5px);
+    }
+  }
+`;
+const FeePercentage = styled.span`
+  font-size: 0.875rem;
+  padding: 1px 5px;
+  border-radius: 5px;
+  font-weight: 400;
+  color: #999;
+  margin-left: 7px;
+  background: rgba(255, 255, 255, 0.15);
 `;
 
 interface PoolColumnDataType {
@@ -102,21 +149,48 @@ const TopPools = () => {
     },
     {
       title: "Pool",
-      dataIndex: "positionId",
-      key: "positionId",
+      key: "pool",
       width: 110,
       filters: [
         {
-          text: "Active Position",
-          value: "active",
+          text: "0.01%",
+          value: "100",
         },
         {
-          text: "Out of Range Position",
-          value: "out-of-range",
+          text: "0.05%",
+          value: "500",
+        },
+        {
+          text: "0.3%",
+          value: "3000",
+        },
+        {
+          text: "1%",
+          value: "10000",
         },
       ],
-      render: () => {
-        return <div>Hello There</div>;
+      onFilter: (value, record) => record.feeTier === value,
+      render: (_, { feeTier, token0, token1 }) => {
+        return (
+          <PairToken target="_blank" href={`/`}>
+            <div>
+              <img src={token0?.logoURI} alt={token0?.name} />
+              <img src={token1?.logoURI} alt={token1?.name} />
+            </div>
+            <h3>
+              <span>
+                {token0?.symbol}/{token1?.symbol}
+              </span>
+              <FeePercentage>
+                {feeTier === "100" && <span>0.01%</span>}
+                {feeTier === "500" && <span>0.05%</span>}
+                {feeTier === "3000" && <span>0.3%</span>}
+                {feeTier === "10000" && <span>1%</span>}
+              </FeePercentage>
+              <FontAwesomeIcon icon={faExternalLinkAlt} />
+            </h3>
+          </PairToken>
+        );
       },
     },
     {
