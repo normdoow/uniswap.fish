@@ -43,7 +43,6 @@ export interface Pool {
   // for pool analyser
   token0: Token;
   token1: Token;
-  feesUSD: string;
   totalValueLockedUSD: string;
   poolDayData: PoolDayData[];
 }

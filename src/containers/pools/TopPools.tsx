@@ -10,6 +10,7 @@ import { ScreenWidth } from "../../utils/styled";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { formatDollarAmount } from "../../utils/format";
+import { getFeeTierPercentage } from "../../utils/uniswapv3/helper";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -100,6 +101,7 @@ interface PoolColumnDataType {
   volume24h: number;
   volume7d: number;
   dailyVolumePerTVL: number;
+  fee24h: number;
 }
 
 const TopPools = () => {
@@ -115,6 +117,7 @@ const TopPools = () => {
         return acc + Number(cur.volumeUSD);
       }, 0);
       const dailyVolumePerTVL = volume7d / 7 / totalValueLockedUSD;
+      const fee24h = (volume7d / 7) * getFeeTierPercentage(pool.feeTier);
 
       return {
         key: index.toString(),
@@ -126,6 +129,7 @@ const TopPools = () => {
         volume24h,
         volume7d,
         dailyVolumePerTVL,
+        fee24h,
       };
     });
     setPools(topPools);
@@ -263,10 +267,20 @@ const TopPools = () => {
       title: "24H Volume / TVL",
       dataIndex: "dailyVolumePerTVL",
       key: "dailyVolumePerTVL",
-      width: 120,
+      width: 150,
       sorter: (a, b) => a.dailyVolumePerTVL - b.dailyVolumePerTVL,
       render: (dailyVolumePerTVL) => {
         return <div>{(dailyVolumePerTVL * 100).toFixed(2)}%</div>;
+      },
+    },
+    {
+      title: "24H Fees",
+      dataIndex: "fee24h",
+      key: "fee24h",
+      width: 110,
+      sorter: (a, b) => a.fee24h - b.fee24h,
+      render: (fee24h) => {
+        return <div>{formatDollarAmount(fee24h)}</div>;
       },
     },
   ];
@@ -303,7 +317,7 @@ const TopPools = () => {
           <AntdTable
             columns={columns}
             dataSource={pools}
-            scroll={{ x: 1000 }}
+            scroll={{ x: 1200 }}
             size="middle"
             loading={isLoading}
           />
