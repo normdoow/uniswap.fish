@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StarOutlined } from "@ant-design/icons";
-import { ConfigProvider, theme, Table as AntdTable } from "antd";
+import { ConfigProvider, theme, Table as AntdTable, Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table";
 import styled from "styled-components";
 import { Heading } from "../../common/components/atomic";
@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { formatDollarAmount } from "../../utils/format";
 import { getFeeTierPercentage } from "../../utils/uniswapv3/helper";
+import { round } from "../../utils/math";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -240,7 +241,16 @@ const TopPools = () => {
       width: 110,
       sorter: (a, b) => a.totalValueLockedUSD - b.totalValueLockedUSD,
       render: (totalValueLockedUSD) => {
-        return <div>{formatDollarAmount(totalValueLockedUSD)}</div>;
+        return (
+          <Tooltip
+            placement="right"
+            color="rgba(0,0,0,0.675)"
+            overlayStyle={{ whiteSpace: "pre-line" }}
+            title={`Total Value Locked\r\n$${round(totalValueLockedUSD, 2)}`}
+          >
+            {formatDollarAmount(totalValueLockedUSD)}
+          </Tooltip>
+        );
       },
     },
     {
@@ -250,7 +260,16 @@ const TopPools = () => {
       width: 110,
       sorter: (a, b) => a.volume24h - b.volume24h,
       render: (volume24h) => {
-        return <div>{formatDollarAmount(volume24h)}</div>;
+        return (
+          <Tooltip
+            placement="right"
+            color="rgba(0,0,0,0.675)"
+            overlayStyle={{ whiteSpace: "pre-line" }}
+            title={`Last 24H Volume\r\n$${round(volume24h, 2)}`}
+          >
+            {formatDollarAmount(volume24h)}
+          </Tooltip>
+        );
       },
     },
     {
@@ -260,7 +279,16 @@ const TopPools = () => {
       width: 110,
       sorter: (a, b) => a.volume7d - b.volume7d,
       render: (volume7d) => {
-        return <div>{formatDollarAmount(volume7d)}</div>;
+        return (
+          <Tooltip
+            placement="right"
+            color="rgba(0,0,0,0.675)"
+            overlayStyle={{ whiteSpace: "pre-line" }}
+            title={`Last 7D Volume\r\n$${round(volume7d, 2)}`}
+          >
+            {formatDollarAmount(volume7d)}
+          </Tooltip>
+        );
       },
     },
     {
@@ -270,7 +298,16 @@ const TopPools = () => {
       width: 150,
       sorter: (a, b) => a.dailyVolumePerTVL - b.dailyVolumePerTVL,
       render: (dailyVolumePerTVL) => {
-        return <div>{(dailyVolumePerTVL * 100).toFixed(2)}%</div>;
+        return (
+          <Tooltip
+            placement="right"
+            color="rgba(0,0,0,0.675)"
+            overlayStyle={{ whiteSpace: "pre-line" }}
+            title={`7D Average 24H Volume / TVL`}
+          >
+            {(dailyVolumePerTVL * 100).toFixed(2)}%
+          </Tooltip>
+        );
       },
     },
     {
@@ -280,7 +317,16 @@ const TopPools = () => {
       width: 110,
       sorter: (a, b) => a.fee24h - b.fee24h,
       render: (fee24h) => {
-        return <div>{formatDollarAmount(fee24h)}</div>;
+        return (
+          <Tooltip
+            placement="right"
+            color="rgba(0,0,0,0.675)"
+            overlayStyle={{ whiteSpace: "pre-line" }}
+            title={`7D Average 24H Fees\r\n$${round(fee24h, 2)}`}
+          >
+            {formatDollarAmount(fee24h)}
+          </Tooltip>
+        );
       },
     },
   ];
