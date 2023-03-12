@@ -17,7 +17,7 @@ import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { getAge, getReadableDateTime } from "../utils/datetime";
 import { getPoolPositions } from "../repos/uniswap";
 import { useAppContext } from "../context/app/appContext";
-import { Pool, Position } from "../common/interfaces/uniswap.interface";
+import { Position } from "../common/interfaces/uniswap.interface";
 import {
   calculatePositionFees,
   getPriceFromTick,
