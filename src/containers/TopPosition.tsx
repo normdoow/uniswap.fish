@@ -976,23 +976,25 @@ const TopPosition = () => {
         assets of at least $500 and being more than one hour old.
       </div>
 
-      <ConfigProvider
-        theme={{
-          algorithm: theme.darkAlgorithm,
-          token: {
-            borderRadius: 6,
-            colorBgBase: "#0d0d0d",
-          },
-        }}
-      >
-        <AntdTable
-          columns={columns}
-          dataSource={positions}
-          scroll={{ x: 1000 }}
-          size="middle"
-          loading={isLoading}
-        />
-      </ConfigProvider>
+      <div style={{ overflow: "hidden", borderRadius: "6px" }}>
+        <ConfigProvider
+          theme={{
+            algorithm: theme.darkAlgorithm,
+            token: {
+              borderRadius: 6,
+              colorBgBase: "#0d0d0d",
+            },
+          }}
+        >
+          <AntdTable
+            columns={columns}
+            dataSource={positions}
+            scroll={{ x: 1000 }}
+            size="middle"
+            loading={isLoading}
+          />
+        </ConfigProvider>
+      </div>
     </Container>
   );
 };
