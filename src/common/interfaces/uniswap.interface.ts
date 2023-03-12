@@ -26,10 +26,11 @@ export interface Token {
   decimals: string;
 }
 
+interface PoolDayData {
+  volumeUSD: string;
+}
 export interface Pool {
   id: string;
-  token0: Token;
-  token1: Token;
   feeTier: string;
   liquidity: string;
   tick: string;
@@ -38,6 +39,13 @@ export interface Pool {
   token1Price: string;
   feeGrowthGlobal0X128: string;
   feeGrowthGlobal1X128: string;
+
+  // for pool analyser
+  token0: Token;
+  token1: Token;
+  feesUSD: string;
+  totalValueLockedUSD: string;
+  poolDayData: PoolDayData[];
 }
 
 export interface Position {

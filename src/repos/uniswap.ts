@@ -273,6 +273,11 @@ export const getPools = async (): Promise<Pool[]> => {
           volumeUSD
         }
         feeTier
+        feesUSD
+        totalValueLockedUSD
+        poolDayData(first: 7, skip: 1) {
+          volumeUSD
+        }
       }
     }`);
 

@@ -9,6 +9,7 @@ import { getPools } from "../../repos/uniswap";
 import { ScreenWidth } from "../../utils/styled";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
+import { formatDollarAmount } from "../../utils/format";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -95,6 +96,7 @@ interface PoolColumnDataType {
   feeTier: string;
   token0: Token;
   token1: Token;
+  totalValueLockedUSD: number;
 }
 
 const TopPools = () => {
@@ -109,6 +111,7 @@ const TopPools = () => {
         feeTier: pool.feeTier,
         token0: pool.token0,
         token1: pool.token1,
+        totalValueLockedUSD: Number(pool.totalValueLockedUSD),
       };
     });
     setPools(topPools);
@@ -213,22 +216,13 @@ const TopPools = () => {
       },
     },
     {
-      title: "Basic Stat",
-      dataIndex: "positionId",
-      key: "positionId",
+      title: "TVL",
+      dataIndex: "totalValueLockedUSD",
+      key: "totalValueLockedUSD",
       width: 110,
-      filters: [
-        {
-          text: "Active Position",
-          value: "active",
-        },
-        {
-          text: "Out of Range Position",
-          value: "out-of-range",
-        },
-      ],
-      render: () => {
-        return <div>Hello There</div>;
+      sorter: (a, b) => a.totalValueLockedUSD - b.totalValueLockedUSD,
+      render: (totalValueLockedUSD) => {
+        return <div>{formatDollarAmount(totalValueLockedUSD)}</div>;
       },
     },
   ];

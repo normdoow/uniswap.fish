@@ -28,7 +28,7 @@ import {
   processPriceChartData,
   round,
 } from "../utils/math";
-import { formatNumberToUSD } from "../utils/format";
+import { formatDollarAmount } from "../utils/format";
 import { AppActionType } from "../context/app/appReducer";
 import { Position as V3Position, Pool as V3Pool } from "@uniswap/v3-sdk";
 import { Token as V3Token } from "@uniswap/sdk-core";
@@ -491,7 +491,7 @@ const TopPosition = () => {
               </div>
             }
           >
-            ${formatNumberToUSD(round(liquidity, 2))}
+            {formatDollarAmount(round(liquidity, 2))}
           </Popover>
         </div>
       ),
