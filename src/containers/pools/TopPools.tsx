@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { Heading } from "../../common/components/atomic";
+import { getPools } from "../../repos/uniswap";
 import { ScreenWidth } from "../../utils/styled";
 
 const Container = styled.div`
@@ -38,6 +39,12 @@ const Total = styled.div`
 `;
 
 const TopPools = () => {
+  useEffect(() => {
+    getPools().then((allPools) => {
+      console.log("debug pools", allPools);
+    });
+  }, []);
+
   return (
     <Container>
       <WrappedHeader>

@@ -4,11 +4,10 @@ import Footer from "../containers/Footer";
 import { DownOutlined } from "@ant-design/icons";
 import Navbar from "../containers/navbar/Navbar";
 import { ScreenWidth } from "../utils/styled";
-import { useAppContext } from "../context/app/appContext";
 import { Br } from "../common/components/atomic";
 import FavoritePools from "../containers/pools/FavoritePools";
 import TopPools from "../containers/pools/TopPools";
-import { Dropdown, Space } from "antd";
+import { Dropdown } from "antd";
 import { NETWORKS } from "../common/network";
 
 const BodyContainer = styled.div`
@@ -86,8 +85,6 @@ const items = NETWORKS.filter((network) => !network.disabled).map((network) => {
 });
 
 function App() {
-  const { state } = useAppContext();
-
   return (
     <>
       <Navbar />

@@ -230,6 +230,7 @@ const _getPoolPositionsByPage = async (
     return [];
   }
 };
+
 export const getPoolPositions = async (
   poolAddress: string
 ): Promise<Position[]> => {
@@ -250,4 +251,43 @@ export const getPoolPositions = async (
     page += PAGE_SIZE;
   }
   return result;
+};
+
+export const getPools = async (): Promise<Pool[]> => {
+  try {
+    const res = await _queryUniswap(`{
+      pools (first: 300, orderBy: totalValueLockedUSD, orderDirection: desc, where: {liquidity_gt: 0, totalValueLockedUSD_gte: 1000000, volumeUSD_gte: 500000}) {
+        id
+        token0 {
+          id
+          symbol
+          name
+          decimals
+          volumeUSD
+        }
+        token1 {
+          id
+          symbol
+          name
+          decimals
+          volumeUSD
+        }
+        feeTier
+      }
+    }`);
+
+    if (res === undefined || res.pools.length === 0) {
+      return [];
+    }
+
+    const pools = res.pools.map((p: Pool) => {
+      p.token0 = _processTokenInfo(p.token0);
+      p.token1 = _processTokenInfo(p.token1);
+      return p;
+    });
+
+    return pools;
+  } catch (e) {
+    return [];
+  }
 };
