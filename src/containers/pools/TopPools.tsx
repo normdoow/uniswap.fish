@@ -75,11 +75,20 @@ const TopPools = () => {
 
   const columns: ColumnsType<PoolColumnDataType> = [
     {
+      title: "",
+      dataIndex: "",
+      key: "favorite",
+      width: 20,
+      fixed: "left",
+      render: () => {
+        return <div>Hello There</div>;
+      },
+    },
+    {
       title: "#",
       dataIndex: "positionId",
       key: "positionId",
       width: 110,
-      fixed: isTablet ? false : "left",
       filters: [
         {
           text: "Active Position",
@@ -100,12 +109,20 @@ const TopPools = () => {
     <Container>
       <WrappedHeader>
         <Heading>Top Pools</Heading>
-        <Total>Total: 30 pools</Total>
+        <Total>Total: {pools.length} pools</Total>
       </WrappedHeader>
 
-      <p style={{ color: "#777", fontSize: "0.875rem", marginTop: 10 }}>
-        You don't have any favorite pools yet. Add your favorite pools to this
-      </p>
+      <div
+        style={{
+          color: "#999",
+          marginTop: 10,
+          marginBottom: 20,
+          fontSize: "0.875rem",
+        }}
+      >
+        We only display pools that meet the requirements of having a total
+        locked value ≥ $1m and a trading volume ≥ $500k.
+      </div>
 
       <div style={{ overflow: "hidden", borderRadius: "6px" }}>
         <ConfigProvider
