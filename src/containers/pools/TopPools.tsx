@@ -1,9 +1,10 @@
+import React, { useEffect, useState } from "react";
+import { StarOutlined } from "@ant-design/icons";
 import { ConfigProvider, theme, Table as AntdTable } from "antd";
 import { ColumnsType } from "antd/es/table";
-import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Heading } from "../../common/components/atomic";
-import { Token } from "../../common/interfaces/uniswap.interface";
+import { Pool, Token } from "../../common/interfaces/uniswap.interface";
 import { getPools } from "../../repos/uniswap";
 import { ScreenWidth } from "../../utils/styled";
 
@@ -51,24 +52,25 @@ interface PoolColumnDataType {
 
 const TopPools = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isTablet, setIsTablet] = useState<boolean>(false);
   const [pools, setPools] = useState<PoolColumnDataType[]>([]);
 
-  const handleResize = () => {
-    if (window.innerWidth <= ScreenWidth.TABLET) {
-      setIsTablet(true);
-    } else {
-      setIsTablet(false);
-    }
+  const processTopPools = (allPools: Pool[]) => {
+    const topPools = allPools.map((pool, index) => {
+      return {
+        key: index.toString(),
+        poolId: pool.id,
+        feeTier: pool.feeTier,
+        token0: pool.token0,
+        token1: pool.token1,
+      };
+    });
+    setPools(topPools);
   };
-  useEffect(() => {
-    window.addEventListener("resize", handleResize);
-  });
 
   useEffect(() => {
     setIsLoading(true);
     getPools().then((allPools) => {
-      console.log("debug pools", allPools);
+      processTopPools(allPools);
       setIsLoading(false);
     });
   }, []);
@@ -76,16 +78,68 @@ const TopPools = () => {
   const columns: ColumnsType<PoolColumnDataType> = [
     {
       title: "",
-      dataIndex: "",
+      dataIndex: "poolId",
       key: "favorite",
-      width: 20,
+      width: 15,
       fixed: "left",
+      render: (poolId) => {
+        return (
+          <div
+            style={{
+              cursor: "pointer",
+              display: "block",
+              fontSize: "1rem",
+              textAlign: "center",
+            }}
+            onClick={() => {
+              console.log("favorite", poolId);
+            }}
+          >
+            <StarOutlined />
+          </div>
+        );
+      },
+    },
+    {
+      title: "Pool",
+      dataIndex: "positionId",
+      key: "positionId",
+      width: 110,
+      filters: [
+        {
+          text: "Active Position",
+          value: "active",
+        },
+        {
+          text: "Out of Range Position",
+          value: "out-of-range",
+        },
+      ],
       render: () => {
         return <div>Hello There</div>;
       },
     },
     {
-      title: "#",
+      title: "Risk",
+      dataIndex: "positionId",
+      key: "positionId",
+      width: 110,
+      filters: [
+        {
+          text: "Active Position",
+          value: "active",
+        },
+        {
+          text: "Out of Range Position",
+          value: "out-of-range",
+        },
+      ],
+      render: () => {
+        return <div>Hello There</div>;
+      },
+    },
+    {
+      title: "Basic Stat",
       dataIndex: "positionId",
       key: "positionId",
       width: 110,
