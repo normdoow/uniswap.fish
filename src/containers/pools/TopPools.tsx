@@ -97,6 +97,8 @@ interface PoolColumnDataType {
   token0: Token;
   token1: Token;
   totalValueLockedUSD: number;
+  volume24h: number;
+  volume7d: number;
 }
 
 const TopPools = () => {
@@ -105,6 +107,12 @@ const TopPools = () => {
 
   const processTopPools = (allPools: Pool[]) => {
     const topPools = allPools.map((pool, index) => {
+      // average poolDayData
+      const volume24h = Number(pool.poolDayData[0].volumeUSD);
+      const volume7d = pool.poolDayData.reduce((acc, cur) => {
+        return acc + Number(cur.volumeUSD);
+      }, 0);
+
       return {
         key: index.toString(),
         poolId: pool.id,
@@ -112,6 +120,8 @@ const TopPools = () => {
         token0: pool.token0,
         token1: pool.token1,
         totalValueLockedUSD: Number(pool.totalValueLockedUSD),
+        volume24h,
+        volume7d,
       };
     });
     setPools(topPools);
@@ -153,7 +163,7 @@ const TopPools = () => {
     {
       title: "Pool",
       key: "pool",
-      width: 110,
+      width: 140,
       filters: [
         {
           text: "0.01%",
@@ -223,6 +233,26 @@ const TopPools = () => {
       sorter: (a, b) => a.totalValueLockedUSD - b.totalValueLockedUSD,
       render: (totalValueLockedUSD) => {
         return <div>{formatDollarAmount(totalValueLockedUSD)}</div>;
+      },
+    },
+    {
+      title: "Volume 24H",
+      dataIndex: "volume24h",
+      key: "volume24h",
+      width: 110,
+      sorter: (a, b) => a.volume24h - b.volume24h,
+      render: (volume24h) => {
+        return <div>{formatDollarAmount(volume24h)}</div>;
+      },
+    },
+    {
+      title: "Volume 7D",
+      dataIndex: "volume7d",
+      key: "volume7d",
+      width: 110,
+      sorter: (a, b) => a.volume7d - b.volume7d,
+      render: (volume7d) => {
+        return <div>{formatDollarAmount(volume7d)}</div>;
       },
     },
   ];
