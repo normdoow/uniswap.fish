@@ -99,6 +99,7 @@ interface PoolColumnDataType {
   totalValueLockedUSD: number;
   volume24h: number;
   volume7d: number;
+  dailyVolumePerTVL: number;
 }
 
 const TopPools = () => {
@@ -108,10 +109,12 @@ const TopPools = () => {
   const processTopPools = (allPools: Pool[]) => {
     const topPools = allPools.map((pool, index) => {
       // average poolDayData
+      const totalValueLockedUSD = Number(pool.totalValueLockedUSD);
       const volume24h = Number(pool.poolDayData[0].volumeUSD);
       const volume7d = pool.poolDayData.reduce((acc, cur) => {
         return acc + Number(cur.volumeUSD);
       }, 0);
+      const dailyVolumePerTVL = volume7d / 7 / totalValueLockedUSD;
 
       return {
         key: index.toString(),
@@ -119,9 +122,10 @@ const TopPools = () => {
         feeTier: pool.feeTier,
         token0: pool.token0,
         token1: pool.token1,
-        totalValueLockedUSD: Number(pool.totalValueLockedUSD),
+        totalValueLockedUSD,
         volume24h,
         volume7d,
+        dailyVolumePerTVL,
       };
     });
     setPools(topPools);
@@ -163,7 +167,7 @@ const TopPools = () => {
     {
       title: "Pool",
       key: "pool",
-      width: 140,
+      width: 180,
       filters: [
         {
           text: "0.01%",
@@ -253,6 +257,16 @@ const TopPools = () => {
       sorter: (a, b) => a.volume7d - b.volume7d,
       render: (volume7d) => {
         return <div>{formatDollarAmount(volume7d)}</div>;
+      },
+    },
+    {
+      title: "24H Volume / TVL",
+      dataIndex: "dailyVolumePerTVL",
+      key: "dailyVolumePerTVL",
+      width: 120,
+      sorter: (a, b) => a.dailyVolumePerTVL - b.dailyVolumePerTVL,
+      render: (dailyVolumePerTVL) => {
+        return <div>{(dailyVolumePerTVL * 100).toFixed(2)}%</div>;
       },
     },
   ];
