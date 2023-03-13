@@ -270,7 +270,7 @@ const TopPools = () => {
               onSelect={(value: string) => {
                 setTokenSearchText(value);
               }}
-              placeholder="Search token"
+              placeholder="Search token by symbol or address"
             />
 
             <Checkbox.Group
