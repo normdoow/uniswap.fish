@@ -73,7 +73,7 @@ const items = NETWORKS.filter((network) => !network.disabled).map((network) => {
   return {
     key: network.id,
     label: (
-      <NetworkDropdownItem>
+      <NetworkDropdownItem key={network.id}>
         <img src={network.logoURI} />
         <div>
           <div className="name">{network.name}</div>

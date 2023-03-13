@@ -25,6 +25,7 @@ import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { formatDollarAmount } from "../../utils/format";
 import { getFeeTierPercentage } from "../../utils/uniswapv3/helper";
 import { round } from "../../utils/math";
+import { CheckboxValueType } from "antd/es/checkbox/Group";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -121,6 +122,8 @@ interface PoolColumnDataType {
 const TopPools = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [pools, setPools] = useState<PoolColumnDataType[]>([]);
+  // Pool filter variables
+  const [feeCheckedList, setFeeCheckedList] = useState<CheckboxValueType[]>([]);
   const [tokens, setTokens] = useState<Token[]>([]);
   const [tokenSearchText, setTokenSearchText] = useState("");
   const searchTokenInput = useRef<InputRef>(null);
@@ -161,6 +164,11 @@ const TopPools = () => {
     });
   }, []);
 
+  const isPoolFilterResetDisabled = feeCheckedList.length === 0;
+  const handlePoolFilterReset = (clearFilters: () => void) => {
+    clearFilters();
+    setFeeCheckedList([]);
+  };
   const columns: ColumnsType<PoolColumnDataType> = [
     {
       title: "",
@@ -190,12 +198,7 @@ const TopPools = () => {
       title: "Pool",
       key: "pool",
       width: 180,
-      filterDropdown: ({
-        setSelectedKeys,
-        selectedKeys,
-        confirm,
-        clearFilters,
-      }) => (
+      filterDropdown: ({ setSelectedKeys, confirm, clearFilters }) => (
         <div onKeyDown={(e) => e.stopPropagation()}>
           <div
             style={{
@@ -212,48 +215,60 @@ const TopPools = () => {
               // onSearch={(text) => setOptions(getPanelValue(text))}
               placeholder="Search token"
             />
-            <div>
-              <Checkbox value="A">0.01% Fee Tier</Checkbox>
-            </div>
-            <div>
-              <Checkbox value="A">0.05% Fee Tier</Checkbox>
-            </div>
-            <div>
-              <Checkbox value="A">0.3% Fee Tier</Checkbox>
-            </div>
-            <div>
-              <Checkbox value="A">1% Fee Tier</Checkbox>
-            </div>
+
+            <Checkbox.Group
+              options={[
+                { label: "0.01%", value: "100" },
+                { label: "0.05%", value: "500" },
+                { label: "0.3%", value: "3000" },
+                { label: "1%", value: "10000" },
+              ]}
+              value={feeCheckedList}
+              onChange={(list) => {
+                setFeeCheckedList(list);
+              }}
+            />
           </div>
-          <Space style={{ padding: 8 }}>
+          <Space
+            style={{
+              padding: 8,
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
             <Button
-              type="primary"
-              // onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+              onClick={() =>
+                clearFilters && handlePoolFilterReset(clearFilters)
+              }
               size="small"
-              style={{ width: 90 }}
-            >
-              OK
-            </Button>
-            <Button
-              // onClick={() => clearFilters && handleReset(clearFilters)}
-              size="small"
-              style={{ width: 90 }}
+              type="text"
+              disabled={isPoolFilterResetDisabled}
             >
               Reset
+            </Button>
+
+            <Button
+              type="primary"
+              onClick={() => {
+                if (feeCheckedList.length === 0) {
+                  setSelectedKeys([]);
+                } else {
+                  setSelectedKeys([JSON.stringify({ fees: feeCheckedList })]);
+                }
+                confirm();
+              }}
+              size="small"
+            >
+              OK
             </Button>
           </Space>
         </div>
       ),
       onFilter: (value, record) => {
-        return true;
-        //   record[dataIndex]
-        //     .toString()
-        //     .toLowerCase()
-        //     .includes((value as string).toLowerCase()),
-        // onFilterDropdownOpenChange: (visible) => {
-        //   if (visible) {
-        //     setTimeout(() => searchInput.current?.select(), 100);
-        //   }
+        const { fees } = JSON.parse(value as string);
+        if (fees.length === 0) return true;
+
+        return fees.includes(record.feeTier);
       },
       render: (_, { feeTier, token0, token1 }) => {
         return (
