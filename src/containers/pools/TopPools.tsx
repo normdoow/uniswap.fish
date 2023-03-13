@@ -9,6 +9,10 @@ import {
   Input,
   Space,
   Button,
+  AutoComplete,
+  Checkbox,
+  Row,
+  Col,
 } from "antd";
 import { ColumnsType } from "antd/es/table";
 import styled from "styled-components";
@@ -191,28 +195,44 @@ const TopPools = () => {
         selectedKeys,
         confirm,
         clearFilters,
-        close,
       }) => (
-        <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
-          <Input
-            ref={searchTokenInput}
-            // placeholder={`Search ${dataIndex}`}
-            value={selectedKeys[0]}
-            onChange={(e) =>
-              setSelectedKeys(e.target.value ? [e.target.value] : [])
-            }
-            // onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
-            style={{ marginBottom: 8, display: "block" }}
-          />
-          <Space>
+        <div onKeyDown={(e) => e.stopPropagation()}>
+          <div
+            style={{
+              background: "#2c2c2c",
+              padding: 8,
+              borderTopLeftRadius: 8,
+              borderTopRightRadius: 8,
+            }}
+          >
+            <AutoComplete
+              options={[{ value: "what the heck" }]}
+              style={{ marginBottom: 8, display: "block" }}
+              // onSelect={onSelect}
+              // onSearch={(text) => setOptions(getPanelValue(text))}
+              placeholder="Search token"
+            />
+            <div>
+              <Checkbox value="A">0.01% Fee Tier</Checkbox>
+            </div>
+            <div>
+              <Checkbox value="A">0.05% Fee Tier</Checkbox>
+            </div>
+            <div>
+              <Checkbox value="A">0.3% Fee Tier</Checkbox>
+            </div>
+            <div>
+              <Checkbox value="A">1% Fee Tier</Checkbox>
+            </div>
+          </div>
+          <Space style={{ padding: 8 }}>
             <Button
               type="primary"
               // onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
-              icon={<SearchOutlined />}
               size="small"
               style={{ width: 90 }}
             >
-              Search
+              OK
             </Button>
             <Button
               // onClick={() => clearFilters && handleReset(clearFilters)}
@@ -221,30 +241,8 @@ const TopPools = () => {
             >
               Reset
             </Button>
-            <Button
-              type="link"
-              size="small"
-              onClick={() => {
-                // confirm({ closeDropdown: false });
-                // setSearchText((selectedKeys as string[])[0]);
-              }}
-            >
-              Filter
-            </Button>
-            <Button
-              type="link"
-              size="small"
-              onClick={() => {
-                close();
-              }}
-            >
-              close
-            </Button>
           </Space>
         </div>
-      ),
-      filterIcon: (filtered: boolean) => (
-        <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
       ),
       onFilter: (value, record) => {
         return true;
