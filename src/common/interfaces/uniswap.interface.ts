@@ -17,6 +17,9 @@ export interface Tick {
   price1: string;
 }
 
+interface TokenDayData {
+  priceUSD: string;
+}
 export interface Token {
   id: string;
   name: string;
@@ -24,6 +27,11 @@ export interface Token {
   volumeUSD: string;
   logoURI: string;
   decimals: string;
+
+  // For pool overview
+  tokenDayData: TokenDayData[];
+  totalValueLockedUSD: string;
+  poolCount: number;
 }
 
 interface PoolDayData {
@@ -40,7 +48,7 @@ export interface Pool {
   feeGrowthGlobal0X128: string;
   feeGrowthGlobal1X128: string;
 
-  // for pool analyser
+  // For pool overview
   token0: Token;
   token1: Token;
   totalValueLockedUSD: string;

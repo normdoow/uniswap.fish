@@ -267,6 +267,10 @@ const getBulkTokens = async (tokenAddresses: string[]): Promise<Token[]> => {
       symbol
       volumeUSD
       decimals
+      totalValueLockedUSD
+      tokenDayData(first: 1, orderBy: date, orderDirection: desc) {
+        priceUSD
+      }
     }
   }`);
 
@@ -320,8 +324,20 @@ export const getPools = async (): Promise<{
     ).then((res) => res.flat());
     // sort token by volume
     tokens.sort((a, b) => Number(b.volumeUSD) - Number(a.volumeUSD));
+    // map poolCount
+    const poolCountByTokenHash = res.pools.reduce((acc: any, p: Pool) => {
+      acc[p.token0.id] = (acc[p.token0.id] || 0) + 1;
+      acc[p.token1.id] = (acc[p.token1.id] || 0) + 1;
+      return acc;
+    }, {});
+    const _tokens = tokens.map((t: Token) => {
+      return {
+        ...t,
+        poolCount: poolCountByTokenHash[t.id],
+      };
+    });
     // create hash of tokens id
-    const tokenHash = tokens.reduce((acc: any, t: Token) => {
+    const tokenHash = _tokens.reduce((acc: any, t: Token) => {
       acc[t.id] = t;
       return acc;
     }, {});

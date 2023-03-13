@@ -1,19 +1,16 @@
-import React, { useEffect, useRef, useState } from "react";
-import { SearchOutlined, StarOutlined } from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
+import { StarOutlined } from "@ant-design/icons";
 import {
   ConfigProvider,
   theme,
   Table as AntdTable,
   Tooltip,
-  InputRef,
-  Input,
   Space,
   Button,
   AutoComplete,
   Checkbox,
-  Row,
-  Col,
   SelectProps,
+  Popover,
 } from "antd";
 import { ColumnsType } from "antd/es/table";
 import styled from "styled-components";
@@ -27,6 +24,7 @@ import { formatDollarAmount } from "../../utils/format";
 import { getFeeTierPercentage } from "../../utils/uniswapv3/helper";
 import { round } from "../../utils/math";
 import { CheckboxValueType } from "antd/es/checkbox/Group";
+import { getCoingeckoToken } from "../../repos/coingecko";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -105,6 +103,60 @@ const FeePercentage = styled.span`
   color: #999;
   margin-left: 7px;
   background: rgba(255, 255, 255, 0.15);
+`;
+export const Table = styled.div`
+  width: 100%;
+  display: grid;
+  grid-gap: 5px;
+  margin-top: 7px;
+
+  padding: 6px 12px;
+  &.adjust-padding-right {
+    padding-right: 6px;
+  }
+  background: rgba(255, 255, 255, 0.075);
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #aaa;
+
+  & > div {
+    display: grid;
+    grid-template-columns: 100px 1fr 6rem;
+    grid-gap: 7px;
+
+    & > div:nth-child(2) {
+      text-align: right;
+    }
+    & > div:nth-child(3) {
+      text-align: left;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 5rem;
+      text-align: center;
+    }
+  }
+`;
+const TokenIcon = styled.div`
+  color: white;
+  display: flex;
+  align-items: center;
+
+  & img {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 6px;
+  }
+
+  & a {
+    color: #777;
+    font-size: 0.675rem;
+    transform: translateY(-1px);
+
+    & > svg {
+      margin-left: 6px;
+    }
+  }
 `;
 
 interface PoolColumnDataType {
@@ -185,7 +237,7 @@ const TopPools = () => {
         volume7d,
         dailyVolumePerTVL,
         fee24h,
-      };
+      } as PoolColumnDataType;
     });
     setPools(topPools);
   };
@@ -328,24 +380,114 @@ const TopPools = () => {
       },
       render: (_, { feeTier, token0, token1 }) => {
         return (
-          <PairToken target="_blank" href={`/`}>
-            <div>
-              <img src={token0?.logoURI} alt={token0?.name} />
-              <img src={token1?.logoURI} alt={token1?.name} />
-            </div>
-            <h3>
-              <span>
-                {token0?.symbol}/{token1?.symbol}
-              </span>
-              <FeePercentage>
-                {feeTier === "100" && <span>0.01%</span>}
-                {feeTier === "500" && <span>0.05%</span>}
-                {feeTier === "3000" && <span>0.3%</span>}
-                {feeTier === "10000" && <span>1%</span>}
-              </FeePercentage>
-              <FontAwesomeIcon icon={faExternalLinkAlt} />
-            </h3>
-          </PairToken>
+          <Popover
+            placement="right"
+            color="rgba(0,0,0,0.875)"
+            content={
+              <div>
+                <div>
+                  <TokenIcon>
+                    <img src={token0.logoURI} />
+                    <b>{token0.symbol}</b>
+                    <a
+                      target="_blank"
+                      href={`https://www.coingecko.com/en/coins/${
+                        getCoingeckoToken(token0.id)?.id
+                      }`}
+                    >
+                      <FontAwesomeIcon
+                        style={{ marginLeft: 6 }}
+                        icon={faExternalLinkAlt}
+                      />
+                    </a>
+                  </TokenIcon>
+                  <Table className="adjust-padding-right">
+                    <div>
+                      <div>Current Price</div>
+                      <div></div>
+                      <div>
+                        {formatDollarAmount(
+                          Number(token0.tokenDayData[0].priceUSD)
+                        )}
+                      </div>
+                    </div>
+                    <div>
+                      <div>TVL</div>
+                      <div></div>
+                      <div>
+                        {formatDollarAmount(Number(token0.totalValueLockedUSD))}
+                      </div>
+                    </div>
+                    <div>
+                      <div>Pool Count</div>
+                      <div></div>
+                      <div>{token0.poolCount}</div>
+                    </div>
+                  </Table>
+                </div>
+
+                <div style={{ marginTop: 16 }}>
+                  <TokenIcon>
+                    <img src={token1.logoURI} />
+                    <b>{token1.symbol}</b>
+                    <a
+                      target="_blank"
+                      href={`https://www.coingecko.com/en/coins/${
+                        getCoingeckoToken(token1.id)?.id
+                      }`}
+                    >
+                      <FontAwesomeIcon
+                        style={{ marginLeft: 6 }}
+                        icon={faExternalLinkAlt}
+                      />
+                    </a>
+                  </TokenIcon>
+                  <Table className="adjust-padding-right">
+                    <div>
+                      <div>Current Price</div>
+                      <div></div>
+                      <div>
+                        {formatDollarAmount(
+                          Number(token1.tokenDayData[0].priceUSD)
+                        )}
+                      </div>
+                    </div>
+                    <div>
+                      <div>TVL</div>
+                      <div></div>
+                      <div>
+                        {formatDollarAmount(Number(token1.totalValueLockedUSD))}
+                      </div>
+                    </div>
+                    <div>
+                      <div>Pool Count</div>
+                      <div></div>
+                      <div>{token1.poolCount}</div>
+                    </div>
+                  </Table>
+                </div>
+              </div>
+            }
+          >
+            <PairToken target="_blank" href={`/`}>
+              <div>
+                <img src={token0?.logoURI} alt={token0?.name} />
+                <img src={token1?.logoURI} alt={token1?.name} />
+              </div>
+              <h3>
+                <span>
+                  {token0?.symbol}/{token1?.symbol}
+                </span>
+                <FeePercentage>
+                  {feeTier === "100" && <span>0.01%</span>}
+                  {feeTier === "500" && <span>0.05%</span>}
+                  {feeTier === "3000" && <span>0.3%</span>}
+                  {feeTier === "10000" && <span>1%</span>}
+                </FeePercentage>
+                <FontAwesomeIcon icon={faExternalLinkAlt} />
+              </h3>
+            </PairToken>
+          </Popover>
         );
       },
     },
