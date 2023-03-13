@@ -318,6 +318,8 @@ export const getPools = async (): Promise<{
         return getBulkTokens(tokenIds.slice(start, end));
       })
     ).then((res) => res.flat());
+    // sort token by volume
+    tokens.sort((a, b) => Number(b.volumeUSD) - Number(a.volumeUSD));
     // create hash of tokens id
     const tokenHash = tokens.reduce((acc: any, t: Token) => {
       acc[t.id] = t;

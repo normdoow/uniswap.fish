@@ -13,6 +13,7 @@ import {
   Checkbox,
   Row,
   Col,
+  SelectProps,
 } from "antd";
 import { ColumnsType } from "antd/es/table";
 import styled from "styled-components";
@@ -119,14 +120,48 @@ interface PoolColumnDataType {
   fee24h: number;
 }
 
+const searchTokenResult = (tokens: Token[], query: string) =>
+  tokens
+    .filter((token) =>
+      `${token.symbol.toLocaleLowerCase()}_${token.id}`.includes(query)
+    )
+    .map((token) => {
+      return {
+        value: token.id,
+        label: (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <img
+                src={token.logoURI}
+                style={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: "50%",
+                  marginRight: 8,
+                }}
+              />
+              <b>{token.symbol}</b>
+            </div>
+            <div style={{ color: "#777" }}>{token.name}</div>
+          </div>
+        ),
+      };
+    });
 const TopPools = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [pools, setPools] = useState<PoolColumnDataType[]>([]);
   // Pool filter variables
   const [feeCheckedList, setFeeCheckedList] = useState<CheckboxValueType[]>([]);
+  const [tokensSearchOptions, setTokensSearchOptions] = useState<
+    SelectProps<object>["options"]
+  >([]);
   const [tokens, setTokens] = useState<Token[]>([]);
   const [tokenSearchText, setTokenSearchText] = useState("");
-  const searchTokenInput = useRef<InputRef>(null);
 
   const processTopPools = (allPools: Pool[]) => {
     const topPools = allPools.map((pool, index) => {
@@ -164,10 +199,29 @@ const TopPools = () => {
     });
   }, []);
 
-  const isPoolFilterResetDisabled = feeCheckedList.length === 0;
+  const isPoolFilterResetDisabled =
+    feeCheckedList.length === 0 && !tokenSearchText;
   const handlePoolFilterReset = (clearFilters: () => void) => {
     clearFilters();
     setFeeCheckedList([]);
+    setTokenSearchText("");
+    setTokensSearchOptions([]);
+  };
+  const handlePoolFilterOK = (setSelectedKeys: any, confirm: () => void) => {
+    if (isPoolFilterResetDisabled) {
+      setSelectedKeys([]);
+    } else {
+      setSelectedKeys([
+        JSON.stringify({ fees: feeCheckedList, token: tokenSearchText }),
+      ]);
+    }
+    confirm();
+  };
+  const handlePoolTokenSearch = (value: string) => {
+    setTokenSearchText(value);
+    setTokensSearchOptions(
+      value ? searchTokenResult(tokens, value.toLocaleLowerCase()) : []
+    );
   };
   const columns: ColumnsType<PoolColumnDataType> = [
     {
@@ -209,10 +263,13 @@ const TopPools = () => {
             }}
           >
             <AutoComplete
-              options={[{ value: "what the heck" }]}
               style={{ marginBottom: 8, display: "block" }}
-              // onSelect={onSelect}
-              // onSearch={(text) => setOptions(getPanelValue(text))}
+              options={tokensSearchOptions}
+              onSearch={handlePoolTokenSearch}
+              value={tokenSearchText}
+              onSelect={(value: string) => {
+                setTokenSearchText(value);
+              }}
               placeholder="Search token"
             />
 
@@ -249,14 +306,7 @@ const TopPools = () => {
 
             <Button
               type="primary"
-              onClick={() => {
-                if (feeCheckedList.length === 0) {
-                  setSelectedKeys([]);
-                } else {
-                  setSelectedKeys([JSON.stringify({ fees: feeCheckedList })]);
-                }
-                confirm();
-              }}
+              onClick={() => handlePoolFilterOK(setSelectedKeys, confirm)}
               size="small"
             >
               OK
@@ -265,10 +315,16 @@ const TopPools = () => {
         </div>
       ),
       onFilter: (value, record) => {
-        const { fees } = JSON.parse(value as string);
-        if (fees.length === 0) return true;
+        const { fees, token } = JSON.parse(value as string);
 
-        return fees.includes(record.feeTier);
+        if (fees.length > 0 && !fees.includes(record.feeTier)) return false;
+        if (
+          token &&
+          !(record.token0.id === token || record.token1.id === token)
+        )
+          return false;
+
+        return true;
       },
       render: (_, { feeTier, token0, token1 }) => {
         return (
