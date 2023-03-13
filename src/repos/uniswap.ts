@@ -1,6 +1,10 @@
 import axios from "axios";
 import { getCurrentNetwork } from "../common/network";
-import { getTokenLogoURL, sortTokens } from "../utils/uniswapv3/helper";
+import {
+  getTokenLogoURL,
+  getUniqueItems,
+  sortTokens,
+} from "../utils/uniswapv3/helper";
 import lscache from "../utils/lscache";
 import {
   Pool,
@@ -253,24 +257,39 @@ export const getPoolPositions = async (
   return result;
 };
 
-export const getPools = async (): Promise<Pool[]> => {
+const getBulkTokens = async (tokenAddresses: string[]): Promise<Token[]> => {
+  const res = await _queryUniswap(`{
+    tokens(where: {id_in: [${tokenAddresses
+      .map((id) => `"${id}"`)
+      .join(",")}]}) {
+      id
+      name
+      symbol
+      volumeUSD
+      decimals
+    }
+  }`);
+
+  if (res.tokens !== null) {
+    res.tokens = res.tokens.map(_processTokenInfo);
+  }
+
+  return res.tokens;
+};
+
+export const getPools = async (): Promise<{
+  pools: Pool[];
+  tokens: Token[];
+}> => {
   try {
     const res = await _queryUniswap(`{
       pools (first: 300, orderBy: totalValueLockedUSD, orderDirection: desc, where: {liquidity_gt: 0, totalValueLockedUSD_gte: 1000000, volumeUSD_gte: 500000}) {
         id
         token0 {
           id
-          symbol
-          name
-          decimals
-          volumeUSD
         }
         token1 {
           id
-          symbol
-          name
-          decimals
-          volumeUSD
         }
         feeTier
         totalValueLockedUSD
@@ -281,17 +300,40 @@ export const getPools = async (): Promise<Pool[]> => {
     }`);
 
     if (res === undefined || res.pools.length === 0) {
-      return [];
+      return { pools: [], tokens: [] };
     }
 
+    const tokenIds = getUniqueItems(
+      res.pools.reduce(
+        (acc: string[], p: Pool) => [...acc, p.token0.id, p.token1.id],
+        []
+      )
+    );
+    const queryPage = Math.ceil(tokenIds.length / 100);
+    // batch query getBulkTokens function by page using Promise.all
+    const tokens = await Promise.all(
+      Array.from({ length: queryPage }, (_, i) => {
+        const start = i * 100;
+        const end = start + 100;
+        return getBulkTokens(tokenIds.slice(start, end));
+      })
+    ).then((res) => res.flat());
+    // create hash of tokens id
+    const tokenHash = tokens.reduce((acc: any, t: Token) => {
+      acc[t.id] = t;
+      return acc;
+    }, {});
+    // map token0 and token1 to pool
     const pools = res.pools.map((p: Pool) => {
-      p.token0 = _processTokenInfo(p.token0);
-      p.token1 = _processTokenInfo(p.token1);
-      return p;
+      return {
+        ...p,
+        token0: tokenHash[p.token0.id],
+        token1: tokenHash[p.token1.id],
+      };
     });
 
-    return pools;
+    return { pools, tokens };
   } catch (e) {
-    return [];
+    return { pools: [], tokens: [] };
   }
 };

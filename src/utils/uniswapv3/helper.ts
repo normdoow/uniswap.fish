@@ -24,3 +24,8 @@ export const sortTokens = (token0: Token, token1: Token): Token[] => {
   }
   return [token1, token0];
 };
+
+// return unique string in string[]
+export const getUniqueItems = (arr: string[]): string[] => {
+  return arr.filter((v, i, a) => a.indexOf(v) === i);
+};

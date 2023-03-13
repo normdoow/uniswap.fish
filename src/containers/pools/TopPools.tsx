@@ -1,6 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { StarOutlined } from "@ant-design/icons";
-import { ConfigProvider, theme, Table as AntdTable, Tooltip } from "antd";
+import React, { useEffect, useRef, useState } from "react";
+import { SearchOutlined, StarOutlined } from "@ant-design/icons";
+import {
+  ConfigProvider,
+  theme,
+  Table as AntdTable,
+  Tooltip,
+  InputRef,
+  Input,
+  Space,
+  Button,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
 import styled from "styled-components";
 import { Heading } from "../../common/components/atomic";
@@ -108,6 +117,9 @@ interface PoolColumnDataType {
 const TopPools = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [pools, setPools] = useState<PoolColumnDataType[]>([]);
+  const [tokens, setTokens] = useState<Token[]>([]);
+  const [tokenSearchText, setTokenSearchText] = useState("");
+  const searchTokenInput = useRef<InputRef>(null);
 
   const processTopPools = (allPools: Pool[]) => {
     const topPools = allPools.map((pool, index) => {
@@ -138,8 +150,9 @@ const TopPools = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    getPools().then((allPools) => {
-      processTopPools(allPools);
+    getPools().then(({ pools, tokens }) => {
+      processTopPools(pools);
+      setTokens(tokens);
       setIsLoading(false);
     });
   }, []);
@@ -149,7 +162,7 @@ const TopPools = () => {
       title: "",
       dataIndex: "poolId",
       key: "favorite",
-      width: 15,
+      width: 25,
       fixed: "left",
       render: (poolId) => {
         return (
@@ -173,25 +186,77 @@ const TopPools = () => {
       title: "Pool",
       key: "pool",
       width: 180,
-      filters: [
-        {
-          text: "0.01%",
-          value: "100",
-        },
-        {
-          text: "0.05%",
-          value: "500",
-        },
-        {
-          text: "0.3%",
-          value: "3000",
-        },
-        {
-          text: "1%",
-          value: "10000",
-        },
-      ],
-      onFilter: (value, record) => record.feeTier === value,
+      filterDropdown: ({
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+        clearFilters,
+        close,
+      }) => (
+        <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+          <Input
+            ref={searchTokenInput}
+            // placeholder={`Search ${dataIndex}`}
+            value={selectedKeys[0]}
+            onChange={(e) =>
+              setSelectedKeys(e.target.value ? [e.target.value] : [])
+            }
+            // onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+            style={{ marginBottom: 8, display: "block" }}
+          />
+          <Space>
+            <Button
+              type="primary"
+              // onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+              icon={<SearchOutlined />}
+              size="small"
+              style={{ width: 90 }}
+            >
+              Search
+            </Button>
+            <Button
+              // onClick={() => clearFilters && handleReset(clearFilters)}
+              size="small"
+              style={{ width: 90 }}
+            >
+              Reset
+            </Button>
+            <Button
+              type="link"
+              size="small"
+              onClick={() => {
+                // confirm({ closeDropdown: false });
+                // setSearchText((selectedKeys as string[])[0]);
+              }}
+            >
+              Filter
+            </Button>
+            <Button
+              type="link"
+              size="small"
+              onClick={() => {
+                close();
+              }}
+            >
+              close
+            </Button>
+          </Space>
+        </div>
+      ),
+      filterIcon: (filtered: boolean) => (
+        <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
+      ),
+      onFilter: (value, record) => {
+        return true;
+        //   record[dataIndex]
+        //     .toString()
+        //     .toLowerCase()
+        //     .includes((value as string).toLowerCase()),
+        // onFilterDropdownOpenChange: (visible) => {
+        //   if (visible) {
+        //     setTimeout(() => searchInput.current?.select(), 100);
+        //   }
+      },
       render: (_, { feeTier, token0, token1 }) => {
         return (
           <PairToken target="_blank" href={`/`}>
