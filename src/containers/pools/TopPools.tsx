@@ -59,16 +59,11 @@ const Total = styled.div`
     display: none;
   }
 `;
-const PairToken = styled.a`
+const PairToken = styled.div`
   display: flex;
   align-items: center;
   color: white;
   text-decoration: none;
-
-  &:hover {
-    opacity: 0.8;
-    color: white;
-  }
 
   & > div {
     margin-right: 7px;
@@ -378,7 +373,7 @@ const TopPools = () => {
 
         return true;
       },
-      render: (_, { feeTier, token0, token1 }) => {
+      render: (_, { poolId, feeTier, token0, token1 }) => {
         return (
           <Popover
             placement="right"
@@ -469,7 +464,7 @@ const TopPools = () => {
               </div>
             }
           >
-            <PairToken target="_blank" href={`/`}>
+            <PairToken>
               <div>
                 <img src={token0?.logoURI} alt={token0?.name} />
                 <img src={token1?.logoURI} alt={token1?.name} />
@@ -484,7 +479,12 @@ const TopPools = () => {
                   {feeTier === "3000" && <span>0.3%</span>}
                   {feeTier === "10000" && <span>1%</span>}
                 </FeePercentage>
-                <FontAwesomeIcon icon={faExternalLinkAlt} />
+                <a
+                  target="_blank"
+                  href={`https://info.uniswap.org/#/ethereum/pools/${poolId}`}
+                >
+                  <FontAwesomeIcon icon={faExternalLinkAlt} />
+                </a>
               </h3>
             </PairToken>
           </Popover>
