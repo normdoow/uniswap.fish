@@ -297,8 +297,13 @@ export const getPools = async (): Promise<{
         }
         feeTier
         totalValueLockedUSD
-        poolDayData(first: 7, skip: 1, orderBy: date, orderDirection: desc) {
+        poolDayData(first: 14, skip: 1, orderBy: date, orderDirection: desc) {
+          date
           volumeUSD
+          open 
+          close
+          high
+          low
         }
       }
     }`);

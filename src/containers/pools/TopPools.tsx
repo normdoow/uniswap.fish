@@ -15,7 +15,11 @@ import {
 import { ColumnsType } from "antd/es/table";
 import styled from "styled-components";
 import { Heading } from "../../common/components/atomic";
-import { Pool, Token } from "../../common/interfaces/uniswap.interface";
+import {
+  Pool,
+  Token,
+  PoolDayData,
+} from "../../common/interfaces/uniswap.interface";
 import { getPools } from "../../repos/uniswap";
 import { ScreenWidth } from "../../utils/styled";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -165,6 +169,7 @@ interface PoolColumnDataType {
   volume7d: number;
   dailyVolumePerTVL: number;
   fee24h: number;
+  priceVolatility24HPercentage: number;
 }
 
 const searchTokenResult = (tokens: Token[], query: string) =>
@@ -212,14 +217,24 @@ const TopPools = () => {
 
   const processTopPools = (allPools: Pool[]) => {
     const topPools = allPools.map((pool, index) => {
-      // average poolDayData
+      // Basic Stats
+      const poolDayData7d = pool.poolDayData.slice(0, 7);
       const totalValueLockedUSD = Number(pool.totalValueLockedUSD);
-      const volume24h = Number(pool.poolDayData[0].volumeUSD);
-      const volume7d = pool.poolDayData.reduce((acc, cur) => {
+      const volume24h = Number(poolDayData7d[0].volumeUSD);
+      const volume7d = poolDayData7d.reduce((acc, cur) => {
         return acc + Number(cur.volumeUSD);
       }, 0);
       const dailyVolumePerTVL = volume7d / 7 / totalValueLockedUSD;
       const fee24h = (volume7d / 7) * getFeeTierPercentage(pool.feeTier);
+
+      // Price Volatility
+      const poolDayData14d = pool.poolDayData;
+      const priceVolatility24HPercentage =
+        poolDayData14d
+          .map((d: PoolDayData) => {
+            return (100 * (Number(d.high) - Number(d.low))) / Number(d.high);
+          })
+          .reduce((a, b) => a + b, 0) / 14;
 
       return {
         key: index.toString(),
@@ -232,6 +247,7 @@ const TopPools = () => {
         volume7d,
         dailyVolumePerTVL,
         fee24h,
+        priceVolatility24HPercentage,
       } as PoolColumnDataType;
     });
     setPools(topPools);
@@ -511,6 +527,22 @@ const TopPools = () => {
       },
     },
     {
+      title: "Price Volatility 24H",
+      dataIndex: "priceVolatility24HPercentage",
+      key: "priceVolatility24HPercentage",
+      width: 140,
+      sorter: (a, b) =>
+        a.priceVolatility24HPercentage - b.priceVolatility24HPercentage,
+      render: (priceVolatility24HPercentage) => {
+        const _p = priceVolatility24HPercentage;
+        let p = round(_p, 2);
+        if (p < 0.1) p = round(_p, 4);
+        if (p < 0.001) p = round(_p, 6);
+
+        return <div>{p}%</div>;
+      },
+    },
+    {
       title: "TVL",
       dataIndex: "totalValueLockedUSD",
       key: "totalValueLockedUSD",
@@ -639,7 +671,7 @@ const TopPools = () => {
           <AntdTable
             columns={columns}
             dataSource={pools}
-            scroll={{ x: 1200 }}
+            scroll={{ x: 1400 }}
             size="middle"
             loading={isLoading}
           />
