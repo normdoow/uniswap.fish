@@ -208,21 +208,28 @@ const searchTokenResult = (tokens: Token[], query: string) =>
       };
     });
 const CandleStickChart = ({ data }: { data: PoolColumnDataType }) => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, []);
+
   return (
     <div style={{ color: "black" }}>
       <div style={{ color: "white", fontWeight: 500 }}>
         {data.token0.symbol}/{data.token1.symbol} Price Chart (14D)
       </div>
 
-      <Chart
-        key={`candlestick-chart-${data.poolId}`}
-        options={{
-          tooltip: {
-            custom: function ({ seriesIndex, dataPointIndex, w }) {
-              const data: any =
-                w.globals.initialSeries[seriesIndex].data[dataPointIndex];
+      {!isLoading && (
+        <Chart
+          key={`candlestick-chart-${data.poolId}`}
+          options={{
+            tooltip: {
+              custom: function ({ seriesIndex, dataPointIndex, w }) {
+                const data: any =
+                  w.globals.initialSeries[seriesIndex].data[dataPointIndex];
 
-              return `<div style="padding: 5px">
+                return `<div style="padding: 5px">
                 <div style="margin-bottom: 5px">${new Date(
                   data.x
                 ).toDateString()}</div> 
@@ -232,45 +239,46 @@ const CandleStickChart = ({ data }: { data: PoolColumnDataType }) => {
                 <div><b>Low:</b> ${round(data.y[2], 6)}</div>
                 <div><b>Close:</b> ${round(data.y[3], 6)}</div>
               </div>`;
+              },
             },
-          },
-          chart: {
-            toolbar: {
+            chart: {
+              toolbar: {
+                show: false,
+              },
+              foreColor: "#999",
+            },
+            xaxis: {
+              type: "datetime",
+              tooltip: {
+                enabled: false,
+              },
+            },
+            yaxis: {
               show: false,
+              tooltip: {
+                enabled: true,
+              },
             },
-            foreColor: "#999",
-          },
-          xaxis: {
-            type: "datetime",
-            tooltip: {
-              enabled: false,
+          }}
+          series={[
+            {
+              data: data.poolDayDatas.map((d: PoolDayData) => {
+                return {
+                  x: new Date(d.date * 1000),
+                  y: [
+                    Number(d.open),
+                    Number(d.high),
+                    Number(d.low),
+                    Number(d.close),
+                  ],
+                };
+              }),
             },
-          },
-          yaxis: {
-            show: false,
-            tooltip: {
-              enabled: true,
-            },
-          },
-        }}
-        series={[
-          {
-            data: data.poolDayDatas.map((d: PoolDayData) => {
-              return {
-                x: new Date(d.date * 1000),
-                y: [
-                  Number(d.open),
-                  Number(d.high),
-                  Number(d.low),
-                  Number(d.close),
-                ],
-              };
-            }),
-          },
-        ]}
-        type="candlestick"
-        height={175}
-      />
+          ]}
+          type="candlestick"
+          height={175}
+        />
+      )}
     </div>
   );
 };
