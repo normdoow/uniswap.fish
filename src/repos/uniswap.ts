@@ -301,9 +301,9 @@ export const getPools = async (): Promise<{
           date
           volumeUSD
           open 
-          close
           high
           low
+          close
         }
       }
     }`);

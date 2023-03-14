@@ -38,9 +38,9 @@ export interface PoolDayData {
   date: number;
   volumeUSD: string;
   open: string;
-  close: string;
   high: string;
   low: string;
+  close: string;
 }
 export interface Pool {
   id: string;

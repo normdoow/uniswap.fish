@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Chart from "react-apexcharts";
 import { StarOutlined } from "@ant-design/icons";
 import {
   ConfigProvider,
@@ -24,11 +25,12 @@ import { getPools } from "../../repos/uniswap";
 import { ScreenWidth } from "../../utils/styled";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
-import { formatDollarAmount } from "../../utils/format";
+import { formatAmount, formatDollarAmount } from "../../utils/format";
 import { getFeeTierPercentage } from "../../utils/uniswapv3/helper";
 import { round } from "../../utils/math";
 import { CheckboxValueType } from "antd/es/checkbox/Group";
 import { getCoingeckoToken } from "../../repos/coingecko";
+import { color } from "d3";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -170,6 +172,7 @@ interface PoolColumnDataType {
   dailyVolumePerTVL: number;
   fee24h: number;
   priceVolatility24HPercentage: number;
+  poolDayDatas: PoolDayData[];
 }
 
 const searchTokenResult = (tokens: Token[], query: string) =>
@@ -204,6 +207,73 @@ const searchTokenResult = (tokens: Token[], query: string) =>
         ),
       };
     });
+const CandleStickChart = ({ data }: { data: PoolColumnDataType }) => {
+  return (
+    <div style={{ color: "black" }}>
+      <div style={{ color: "white", fontWeight: 500 }}>
+        {data.token0.symbol}/{data.token1.symbol} Price Chart (14D)
+      </div>
+
+      <Chart
+        key={`candlestick-chart-${data.poolId}`}
+        options={{
+          tooltip: {
+            custom: function ({ seriesIndex, dataPointIndex, w }) {
+              const data: any =
+                w.globals.initialSeries[seriesIndex].data[dataPointIndex];
+
+              return `<div style="padding: 5px">
+                <div style="margin-bottom: 5px">${new Date(
+                  data.x
+                ).toDateString()}</div> 
+
+                <div><b>Open:</b> ${round(data.y[0], 6)}</div>
+                <div><b>High:</b> ${round(data.y[1], 6)}</div>
+                <div><b>Low:</b> ${round(data.y[2], 6)}</div>
+                <div><b>Close:</b> ${round(data.y[3], 6)}</div>
+              </div>`;
+            },
+          },
+          chart: {
+            toolbar: {
+              show: false,
+            },
+            foreColor: "#999",
+          },
+          xaxis: {
+            type: "datetime",
+            tooltip: {
+              enabled: false,
+            },
+          },
+          yaxis: {
+            show: false,
+            tooltip: {
+              enabled: true,
+            },
+          },
+        }}
+        series={[
+          {
+            data: data.poolDayDatas.map((d: PoolDayData) => {
+              return {
+                x: new Date(d.date * 1000),
+                y: [
+                  Number(d.open),
+                  Number(d.high),
+                  Number(d.low),
+                  Number(d.close),
+                ],
+              };
+            }),
+          },
+        ]}
+        type="candlestick"
+        height={175}
+      />
+    </div>
+  );
+};
 const TopPools = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [pools, setPools] = useState<PoolColumnDataType[]>([]);
@@ -235,6 +305,7 @@ const TopPools = () => {
             return (100 * (Number(d.high) - Number(d.low))) / Number(d.high);
           })
           .reduce((a, b) => a + b, 0) / 14;
+      const poolDayDatas = pool.poolDayData;
 
       return {
         key: index.toString(),
@@ -248,6 +319,7 @@ const TopPools = () => {
         dailyVolumePerTVL,
         fee24h,
         priceVolatility24HPercentage,
+        poolDayDatas,
       } as PoolColumnDataType;
     });
     setPools(topPools);
@@ -533,13 +605,28 @@ const TopPools = () => {
       width: 140,
       sorter: (a, b) =>
         a.priceVolatility24HPercentage - b.priceVolatility24HPercentage,
-      render: (priceVolatility24HPercentage) => {
+      render: (priceVolatility24HPercentage, record) => {
         const _p = priceVolatility24HPercentage;
         let p = round(_p, 2);
         if (p < 0.1) p = round(_p, 4);
         if (p < 0.001) p = round(_p, 6);
 
-        return <div>{p}%</div>;
+        return (
+          <Popover
+            placement="right"
+            color="rgba(0,0,0,0.875)"
+            content={
+              <div>
+                <CandleStickChart data={record} />
+                <div style={{ fontSize: "0.675rem", color: "#777" }}>
+                  Price Volatility 24H = 14D average of (high - low) / high
+                </div>
+              </div>
+            }
+          >
+            {p}%
+          </Popover>
+        );
       },
     },
     {

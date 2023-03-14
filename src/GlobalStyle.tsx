@@ -60,6 +60,11 @@ const GlobalStyle = createGlobalStyle`
   }
 
   /* Override CSS */
+  .apexcharts-gridline {
+    stroke-width: 1px;
+    stroke: #333;
+  }
+
   *[data-for="il"] {
     cursor: help;
   }
