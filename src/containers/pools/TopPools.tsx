@@ -24,7 +24,10 @@ import {
 import { getPools } from "../../repos/uniswap";
 import { ScreenWidth } from "../../utils/styled";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+  faExchangeAlt,
+  faExternalLinkAlt,
+} from "@fortawesome/free-solid-svg-icons";
 import { formatAmount, formatDollarAmount } from "../../utils/format";
 import { getFeeTierPercentage } from "../../utils/uniswapv3/helper";
 import { round } from "../../utils/math";
@@ -209,6 +212,7 @@ const searchTokenResult = (tokens: Token[], query: string) =>
     });
 const CandleStickChart = ({ data }: { data: PoolColumnDataType }) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [isPriceToggle, setIsPriceToggle] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -218,8 +222,33 @@ const CandleStickChart = ({ data }: { data: PoolColumnDataType }) => {
 
   return (
     <div style={{ color: "black" }}>
-      <div style={{ color: "white", fontWeight: 500 }}>
-        {data.token0.symbol}/{data.token1.symbol} Price Chart (14D)
+      <div
+        style={{
+          color: "white",
+          fontWeight: 500,
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <span>
+          {data.token0.symbol}/{data.token1.symbol} Price Chart (14D)
+        </span>
+        <div
+          style={{
+            borderRadius: 7,
+            background: "rgba(255, 255, 255, 0.25)",
+            cursor: "pointer",
+            fontSize: "0.875rem",
+            width: 22,
+            height: 22,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onClick={() => setIsPriceToggle(!isPriceToggle)}
+        >
+          <FontAwesomeIcon icon={faExchangeAlt} />
+        </div>
       </div>
 
       {isLoading && <div style={{ height: 205, width: 300 }} />}
@@ -266,14 +295,21 @@ const CandleStickChart = ({ data }: { data: PoolColumnDataType }) => {
           series={[
             {
               data: data.poolDayDatas.map((d: PoolDayData) => {
+                let open = Number(d.open);
+                let close = Number(d.close);
+                let high = Number(d.high);
+                let low = Number(d.low);
+
+                if (isPriceToggle) {
+                  open = 1 / Number(d.open);
+                  close = 1 / Number(d.close);
+                  high = 1 / Number(d.low);
+                  low = 1 / Number(d.high);
+                }
+
                 return {
                   x: new Date(d.date * 1000),
-                  y: [
-                    Number(d.open),
-                    Number(d.high),
-                    Number(d.low),
-                    Number(d.close),
-                  ],
+                  y: [open, high, low, close],
                 };
               }),
             },
