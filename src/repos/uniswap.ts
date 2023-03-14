@@ -297,7 +297,7 @@ export const getPools = async (): Promise<{
         }
         feeTier
         totalValueLockedUSD
-        poolDayData(first: 14, skip: 1, orderBy: date, orderDirection: desc) {
+        poolDayData(first: 15, skip: 1, orderBy: date, orderDirection: desc) {
           date
           volumeUSD
           open 
@@ -347,13 +347,24 @@ export const getPools = async (): Promise<{
       return acc;
     }, {});
     // map token0 and token1 to pool
-    const pools = res.pools.map((p: Pool) => {
-      return {
-        ...p,
-        token0: tokenHash[p.token0.id],
-        token1: tokenHash[p.token1.id],
-      };
-    });
+    const pools = res.pools
+      .map((p: Pool) => {
+        return {
+          ...p,
+          token0: tokenHash[p.token0.id],
+          token1: tokenHash[p.token1.id],
+        };
+      })
+      // fix poolDayData incorrect data
+      .map((p: Pool) => {
+        const poolDayData = [];
+        for (let i = 0; i < p.poolDayData.length - 1; ++i) {
+          p.poolDayData[i].open = p.poolDayData[i + 1].close;
+          poolDayData.push(p.poolDayData[i]);
+        }
+        p.poolDayData = poolDayData;
+        return p;
+      });
 
     return { pools, tokens };
   } catch (e) {
