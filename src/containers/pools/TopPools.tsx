@@ -211,7 +211,9 @@ const CandleStickChart = ({ data }: { data: PoolColumnDataType }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsLoading(false);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 200);
   }, []);
 
   return (
@@ -220,6 +222,7 @@ const CandleStickChart = ({ data }: { data: PoolColumnDataType }) => {
         {data.token0.symbol}/{data.token1.symbol} Price Chart (14D)
       </div>
 
+      {isLoading && <div style={{ height: 205, width: 300 }} />}
       {!isLoading && (
         <Chart
           key={`candlestick-chart-${data.poolId}`}
@@ -276,7 +279,7 @@ const CandleStickChart = ({ data }: { data: PoolColumnDataType }) => {
             },
           ]}
           type="candlestick"
-          height={175}
+          height={190}
         />
       )}
     </div>
