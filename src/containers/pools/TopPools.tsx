@@ -7,7 +7,7 @@ import {
   Table as AntdTable,
   Tooltip,
   Space,
-  Button,
+  Button as AntdButton,
   AutoComplete,
   Checkbox,
   SelectProps,
@@ -15,7 +15,7 @@ import {
 } from "antd";
 import { ColumnsType } from "antd/es/table";
 import styled from "styled-components";
-import { Heading } from "../../common/components/atomic";
+import { Button, Heading } from "../../common/components/atomic";
 import {
   Pool,
   Token,
@@ -593,7 +593,7 @@ const TopPools = () => {
               justifyContent: "space-between",
             }}
           >
-            <Button
+            <AntdButton
               onClick={() =>
                 clearFilters && handlePoolFilterReset(clearFilters)
               }
@@ -602,15 +602,15 @@ const TopPools = () => {
               disabled={isPoolFilterResetDisabled}
             >
               Reset
-            </Button>
+            </AntdButton>
 
-            <Button
+            <AntdButton
               type="primary"
               onClick={() => handlePoolFilterOK(setSelectedKeys, confirm)}
               size="small"
             >
               OK
-            </Button>
+            </AntdButton>
           </Space>
         </div>
       ),
@@ -1086,6 +1086,25 @@ const TopPools = () => {
           </Tooltip>
         );
       },
+    },
+    {
+      title: "Action",
+      key: "action",
+      fixed: "right",
+      width: 80,
+      render: (_, record) => (
+        <a target="_blank" href="/">
+          <Button style={{ fontSize: "0.875rem" }}>
+            <Tooltip
+              placement="right"
+              color="rgba(0,0,0,0.675)"
+              title={`Go to the Uniswap Calculator`}
+            >
+              Calculate
+            </Tooltip>
+          </Button>
+        </a>
+      ),
     },
   ];
 
