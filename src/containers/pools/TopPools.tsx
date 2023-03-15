@@ -35,7 +35,6 @@ import { getFeeTierPercentage } from "../../utils/uniswapv3/helper";
 import { round } from "../../utils/math";
 import { CheckboxValueType } from "antd/es/checkbox/Group";
 import { getCoingeckoToken } from "../../repos/coingecko";
-import { color } from "d3";
 import {
   estimateFee,
   getLiquidityDelta,
@@ -147,6 +146,17 @@ export const Table = styled.div`
       border-radius: 5rem;
       text-align: center;
     }
+  }
+`;
+const TableToken = styled.div`
+  display: flex;
+  align-items: center;
+
+  & > img {
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    transform: translateX(-5px);
   }
 `;
 const TokenIcon = styled.div`
@@ -738,7 +748,7 @@ const TopPools = () => {
       title: "Estimated Fees 24H ($1k)",
       dataIndex: "estimatedFee24h",
       key: "estimatedFee24h",
-      width: 160,
+      width: 140,
       sorter: (a, b) => a.estimatedFee24h - b.estimatedFee24h,
       render: (estimatedFee24h, record) => {
         return (
@@ -747,10 +757,85 @@ const TopPools = () => {
             color="rgba(0,0,0,0.875)"
             content={
               <div>
-                <div style={{ fontSize: "0.675rem", color: "#777" }}>
-                  <div>Amount0: {record.estimatedFeeToken0}</div>
-                  <div>Amount1: {record.estimatedFeeToken1}</div>
-                  Price Volatility 24H = 14D average of (high - low) / high
+                <div style={{ color: "white", fontWeight: 500 }}>
+                  Estimated Fees 24H per $1,000
+                </div>
+                <Table className="adjust-padding-right">
+                  <div>
+                    <TableToken>
+                      <img
+                        alt={record.token0?.name}
+                        src={record.token0?.logoURI}
+                      />{" "}
+                      <span>{record.token0?.symbol}</span>
+                    </TableToken>
+                    <div>{round(record.estimatedFeeToken0, 6)}</div>
+                    <div>
+                      {formatDollarAmount(
+                        record.estimatedFeeToken0 *
+                          Number(record.token0.tokenDayData[0].priceUSD)
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <TableToken>
+                      <img
+                        alt={record.token1?.name}
+                        src={record.token1?.logoURI}
+                      />{" "}
+                      <span>{record.token1?.symbol}</span>
+                    </TableToken>
+                    <div>{round(record.estimatedFeeToken1, 6)}</div>
+                    <div>
+                      {formatDollarAmount(
+                        record.estimatedFeeToken1 *
+                          Number(record.token1.tokenDayData[0].priceUSD)
+                      )}
+                    </div>
+                  </div>
+                </Table>
+
+                <Table className="adjust-padding-right">
+                  <div>
+                    <div>Weekly</div>
+                    <div>{formatDollarAmount(record.estimatedFee24h * 7)}</div>
+                    <div>
+                      {((100 * (record.estimatedFee24h * 7)) / 1000).toFixed(2)}
+                      %
+                    </div>
+                  </div>
+                  <div>
+                    <div>Monthly</div>
+                    <div>{formatDollarAmount(record.estimatedFee24h * 30)}</div>
+                    <div>
+                      {((100 * (record.estimatedFee24h * 30)) / 1000).toFixed(
+                        2
+                      )}
+                      %
+                    </div>
+                  </div>
+                  <div>
+                    <div>Yearly (APR)</div>
+                    <div>
+                      {formatDollarAmount(record.estimatedFee24h * 365)}
+                    </div>
+                    <div>
+                      {((100 * (record.estimatedFee24h * 365)) / 1000).toFixed(
+                        2
+                      )}
+                      %
+                    </div>
+                  </div>
+                </Table>
+                <div
+                  style={{ fontSize: "0.675rem", color: "#777", marginTop: 14 }}
+                >
+                  Estimated Fees 24H are calculated based on the current
+                  <br />
+                  liquidity and volume 24H with the price range setting of
+                  <br />
+                  (current price - volatility 24H, current price + volatility
+                  24H)
                 </div>
               </div>
             }
