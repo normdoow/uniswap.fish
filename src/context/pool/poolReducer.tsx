@@ -1,14 +1,23 @@
-import { Network } from "../../common/interfaces/uniswap.interface";
+import { Network, Pool } from "../../common/interfaces/uniswap.interface";
 import { PoolContextState } from "./poolContext";
 
 export enum PoolActionType {
   SET_CHAIN = "SET_CHAIN",
+  SET_POOLS_CACHE = "SET_POOLS_CACHE",
 }
 
-export type PoolContextAction = {
-  type: PoolActionType.SET_CHAIN;
-  payload: Network;
-};
+export type PoolContextAction =
+  | {
+      type: PoolActionType.SET_CHAIN;
+      payload: Network;
+    }
+  | {
+      type: PoolActionType.SET_POOLS_CACHE;
+      payload: {
+        chainId: string;
+        pools: Pool[];
+      };
+    };
 
 export const poolContextReducer = (
   state: PoolContextState,
@@ -17,6 +26,15 @@ export const poolContextReducer = (
   switch (action.type) {
     case PoolActionType.SET_CHAIN: {
       return { ...state, chain: action.payload };
+    }
+    case PoolActionType.SET_POOLS_CACHE: {
+      return {
+        ...state,
+        poolsCache: {
+          ...state.poolsCache,
+          [action.payload.chainId]: action.payload.pools,
+        },
+      };
     }
   }
 };

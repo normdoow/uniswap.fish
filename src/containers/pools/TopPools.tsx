@@ -48,6 +48,7 @@ import {
   setCurrentNetwork,
 } from "../../common/network";
 import { usePoolContext } from "../../context/pool/poolContext";
+import { PoolActionType } from "../../context/pool/poolReducer";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -498,6 +499,11 @@ const TopPools = () => {
   };
 
   useEffect(() => {
+    if (poolContext.state.poolsCache[poolContext.state.chain.id]) {
+      processTopPools(poolContext.state.poolsCache[poolContext.state.chain.id]);
+      return;
+    }
+
     const tempChain = getCurrentNetwork();
     setCurrentNetwork(poolContext.state.chain);
     setIsLoading(true);
@@ -506,7 +512,15 @@ const TopPools = () => {
       processTopPools(pools);
       setTokens(tokens);
       setIsLoading(false);
+
       setCurrentNetwork(tempChain);
+      poolContext.dispatch({
+        type: PoolActionType.SET_POOLS_CACHE,
+        payload: {
+          chainId: poolContext.state.chain.id,
+          pools,
+        },
+      });
     });
   }, [poolContext.state.chain]);
 

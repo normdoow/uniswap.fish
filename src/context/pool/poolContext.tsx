@@ -1,13 +1,15 @@
 import React from "react";
-import { Network } from "../../common/interfaces/uniswap.interface";
+import { Network, Pool } from "../../common/interfaces/uniswap.interface";
 import { NETWORKS } from "../../common/network";
 import { poolContextReducer, PoolContextAction } from "./poolReducer";
 
 export interface PoolContextState {
   chain: Network;
+  poolsCache: { [chainId: string]: Pool[] };
 }
 const initialState: PoolContextState = {
   chain: NETWORKS[0],
+  poolsCache: {},
 };
 
 interface PoolContextProviderProps {
