@@ -528,7 +528,7 @@ const TopPools = () => {
       title: "",
       dataIndex: "poolId",
       key: "favorite",
-      width: 25,
+      width: 40,
       fixed: "left",
       render: (poolId) => {
         return (
@@ -551,7 +551,7 @@ const TopPools = () => {
     {
       title: "Pool",
       key: "pool",
-      width: 180,
+      width: 240,
       filterDropdown: ({ setSelectedKeys, confirm, clearFilters }) => (
         <div onKeyDown={(e) => e.stopPropagation()}>
           <div
@@ -745,10 +745,10 @@ const TopPools = () => {
       },
     },
     {
-      title: "Estimated Fees 24H ($1k)",
+      title: "Estimated Fees 24H",
       dataIndex: "estimatedFee24h",
       key: "estimatedFee24h",
-      width: 140,
+      width: 180,
       sorter: (a, b) => a.estimatedFee24h - b.estimatedFee24h,
       render: (estimatedFee24h, record) => {
         return (
@@ -840,7 +840,8 @@ const TopPools = () => {
               </div>
             }
           >
-            {formatDollarAmount(estimatedFee24h)}
+            {formatDollarAmount(estimatedFee24h)}{" "}
+            <span style={{ color: "#555" }}>/ $1,000</span>
           </Popover>
         );
       },
@@ -849,7 +850,7 @@ const TopPools = () => {
       title: "Risk",
       dataIndex: "risk",
       key: "risk",
-      width: 100,
+      width: 120,
       filters: [
         {
           text: "SAFE",
@@ -941,7 +942,7 @@ const TopPools = () => {
       title: "Price Volatility 24H",
       dataIndex: "priceVolatility24HPercentage",
       key: "priceVolatility24HPercentage",
-      width: 140,
+      width: 170,
       sorter: (a, b) =>
         a.priceVolatility24HPercentage - b.priceVolatility24HPercentage,
       render: (priceVolatility24HPercentage, record) => {
@@ -972,7 +973,7 @@ const TopPools = () => {
       title: "TVL",
       dataIndex: "totalValueLockedUSD",
       key: "totalValueLockedUSD",
-      width: 110,
+      width: 120,
       sorter: (a, b) => a.totalValueLockedUSD - b.totalValueLockedUSD,
       render: (totalValueLockedUSD) => {
         return (
@@ -991,7 +992,7 @@ const TopPools = () => {
       title: "24H Fees",
       dataIndex: "fee24h",
       key: "fee24h",
-      width: 110,
+      width: 120,
       sorter: (a, b) => a.fee24h - b.fee24h,
       render: (fee24h) => {
         return (
@@ -1010,7 +1011,7 @@ const TopPools = () => {
       title: "24H Fees / TVL",
       dataIndex: "dailyFeesPerTVL",
       key: "dailyFeesPerTVL",
-      width: 120,
+      width: 140,
       sorter: (a, b) => a.dailyFeesPerTVL - b.dailyFeesPerTVL,
       render: (dailyFeesPerTVL) => {
         const _p = dailyFeesPerTVL * 100;
@@ -1034,7 +1035,7 @@ const TopPools = () => {
       title: "Volume 24H",
       dataIndex: "volume24h",
       key: "volume24h",
-      width: 110,
+      width: 130,
       sorter: (a, b) => a.volume24h - b.volume24h,
       render: (volume24h) => {
         return (
@@ -1053,7 +1054,7 @@ const TopPools = () => {
       title: "Volume 7D",
       dataIndex: "volume7d",
       key: "volume7d",
-      width: 110,
+      width: 130,
       sorter: (a, b) => a.volume7d - b.volume7d,
       render: (volume7d) => {
         return (
@@ -1072,7 +1073,7 @@ const TopPools = () => {
       title: "24H Volume / TVL",
       dataIndex: "dailyVolumePerTVL",
       key: "dailyVolumePerTVL",
-      width: 150,
+      width: 160,
       sorter: (a, b) => a.dailyVolumePerTVL - b.dailyVolumePerTVL,
       render: (dailyVolumePerTVL) => {
         return (
@@ -1091,9 +1092,9 @@ const TopPools = () => {
       title: "Action",
       key: "action",
       fixed: "right",
-      width: 80,
+      width: 100,
       render: (_, record) => (
-        <a target="_blank" href="/">
+        <a target="_blank" href={`/>`}>
           <Button style={{ fontSize: "0.875rem" }}>
             <Tooltip
               placement="right"
@@ -1140,7 +1141,11 @@ const TopPools = () => {
           <AntdTable
             columns={columns}
             dataSource={pools}
-            scroll={{ x: 2000 }}
+            scroll={{
+              x: columns
+                .map((c) => c.width)
+                .reduce((a, b) => Number(a) + Number(b), 0),
+            }}
             size="middle"
             loading={isLoading}
           />
