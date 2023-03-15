@@ -402,15 +402,15 @@ const TopPools = () => {
         highPriceVolatility: priceVolatility24HPercentage > 10,
         lowToken0TVL: Number(pool.token0.totalValueLockedUSD) < 10000000,
         lowToken0PoolCount: pool.token0.poolCount < 5,
-        lowToken1TVL: Number(pool.token0.totalValueLockedUSD) < 10000000,
-        lowToken1PoolCount: pool.token0.poolCount < 5,
+        lowToken1TVL: Number(pool.token1.totalValueLockedUSD) < 10000000,
+        lowToken1PoolCount: pool.token1.poolCount < 5,
       };
       const riskChecklistCount = Object.values(riskChecklist).filter(
         (v) => v === true
       ).length;
       let risk = Risk.SAFE;
       if (riskChecklistCount >= 1) risk = Risk.LOW_RISK;
-      if (riskChecklistCount >= 3) risk = Risk.HIGH_RISK;
+      if (riskChecklistCount >= 4) risk = Risk.HIGH_RISK;
 
       return {
         key: index.toString(),
