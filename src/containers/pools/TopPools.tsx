@@ -1118,8 +1118,11 @@ const TopPools = () => {
       key: "action",
       fixed: "right",
       width: 100,
-      render: (_, record) => (
-        <a target="_blank" href={`/>`}>
+      render: (_, { token0, token1, feeTier }) => (
+        <a
+          target="_blank"
+          href={`/?network=${poolContext.state.chain.id}&token0=${token0.id}&token1=${token1.id}&feeTier=${feeTier}`}
+        >
           <Button style={{ fontSize: "0.875rem" }}>
             <Tooltip
               placement="right"
