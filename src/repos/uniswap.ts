@@ -281,13 +281,16 @@ const getBulkTokens = async (tokenAddresses: string[]): Promise<Token[]> => {
   return res.tokens;
 };
 
-export const getPools = async (): Promise<{
+export const getPools = async (
+  totalValueLockedUSD_gte: number,
+  volumeUSD_gte: number
+): Promise<{
   pools: Pool[];
   tokens: Token[];
 }> => {
   try {
     const res = await _queryUniswap(`{
-      pools (first: 300, orderBy: totalValueLockedUSD, orderDirection: desc, where: {liquidity_gt: 0, totalValueLockedUSD_gte: 1000000, volumeUSD_gte: 500000}) {
+      pools (first: 300, orderBy: totalValueLockedUSD, orderDirection: desc, where: {liquidity_gt: 0, totalValueLockedUSD_gte: ${totalValueLockedUSD_gte}, volumeUSD_gte: ${volumeUSD_gte}}) {
         id
         token0 {
           id

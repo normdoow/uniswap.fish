@@ -508,20 +508,24 @@ const TopPools = () => {
     setCurrentNetwork(poolContext.state.chain);
     setIsLoading(true);
 
-    getPools().then(({ pools, tokens }) => {
-      processTopPools(pools);
-      setTokens(tokens);
-      setIsLoading(false);
+    const { totalValueLockedUSD_gte, volumeUSD_gte } = poolContext.state.chain;
 
-      setCurrentNetwork(tempChain);
-      poolContext.dispatch({
-        type: PoolActionType.SET_POOLS_CACHE,
-        payload: {
-          chainId: poolContext.state.chain.id,
-          pools,
-        },
-      });
-    });
+    getPools(totalValueLockedUSD_gte, volumeUSD_gte).then(
+      ({ pools, tokens }) => {
+        processTopPools(pools);
+        setTokens(tokens);
+        setIsLoading(false);
+
+        setCurrentNetwork(tempChain);
+        poolContext.dispatch({
+          type: PoolActionType.SET_POOLS_CACHE,
+          payload: {
+            chainId: poolContext.state.chain.id,
+            pools,
+          },
+        });
+      }
+    );
   }, [poolContext.state.chain]);
 
   const isPoolFilterResetDisabled =
@@ -1153,7 +1157,10 @@ const TopPools = () => {
         }}
       >
         We only display pools that meet the requirements of having a total
-        locked value ≥ $1m and a trading volume ≥ $500k.
+        locked value ≥{" "}
+        {formatAmount(poolContext.state.chain.totalValueLockedUSD_gte)} and a
+        trading volume ≥{" "}
+        {formatDollarAmount(poolContext.state.chain.volumeUSD_gte)}.
       </div>
 
       <div style={{ overflow: "hidden", borderRadius: "6px" }}>

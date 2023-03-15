@@ -29,6 +29,8 @@ export const NETWORKS: Network[] = [
       "https://seeklogo.com/images/E/ethereum-logo-EC6CDBA45B-seeklogo.com.png",
     subgraphEndpoint:
       "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
+    totalValueLockedUSD_gte: 1000000,
+    volumeUSD_gte: 500000,
   },
   {
     id: "polygon",
@@ -39,6 +41,8 @@ export const NETWORKS: Network[] = [
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgwyOAYn_Z1BalQYMfN8zVqwenavJVSO9SUZ1rz0ZerShW-5Ubzf6U96kLODC-ta2bVks&usqp=CAU",
     subgraphEndpoint:
       "https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon",
+    totalValueLockedUSD_gte: 100000,
+    volumeUSD_gte: 50000,
   },
   {
     id: "optimism",
@@ -48,6 +52,8 @@ export const NETWORKS: Network[] = [
     logoURI: "https://optimistic.etherscan.io/images/brandassets/optimism.svg",
     subgraphEndpoint:
       "https://api.thegraph.com/subgraphs/name/ianlapham/optimism-post-regenesis",
+    totalValueLockedUSD_gte: 1000000,
+    volumeUSD_gte: 500000,
   },
   {
     id: "celo",
@@ -59,6 +65,8 @@ export const NETWORKS: Network[] = [
     isNew: false,
     subgraphEndpoint:
       "https://api.thegraph.com/subgraphs/name/jesse-sawa/uniswap-celo",
+    totalValueLockedUSD_gte: 10000,
+    volumeUSD_gte: 1000,
   },
   {
     id: "arbitrum",
@@ -74,6 +82,8 @@ export const NETWORKS: Network[] = [
       "https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-arbitrum-one",
     // subgraphEndpoint:
     //   "https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-minimal",
+    totalValueLockedUSD_gte: 0,
+    volumeUSD_gte: 0,
   },
 ];
 
