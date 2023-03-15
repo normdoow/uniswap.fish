@@ -36,6 +36,13 @@ import { round } from "../../utils/math";
 import { CheckboxValueType } from "antd/es/checkbox/Group";
 import { getCoingeckoToken } from "../../repos/coingecko";
 import { color } from "d3";
+import {
+  estimateFee,
+  getLiquidityDelta,
+  getPriceFromTick,
+  getTokensAmountFromDepositAmountUSD,
+} from "../../utils/uniswapv3/math";
+import BigNumber from "bignumber.js";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -214,6 +221,9 @@ interface PoolColumnDataType {
   dailyFeesPerTVL: number;
   risk: Risk;
   riskChecklist: RiskChecklist;
+  estimatedFee24h: number;
+  estimatedFeeToken0: number;
+  estimatedFeeToken1: number;
 }
 
 const searchTokenResult = (tokens: Token[], query: string) =>
@@ -387,7 +397,7 @@ const TopPools = () => {
 
       // Price Volatility
       const poolDayData14d = pool.poolDayData;
-      const priceVolatility24HPercentage =
+      const priceVolatility24HPercentage: number =
         poolDayData14d
           .map((d: PoolDayData) => {
             return (100 * (Number(d.high) - Number(d.low))) / Number(d.high);
@@ -412,6 +422,40 @@ const TopPools = () => {
       if (riskChecklistCount >= 1) risk = Risk.LOW_RISK;
       if (riskChecklistCount >= 4) risk = Risk.HIGH_RISK;
 
+      // Estimated Profit
+      const P = getPriceFromTick(
+        Number(pool.tick),
+        pool.token0.decimals,
+        pool.token1.decimals
+      );
+      let Pl = P - (P * priceVolatility24HPercentage) / 100;
+      let Pu = P + (P * priceVolatility24HPercentage) / 100;
+      const priceUSDX = Number(pool.token1.tokenDayData[0].priceUSD);
+      const priceUSDY = Number(pool.token0.tokenDayData[0].priceUSD);
+      const depositAmountUSD = 1000;
+      const { amount0, amount1 } = getTokensAmountFromDepositAmountUSD(
+        P,
+        Pl,
+        Pu,
+        priceUSDX,
+        priceUSDY,
+        depositAmountUSD
+      );
+      const deltaL = getLiquidityDelta(
+        P,
+        Pl,
+        Pu,
+        amount0,
+        amount1,
+        Number(pool.token0?.decimals || 18),
+        Number(pool.token1?.decimals || 18)
+      );
+      const L = new BigNumber(pool.liquidity);
+      const volume24H = volume24h;
+      const feeTier = pool.feeTier;
+      const estimatedFee24h =
+        P >= Pl && P <= Pu ? estimateFee(deltaL, L, volume24H, feeTier) : 0;
+
       return {
         key: index.toString(),
         poolId: pool.id,
@@ -428,6 +472,9 @@ const TopPools = () => {
         dailyFeesPerTVL,
         risk,
         riskChecklist,
+        estimatedFee24h,
+        estimatedFeeToken0: amount1,
+        estimatedFeeToken1: amount0,
       } as PoolColumnDataType;
     });
     setPools(topPools);
@@ -683,6 +730,32 @@ const TopPools = () => {
                 </a>
               </h3>
             </PairToken>
+          </Popover>
+        );
+      },
+    },
+    {
+      title: "Estimated Fees 24H ($1k)",
+      dataIndex: "estimatedFee24h",
+      key: "estimatedFee24h",
+      width: 160,
+      sorter: (a, b) => a.estimatedFee24h - b.estimatedFee24h,
+      render: (estimatedFee24h, record) => {
+        return (
+          <Popover
+            placement="right"
+            color="rgba(0,0,0,0.875)"
+            content={
+              <div>
+                <div style={{ fontSize: "0.675rem", color: "#777" }}>
+                  <div>Amount0: {record.estimatedFeeToken0}</div>
+                  <div>Amount1: {record.estimatedFeeToken1}</div>
+                  Price Volatility 24H = 14D average of (high - low) / high
+                </div>
+              </div>
+            }
+          >
+            {formatDollarAmount(estimatedFee24h)}
           </Popover>
         );
       },
@@ -963,7 +1036,7 @@ const TopPools = () => {
           <AntdTable
             columns={columns}
             dataSource={pools}
-            scroll={{ x: 1400 }}
+            scroll={{ x: 2000 }}
             size="middle"
             loading={isLoading}
           />

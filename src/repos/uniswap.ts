@@ -296,6 +296,8 @@ export const getPools = async (): Promise<{
           id
         }
         feeTier
+        liquidity
+        tick
         totalValueLockedUSD
         poolDayData(first: 15, skip: 1, orderBy: date, orderDirection: desc) {
           date
