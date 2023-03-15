@@ -55,7 +55,7 @@ const LandingContainer = styled.div`
   padding-top: 80px;
 
   display: grid;
-  grid-template-columns: 1fr 370px;
+  grid-template-columns: 1fr 350px;
   grid-gap: 25px;
   margin-top: 25px;
 
@@ -73,7 +73,7 @@ const LandingContainer = styled.div`
     grid-template-columns: 1fr;
 
     & > .select-pair {
-      width: 370px;
+      width: 350px;
       margin: auto auto;
     }
   }

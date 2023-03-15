@@ -56,7 +56,7 @@ const ModalStyle = {
   },
 };
 const Container = styled.div`
-  max-width: 370px;
+  max-width: 350px;
   padding: 15px;
 
   @media only screen and (max-width: 400px) {
@@ -113,7 +113,7 @@ const Tier = styled.div`
   }
 
   & > span {
-    font-size: 0.8rem;
+    font-size: 0.675rem;
     line-height: 1.2rem;
     margin-top: 5px;
     display: inline-block;
@@ -125,7 +125,7 @@ const Tier = styled.div`
     border-radius: 5px;
     padding: 3px 5px;
     color: #ccc;
-    font-size: 0.8rem;
+    font-size: 0.675rem;
     margin-top: 7px;
     text-align: center;
   }
@@ -165,7 +165,7 @@ const NetworkItem = styled.div`
   display: flex;
   align-items: center;
   transition: 0.3s;
-  width: calc(370px - 10px * 2);
+  width: calc(350px - 10px * 2);
   margin: 10px;
   border: 1px solid #333;
   border-radius: 15px;
