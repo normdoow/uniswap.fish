@@ -238,7 +238,9 @@ const CandleStickChart = ({ data }: { data: PoolColumnDataType }) => {
         }}
       >
         <span>
-          {data.token0.symbol}/{data.token1.symbol} Price Chart (14D)
+          {isPriceToggle ? data.token1.symbol : data.token0.symbol}/
+          {isPriceToggle ? data.token0.symbol : data.token1.symbol} Price Chart
+          (14D)
         </span>
         <div
           style={{
