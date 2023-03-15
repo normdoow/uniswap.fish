@@ -13,6 +13,7 @@ import { usePoolContext } from "../context/pool/poolContext";
 import { PoolActionType } from "../context/pool/poolReducer";
 import { getQueryParam, setQueryParam } from "../utils/querystring";
 import { Network } from "../common/interfaces/uniswap.interface";
+import { SEO } from "../common/components/Head";
 
 const BodyContainer = styled.div`
   max-width: 900px;
@@ -166,4 +167,10 @@ function App() {
 }
 
 export default App;
-export { Head } from "../common/components/Head";
+export const Head = () => {
+  const title = "Uniswap V3 Pool Overview - Uniswap.fish";
+  const description =
+    "Analyze and get an overview of Uniswap v3 pools on Ethereum, Polygon, Arbitrum, Optimism, Celo, and more.";
+
+  return <SEO title={title} description={description} />;
+};

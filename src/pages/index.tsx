@@ -26,6 +26,7 @@ import ImpermanentLossModal from "../containers/ImpermanentLossModal";
 import CreatePositionModal from "../containers/CreatePositionModal";
 import TopPosition from "../containers/TopPosition";
 import { Link } from "gatsby";
+import { SEO } from "../common/components/Head";
 
 const BodyContainer = styled.div`
   max-width: 900px;
@@ -262,4 +263,10 @@ function App() {
 }
 
 export default App;
-export { Head } from "../common/components/Head";
+export const Head = () => {
+  const title = "Uniswap V3 Fee Calculator - Uniswap.fish";
+  const description =
+    "Calculate your Uniswap v3 positions fee returns, APY, APR, ROI, yields, and impermanent loss based on how much pool liquidity you provide.";
+
+  return <SEO title={title} description={description} />;
+};

@@ -1,10 +1,16 @@
 import React from "react";
 import { Script } from "gatsby";
 
-export function Head() {
+export function SEO({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) {
   return (
     <>
-      <title>Uniswap V3 Fee Calculator - Uniswap.fish</title>
+      <title>{title}</title>
       <meta charSet="utf-8" />
       <link
         rel="apple-touch-icon"
@@ -33,33 +39,18 @@ export function Head() {
         href="https://fonts.googleapis.com/css2?family=Gowun+Batang&family=Noto+Sans+JP:wght@300;400;500;700&display=swap"
         rel="stylesheet"
       />
-      <meta
-        name="description"
-        content="Calculate your Uniswap v3 positions fee returns, APY, APR, ROI, yields, and impermanent loss based on how much pool liquidity you provide."
-      />
+      <meta name="description" content={description} />
       <meta name="author" content="Chun Rapeepat" />
       <meta property="og:type" content="website" />
-      <meta
-        property="og:title"
-        content="Uniswap V3 Fee Calculator - Uniswap.fish"
-      />
-      <meta
-        property="og:description"
-        content="Calculate your Uniswap v3 positions fee returns, APY, APR, ROI, yields, and impermanent loss based on how much pool liquidity you provide."
-      />
+      <meta property="og:title" content={title} />
+      <meta property="og:description" content={description} />
       <meta property="og:url" content="https://uniswap.fish" />
       <meta property="og:image" content="https://uniswap.fish/ogimage.jpeg" />
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content="@uniswapdotfish" />
-      <meta
-        name="twitter:title"
-        content="Uniswap V3 Fee Calculator - Uniswap.fish"
-      />
-      <meta
-        name="twitter:description"
-        content="Calculate your Uniswap v3 positions fee returns, APY, APR, ROI, yields, and impermanent loss based on how much pool liquidity you provide."
-      />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content="https://uniswap.fish/ogimage.jpeg" />
       <Script>
         {`var ffWidgetId = "bbf56663-84dc-4b55-bf9c-333b5b4c2720";
