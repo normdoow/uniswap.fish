@@ -163,6 +163,11 @@ const TokenIcon = styled.div`
   }
 `;
 
+enum Risk {
+  SAFE = "SAFE",
+  LOW_RISK = "LOW RISK",
+  HIGH_RISK = "HIGH RISK",
+}
 interface PoolColumnDataType {
   key: string;
   poolId: string;
@@ -177,6 +182,7 @@ interface PoolColumnDataType {
   priceVolatility24HPercentage: number;
   poolDayDatas: PoolDayData[];
   dailyFeesPerTVL: number;
+  risk: Risk;
 }
 
 const searchTokenResult = (tokens: Token[], query: string) =>
@@ -356,6 +362,9 @@ const TopPools = () => {
           .reduce((a, b) => a + b, 0) / 14;
       const poolDayDatas = pool.poolDayData;
 
+      // Risk
+      const risk = Risk.HIGH_RISK;
+
       return {
         key: index.toString(),
         poolId: pool.id,
@@ -370,6 +379,7 @@ const TopPools = () => {
         priceVolatility24HPercentage,
         poolDayDatas,
         dailyFeesPerTVL,
+        risk,
       } as PoolColumnDataType;
     });
     setPools(topPools);
@@ -631,21 +641,26 @@ const TopPools = () => {
     },
     {
       title: "Risk",
-      dataIndex: "positionId",
-      key: "positionId",
+      dataIndex: "risk",
+      key: "risk",
       width: 110,
       filters: [
         {
-          text: "Active Position",
-          value: "active",
+          text: "SAFE",
+          value: "SAFE",
         },
         {
-          text: "Out of Range Position",
-          value: "out-of-range",
+          text: "LOW RISK",
+          value: "LOW RISK",
+        },
+        {
+          text: "HIGH RISK",
+          value: "HIGH RISK",
         },
       ],
-      render: () => {
-        return <div>Hello There</div>;
+      onFilter: (value, record) => record.risk.includes(String(value)),
+      render: (risk, record) => {
+        return <div>{risk}</div>;
       },
     },
     {
@@ -729,7 +744,7 @@ const TopPools = () => {
             placement="right"
             color="rgba(0,0,0,0.675)"
             overlayStyle={{ whiteSpace: "pre-line" }}
-            title={`7D Average 24H Volume / TVL`}
+            title={`7D Average 24H Fees / TVL`}
           >
             {(dailyFeesPerTVL * 100).toFixed(2)}%
           </Tooltip>
