@@ -25,8 +25,10 @@ import { getPools } from "../../repos/uniswap";
 import { ScreenWidth } from "../../utils/styled";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faCheck,
   faExchangeAlt,
   faExternalLinkAlt,
+  faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import { formatAmount, formatDollarAmount } from "../../utils/format";
 import { getFeeTierPercentage } from "../../utils/uniswapv3/helper";
@@ -162,11 +164,39 @@ const TokenIcon = styled.div`
     }
   }
 `;
+const CheckList = styled.div`
+  margin-top: 7px;
+
+  & > div:nth-child(1) {
+    display: flex;
+    align-items: center;
+    color: #777;
+    font-weight: 500;
+
+    & > span:nth-child(1) {
+      width: 22px;
+    }
+  }
+  & > div:nth-child(2) {
+    margin-left: 22px;
+    color: #666;
+    font-size: 0.675rem;
+  }
+`;
 
 enum Risk {
   SAFE = "SAFE",
   LOW_RISK = "LOW RISK",
   HIGH_RISK = "HIGH RISK",
+}
+interface RiskChecklist {
+  lowPoolTVL: boolean;
+  lowPoolVolume: boolean;
+  highPriceVolatility: boolean;
+  lowToken0TVL: boolean;
+  lowToken1TVL: boolean;
+  lowToken0PoolCount: boolean;
+  lowToken1PoolCount: boolean;
 }
 interface PoolColumnDataType {
   key: string;
@@ -183,6 +213,7 @@ interface PoolColumnDataType {
   poolDayDatas: PoolDayData[];
   dailyFeesPerTVL: number;
   risk: Risk;
+  riskChecklist: RiskChecklist;
 }
 
 const searchTokenResult = (tokens: Token[], query: string) =>
@@ -365,7 +396,21 @@ const TopPools = () => {
       const poolDayDatas = pool.poolDayData;
 
       // Risk
-      const risk = Risk.HIGH_RISK;
+      const riskChecklist: RiskChecklist = {
+        lowPoolTVL: totalValueLockedUSD < 10000000,
+        lowPoolVolume: dailyVolumePerTVL < 0.1,
+        highPriceVolatility: priceVolatility24HPercentage > 10,
+        lowToken0TVL: Number(pool.token0.totalValueLockedUSD) < 10000000,
+        lowToken0PoolCount: pool.token0.poolCount < 5,
+        lowToken1TVL: Number(pool.token0.totalValueLockedUSD) < 10000000,
+        lowToken1PoolCount: pool.token0.poolCount < 5,
+      };
+      const riskChecklistCount = Object.values(riskChecklist).filter(
+        (v) => v === true
+      ).length;
+      let risk = Risk.SAFE;
+      if (riskChecklistCount >= 1) risk = Risk.LOW_RISK;
+      if (riskChecklistCount >= 3) risk = Risk.HIGH_RISK;
 
       return {
         key: index.toString(),
@@ -382,6 +427,7 @@ const TopPools = () => {
         poolDayDatas,
         dailyFeesPerTVL,
         risk,
+        riskChecklist,
       } as PoolColumnDataType;
     });
     setPools(topPools);
@@ -661,9 +707,75 @@ const TopPools = () => {
         },
       ],
       onFilter: (value, record) => record.risk.includes(String(value)),
-      render: (risk, record) => {
+      render: (risk, { token0, token1, riskChecklist }) => {
+        const CheckListComp = (props: {
+          checked: boolean;
+          title: string;
+          desc: string;
+          style?: React.CSSProperties;
+        }) => {
+          return (
+            <CheckList {...props}>
+              <div style={{ color: props.checked ? "#fd766c" : "#777" }}>
+                <span>
+                  <FontAwesomeIcon icon={props.checked ? faCheck : faTimes} />
+                </span>
+                <span>{props.title}</span>
+              </div>
+              <div style={{ color: props.checked ? "#ba5851" : "#777" }}>
+                {props.desc}
+              </div>
+            </CheckList>
+          );
+        };
+
         return (
-          <div style={{ fontStyle: "italic", fontWeight: 500 }}>{risk}</div>
+          <Popover
+            placement="right"
+            color="rgba(0,0,0,0.875)"
+            content={
+              <div>
+                <CheckListComp
+                  style={{ marginTop: 0 }}
+                  checked={riskChecklist.lowPoolTVL}
+                  title="Low Pool TVL"
+                  desc="Total Value Locked USD < $10m"
+                />
+                <CheckListComp
+                  checked={riskChecklist.lowPoolVolume}
+                  title="Low Pool Volume"
+                  desc="Volume 24H / TVL < 10%"
+                />
+                <CheckListComp
+                  checked={riskChecklist.highPriceVolatility}
+                  title="High Price Volatility"
+                  desc="Price Volatility 24H > 10%"
+                />
+                <CheckListComp
+                  checked={riskChecklist.lowToken0TVL}
+                  title={`Low Token TVL (${token0.symbol})`}
+                  desc="Total Value Locked USD < $10m"
+                />
+                <CheckListComp
+                  checked={riskChecklist.lowToken1TVL}
+                  title={`Low Token TVL (${token1.symbol})`}
+                  desc="Total Value Locked USD < $10m"
+                />
+                <CheckListComp
+                  checked={riskChecklist.lowToken0PoolCount}
+                  title={`Low Token Pool Count (${token0.symbol})`}
+                  desc="Related-Pool Count < 5 Pool"
+                />
+                <CheckListComp
+                  checked={riskChecklist.lowToken1PoolCount}
+                  title={`Low Token Pool Count (${token1.symbol})`}
+                  desc="Related-Pool Count < 5 Pool"
+                />
+              </div>
+            }
+          >
+            <span style={{ fontStyle: "italic", fontWeight: 500 }}>{risk}</span>
+          </Popover>
         );
       },
     },
