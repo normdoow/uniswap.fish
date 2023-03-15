@@ -66,7 +66,7 @@ const TopPools = () => {
   const [tokens, setTokens] = useState<Token[]>([]);
   const [pools, setPools] = useState<PoolColumnDataType[]>([]);
 
-  const processTopPools = (allPools: Pool[]) => {
+  const processTopPools = (allPools: Pool[]): PoolColumnDataType[] => {
     const topPools = allPools.map((pool, index) => {
       // Basic Stats
       const poolDayData7d = pool.poolDayData.slice(0, 7);
@@ -161,12 +161,14 @@ const TopPools = () => {
         estimatedFeeToken1: amount0,
       } as PoolColumnDataType;
     });
-    setPools(topPools);
+
+    return topPools;
   };
 
   useEffect(() => {
     if (poolContext.state.poolsCache[poolContext.state.chain.id]) {
-      processTopPools(poolContext.state.poolsCache[poolContext.state.chain.id]);
+      setPools(poolContext.state.poolsCache[poolContext.state.chain.id]);
+      setTokens(poolContext.state.tokensCache[poolContext.state.chain.id]);
       return;
     }
 
@@ -178,7 +180,8 @@ const TopPools = () => {
 
     getPools(totalValueLockedUSD_gte, volumeUSD_gte).then(
       ({ pools, tokens }) => {
-        processTopPools(pools);
+        const topPools = processTopPools(pools);
+        setPools(topPools);
         setTokens(tokens);
         setIsLoading(false);
 
@@ -187,7 +190,14 @@ const TopPools = () => {
           type: PoolActionType.SET_POOLS_CACHE,
           payload: {
             chainId: poolContext.state.chain.id,
-            pools,
+            pools: topPools,
+          },
+        });
+        poolContext.dispatch({
+          type: PoolActionType.SET_TOKENS_CACHE,
+          payload: {
+            chainId: poolContext.state.chain.id,
+            tokens,
           },
         });
       }

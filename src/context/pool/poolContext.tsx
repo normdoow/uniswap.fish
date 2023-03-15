@@ -1,16 +1,23 @@
 import React from "react";
-import { Network, Pool } from "../../common/interfaces/uniswap.interface";
+import {
+  Network,
+  Pool,
+  Token,
+} from "../../common/interfaces/uniswap.interface";
 import { NETWORKS } from "../../common/network";
+import { PoolColumnDataType } from "../../containers/pools/TopPoolTable";
 import { poolContextReducer, PoolContextAction } from "./poolReducer";
 
 export interface PoolContextState {
   chain: Network;
-  poolsCache: { [chainId: string]: Pool[] };
+  poolsCache: { [chainId: string]: PoolColumnDataType[] };
+  tokensCache: { [chainId: string]: Token[] };
   favoritePoolIds: { [chainId: string]: string[] };
 }
 const initialState: PoolContextState = {
   chain: NETWORKS[0],
   poolsCache: {},
+  tokensCache: {},
   favoritePoolIds: {},
 };
 

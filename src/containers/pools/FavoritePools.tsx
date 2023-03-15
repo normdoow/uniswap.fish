@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Heading } from "../../common/components/atomic";
 import { usePoolContext } from "../../context/pool/poolContext";
 import { ScreenWidth } from "../../utils/styled";
+import TopPoolTable from "./TopPoolTable";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -42,6 +43,8 @@ const FavoritePools = () => {
   const { state, dispatch } = usePoolContext();
   const chainId = state.chain.id;
   const favoritePoolIds = state.favoritePoolIds[chainId] || [];
+  const pools = state.poolsCache[chainId] || [];
+  const tokens = state.tokensCache[chainId] || [];
 
   return (
     <Container>
@@ -55,6 +58,15 @@ const FavoritePools = () => {
           You don't have any favorite pools yet. Add your favorite pool
           collections by clicking the star icon.
         </p>
+      )}
+      {favoritePoolIds.length > 0 && (
+        <div style={{ marginTop: 10 }}>
+          <TopPoolTable
+            isLoading={false}
+            pools={pools.filter((p) => favoritePoolIds.includes(p.poolId))}
+            tokens={tokens}
+          />
+        </div>
       )}
     </Container>
   );

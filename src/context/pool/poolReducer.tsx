@@ -1,9 +1,15 @@
-import { Network, Pool } from "../../common/interfaces/uniswap.interface";
+import {
+  Network,
+  Pool,
+  Token,
+} from "../../common/interfaces/uniswap.interface";
+import { PoolColumnDataType } from "../../containers/pools/TopPoolTable";
 import { PoolContextState } from "./poolContext";
 
 export enum PoolActionType {
   SET_CHAIN = "SET_CHAIN",
   SET_POOLS_CACHE = "SET_POOLS_CACHE",
+  SET_TOKENS_CACHE = "SET_TOKENS_CACHE",
   SET_FAVORITE_POOL_IDS = "SET_FAVORITE_POOL_IDS",
 }
 
@@ -16,7 +22,14 @@ export type PoolContextAction =
       type: PoolActionType.SET_POOLS_CACHE;
       payload: {
         chainId: string;
-        pools: Pool[];
+        pools: PoolColumnDataType[];
+      };
+    }
+  | {
+      type: PoolActionType.SET_TOKENS_CACHE;
+      payload: {
+        chainId: string;
+        tokens: Token[];
       };
     }
   | {
@@ -41,6 +54,15 @@ export const poolContextReducer = (
         poolsCache: {
           ...state.poolsCache,
           [action.payload.chainId]: action.payload.pools,
+        },
+      };
+    }
+    case PoolActionType.SET_TOKENS_CACHE: {
+      return {
+        ...state,
+        tokensCache: {
+          ...state.tokensCache,
+          [action.payload.chainId]: action.payload.tokens,
         },
       };
     }
