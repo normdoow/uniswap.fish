@@ -9,6 +9,8 @@ import FavoritePools from "../containers/pools/FavoritePools";
 import TopPools from "../containers/pools/TopPools";
 import { Dropdown } from "antd";
 import { NETWORKS } from "../common/network";
+import { usePoolContext } from "../context/pool/poolContext";
+import { PoolActionType } from "../context/pool/poolReducer";
 
 const BodyContainer = styled.div`
   max-width: 900px;
@@ -69,22 +71,34 @@ const NetworkDropdownItem = styled.div`
   }
 `;
 
-const items = NETWORKS.filter((network) => !network.disabled).map((network) => {
-  return {
-    key: network.id,
-    label: (
-      <NetworkDropdownItem key={network.id}>
-        <img src={network.logoURI} />
-        <div>
-          <div className="name">{network.name}</div>
-          <div className="desc">{network.desc}</div>
-        </div>
-      </NetworkDropdownItem>
-    ),
-  };
-});
-
 function App() {
+  const poolContext = usePoolContext();
+
+  const items = NETWORKS.filter((network) => !network.disabled).map(
+    (network) => {
+      return {
+        key: network.id,
+        label: (
+          <NetworkDropdownItem
+            key={network.id}
+            onClick={() => {
+              poolContext.dispatch({
+                type: PoolActionType.SET_CHAIN,
+                payload: network,
+              });
+            }}
+          >
+            <img src={network.logoURI} />
+            <div>
+              <div className="name">{network.name}</div>
+              <div className="desc">{network.desc}</div>
+            </div>
+          </NetworkDropdownItem>
+        ),
+      };
+    }
+  );
+
   return (
     <>
       <Navbar />
@@ -101,8 +115,8 @@ function App() {
             placement="bottomRight"
           >
             <NetworkDropdown>
-              <img src="https://seeklogo.com/images/E/ethereum-logo-EC6CDBA45B-seeklogo.com.png" />
-              <span>Ethereum</span>
+              <img src={poolContext.state.chain.logoURI} />
+              <span>{poolContext.state.chain.name}</span>
               <DownOutlined />
             </NetworkDropdown>
           </Dropdown>

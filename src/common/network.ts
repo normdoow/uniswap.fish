@@ -72,6 +72,8 @@ export const NETWORKS: Network[] = [
       "https://assets.website-files.com/5f973c970bea5548ad4287ef/60a320b472858ace6700df76_arb-icon.svg",
     subgraphEndpoint:
       "https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-arbitrum-one",
+    // subgraphEndpoint:
+    //   "https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-minimal",
   },
 ];
 

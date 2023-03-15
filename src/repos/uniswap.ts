@@ -366,7 +366,9 @@ export const getPools = async (): Promise<{
         }
         p.poolDayData = poolDayData;
         return p;
-      });
+      })
+      // filter out if poolDayData < 14
+      .filter((p: Pool) => p.poolDayData.length === 14);
 
     return { pools, tokens };
   } catch (e) {

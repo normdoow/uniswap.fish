@@ -42,6 +42,12 @@ import {
   getTokensAmountFromDepositAmountUSD,
 } from "../../utils/uniswapv3/math";
 import BigNumber from "bignumber.js";
+import {
+  getCurrentNetwork,
+  NETWORKS,
+  setCurrentNetwork,
+} from "../../common/network";
+import { usePoolContext } from "../../context/pool/poolContext";
 
 const Container = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -382,6 +388,7 @@ const CandleStickChart = ({ data }: { data: PoolColumnDataType }) => {
   );
 };
 const TopPools = () => {
+  const poolContext = usePoolContext();
   const [isLoading, setIsLoading] = useState(false);
   const [pools, setPools] = useState<PoolColumnDataType[]>([]);
   // Pool filter variables
@@ -491,13 +498,17 @@ const TopPools = () => {
   };
 
   useEffect(() => {
+    const tempChain = getCurrentNetwork();
+    setCurrentNetwork(poolContext.state.chain);
     setIsLoading(true);
+
     getPools().then(({ pools, tokens }) => {
       processTopPools(pools);
       setTokens(tokens);
       setIsLoading(false);
+      setCurrentNetwork(tempChain);
     });
-  }, []);
+  }, [poolContext.state.chain]);
 
   const isPoolFilterResetDisabled =
     feeCheckedList.length === 0 && !tokenSearchText;
