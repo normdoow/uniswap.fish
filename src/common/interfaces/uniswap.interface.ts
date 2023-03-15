@@ -8,6 +8,10 @@ export interface Network {
   isNew?: boolean;
   error?: string;
   subgraphEndpoint: string;
+
+  // for pool overview
+  totalValueLockedUSD_gte: number;
+  volumeUSD_gte: number;
 }
 
 export interface Tick {

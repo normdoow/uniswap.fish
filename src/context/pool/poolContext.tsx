@@ -6,10 +6,12 @@ import { poolContextReducer, PoolContextAction } from "./poolReducer";
 export interface PoolContextState {
   chain: Network;
   poolsCache: { [chainId: string]: Pool[] };
+  favoritePoolIds: { [chainId: string]: string[] };
 }
 const initialState: PoolContextState = {
   chain: NETWORKS[0],
   poolsCache: {},
+  favoritePoolIds: {},
 };
 
 interface PoolContextProviderProps {

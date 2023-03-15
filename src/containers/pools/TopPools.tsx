@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
-import { StarOutlined } from "@ant-design/icons";
+import { StarFilled, StarOutlined } from "@ant-design/icons";
 import {
   ConfigProvider,
   theme,
@@ -205,6 +205,17 @@ const CheckList = styled.div`
     margin-left: 22px;
     color: #666;
     font-size: 0.675rem;
+  }
+`;
+const FavoriteButton = styled.div`
+  cursor: pointer;
+  display: block;
+  font-size: 1rem;
+  text-align: center;
+  color: #999;
+
+  &:hover {
+    color: white;
   }
 `;
 
@@ -560,20 +571,37 @@ const TopPools = () => {
       width: 40,
       fixed: "left",
       render: (poolId) => {
+        const chainId = poolContext.state.chain.id;
+        const favoritePoolIds =
+          poolContext.state.favoritePoolIds[chainId] || [];
+        const isFavorite = favoritePoolIds?.includes(poolId);
+
         return (
-          <div
-            style={{
-              cursor: "pointer",
-              display: "block",
-              fontSize: "1rem",
-              textAlign: "center",
-            }}
+          <FavoriteButton
+            style={{ color: isFavorite ? "#f1ca12" : "#999" }}
             onClick={() => {
-              console.log("favorite", poolId);
+              if (favoritePoolIds?.includes(poolId)) {
+                poolContext.dispatch({
+                  type: PoolActionType.SET_FAVORITE_POOL_IDS,
+                  payload: {
+                    chainId,
+                    poolIds: favoritePoolIds.filter((id) => id !== poolId),
+                  },
+                });
+              } else {
+                poolContext.dispatch({
+                  type: PoolActionType.SET_FAVORITE_POOL_IDS,
+                  payload: {
+                    chainId,
+                    poolIds: [...favoritePoolIds, poolId],
+                  },
+                });
+              }
             }}
           >
-            <StarOutlined />
-          </div>
+            {isFavorite && <StarFilled />}
+            {!isFavorite && <StarOutlined />}
+          </FavoriteButton>
         );
       },
     },

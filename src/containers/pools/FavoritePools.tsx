@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Heading } from "../../common/components/atomic";
+import { usePoolContext } from "../../context/pool/poolContext";
 import { ScreenWidth } from "../../utils/styled";
 
 const Container = styled.div`
@@ -38,16 +39,23 @@ const Total = styled.div`
 `;
 
 const FavoritePools = () => {
+  const { state, dispatch } = usePoolContext();
+  const chainId = state.chain.id;
+  const favoritePoolIds = state.favoritePoolIds[chainId] || [];
+
   return (
     <Container>
       <WrappedHeader>
         <Heading>Favorite Pools</Heading>
-        <Total>Total: 30 pools</Total>
+        <Total>Total: {favoritePoolIds.length} pools</Total>
       </WrappedHeader>
 
-      <p style={{ color: "#777", fontSize: "0.875rem", marginTop: 10 }}>
-        You don't have any favorite pools yet. Add your favorite pools to this
-      </p>
+      {favoritePoolIds.length === 0 && (
+        <p style={{ color: "#777", fontSize: "0.875rem", marginTop: 10 }}>
+          You don't have any favorite pools yet. Add your favorite pool
+          collections by clicking the star icon.
+        </p>
+      )}
     </Container>
   );
 };
