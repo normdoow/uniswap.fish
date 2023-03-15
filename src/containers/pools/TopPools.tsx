@@ -643,7 +643,7 @@ const TopPools = () => {
       title: "Risk",
       dataIndex: "risk",
       key: "risk",
-      width: 110,
+      width: 100,
       filters: [
         {
           text: "SAFE",
@@ -660,7 +660,9 @@ const TopPools = () => {
       ],
       onFilter: (value, record) => record.risk.includes(String(value)),
       render: (risk, record) => {
-        return <div>{risk}</div>;
+        return (
+          <div style={{ fontStyle: "italic", fontWeight: 500 }}>{risk}</div>
+        );
       },
     },
     {
@@ -739,6 +741,11 @@ const TopPools = () => {
       width: 120,
       sorter: (a, b) => a.dailyFeesPerTVL - b.dailyFeesPerTVL,
       render: (dailyFeesPerTVL) => {
+        const _p = dailyFeesPerTVL * 100;
+        let p = round(_p, 2);
+        if (p < 0.1) p = round(_p, 4);
+        if (p < 0.001) p = round(_p, 6);
+
         return (
           <Tooltip
             placement="right"
@@ -746,7 +753,7 @@ const TopPools = () => {
             overlayStyle={{ whiteSpace: "pre-line" }}
             title={`7D Average 24H Fees / TVL`}
           >
-            {(dailyFeesPerTVL * 100).toFixed(2)}%
+            {p}%
           </Tooltip>
         );
       },
