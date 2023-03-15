@@ -1,5 +1,10 @@
 export const ANNOUNCEMENTS = [
   {
+    message: "pool overview",
+    tweetId: "1636046547392794624",
+    tag: "feature-update",
+  },
+  {
     message: "top positions",
     tweetId: "1632749787983532034",
     tag: "feature-update",
