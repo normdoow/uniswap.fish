@@ -40,7 +40,7 @@ const Total = styled.div`
 `;
 
 const FavoritePools = () => {
-  const { state, dispatch } = usePoolContext();
+  const { state } = usePoolContext();
   const chainId = state.chain.id;
   const favoritePoolIds = state.favoritePoolIds[chainId] || [];
   const pools = state.poolsCache[chainId] || [];
@@ -50,16 +50,18 @@ const FavoritePools = () => {
     <Container>
       <WrappedHeader>
         <Heading>Favorite Pools</Heading>
-        <Total>Total: {favoritePoolIds.length} pools</Total>
+        <Total>
+          Total: {pools.length > 0 ? favoritePoolIds.length : 0} pools
+        </Total>
       </WrappedHeader>
 
-      {favoritePoolIds.length === 0 && (
+      {(favoritePoolIds.length === 0 || pools.length === 0) && (
         <p style={{ color: "#777", fontSize: "0.875rem", marginTop: 10 }}>
           You don't have any favorite pools yet. Add your favorite pool
           collections by clicking the star icon.
         </p>
       )}
-      {favoritePoolIds.length > 0 && (
+      {favoritePoolIds.length > 0 && pools.length > 0 && (
         <div style={{ marginTop: 10 }}>
           <TopPoolTable
             isLoading={false}

@@ -1,12 +1,13 @@
 import React from "react";
-import {
-  Network,
-  Pool,
-  Token,
-} from "../../common/interfaces/uniswap.interface";
+import { Network, Token } from "../../common/interfaces/uniswap.interface";
 import { NETWORKS } from "../../common/network";
 import { PoolColumnDataType } from "../../containers/pools/TopPoolTable";
 import { poolContextReducer, PoolContextAction } from "./poolReducer";
+
+export const favoritePoolIdsLocalStorageKey = "poolOverview_favoritePoolIds";
+const favoritePoolIdsDefault = JSON.parse(
+  localStorage.getItem(favoritePoolIdsLocalStorageKey) || "{}"
+);
 
 export interface PoolContextState {
   chain: Network;
@@ -18,7 +19,7 @@ const initialState: PoolContextState = {
   chain: NETWORKS[0],
   poolsCache: {},
   tokensCache: {},
-  favoritePoolIds: {},
+  favoritePoolIds: favoritePoolIdsDefault,
 };
 
 interface PoolContextProviderProps {

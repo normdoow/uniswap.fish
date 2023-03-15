@@ -4,7 +4,10 @@ import {
   Token,
 } from "../../common/interfaces/uniswap.interface";
 import { PoolColumnDataType } from "../../containers/pools/TopPoolTable";
-import { PoolContextState } from "./poolContext";
+import {
+  favoritePoolIdsLocalStorageKey,
+  PoolContextState,
+} from "./poolContext";
 
 export enum PoolActionType {
   SET_CHAIN = "SET_CHAIN",
@@ -67,13 +70,18 @@ export const poolContextReducer = (
       };
     }
     case PoolActionType.SET_FAVORITE_POOL_IDS: {
-      return {
+      const newState = {
         ...state,
         favoritePoolIds: {
           ...state.favoritePoolIds,
           [action.payload.chainId]: action.payload.poolIds,
         },
       };
+      localStorage.setItem(
+        favoritePoolIdsLocalStorageKey,
+        JSON.stringify(newState.favoritePoolIds)
+      );
+      return newState;
     }
   }
 };
