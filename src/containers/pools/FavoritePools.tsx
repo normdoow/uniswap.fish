@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Heading } from "../../common/components/atomic";
+import { NETWORKS } from "../../common/network";
 import { usePoolContext } from "../../context/pool/poolContext";
 import { ScreenWidth } from "../../utils/styled";
 import TopPoolTable from "./TopPoolTable";
@@ -41,7 +42,7 @@ const Total = styled.div`
 
 const FavoritePools = () => {
   const { state } = usePoolContext();
-  const chainId = state.chain.id;
+  const chainId = state.chain?.id || NETWORKS[0].id;
   const favoritePoolIds = state.favoritePoolIds[chainId] || [];
   const pools = state.poolsCache[chainId] || [];
   const tokens = state.tokensCache[chainId] || [];

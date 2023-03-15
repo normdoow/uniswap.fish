@@ -10,13 +10,13 @@ const favoritePoolIdsDefault = JSON.parse(
 );
 
 export interface PoolContextState {
-  chain: Network;
+  chain: Network | null;
   poolsCache: { [chainId: string]: PoolColumnDataType[] };
   tokensCache: { [chainId: string]: Token[] };
   favoritePoolIds: { [chainId: string]: string[] };
 }
 const initialState: PoolContextState = {
-  chain: NETWORKS[0],
+  chain: null,
   poolsCache: {},
   tokensCache: {},
   favoritePoolIds: favoritePoolIdsDefault,

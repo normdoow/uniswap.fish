@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Footer from "../containers/Footer";
 import { DownOutlined } from "@ant-design/icons";
@@ -11,6 +11,8 @@ import { Dropdown } from "antd";
 import { NETWORKS } from "../common/network";
 import { usePoolContext } from "../context/pool/poolContext";
 import { PoolActionType } from "../context/pool/poolReducer";
+import { getQueryParam, setQueryParam } from "../utils/querystring";
+import { Network } from "../common/interfaces/uniswap.interface";
 
 const BodyContainer = styled.div`
   max-width: 900px;
@@ -74,6 +76,28 @@ const NetworkDropdownItem = styled.div`
 function App() {
   const poolContext = usePoolContext();
 
+  useEffect(() => {
+    let networkId = getQueryParam("network");
+    let network: Network;
+    if (!networkId) {
+      network = NETWORKS[0];
+      setQueryParam("network", network.id);
+    } else {
+      const _network = NETWORKS.find((network) => network.id === networkId);
+      if (_network) {
+        network = _network;
+      } else {
+        network = NETWORKS[0];
+        setQueryParam("network", network.id);
+      }
+    }
+
+    poolContext.dispatch({
+      type: PoolActionType.SET_CHAIN,
+      payload: network,
+    });
+  }, []);
+
   const items = NETWORKS.filter((network) => !network.disabled).map(
     (network) => {
       return {
@@ -86,6 +110,8 @@ function App() {
                 type: PoolActionType.SET_CHAIN,
                 payload: network,
               });
+
+              setQueryParam("network", network.id);
             }}
           >
             <img src={network.logoURI} />
@@ -105,27 +131,33 @@ function App() {
       <BodyContainer>
         <HeaderContainer>
           <h2>Pool Overview</h2>
-          <Dropdown
-            menu={{
-              items,
-              selectable: true,
-              defaultSelectedKeys: ["ethereum"],
-            }}
-            trigger={["click"]}
-            placement="bottomRight"
-          >
-            <NetworkDropdown>
-              <img src={poolContext.state.chain.logoURI} />
-              <span>{poolContext.state.chain.name}</span>
-              <DownOutlined />
-            </NetworkDropdown>
-          </Dropdown>
+          {poolContext.state.chain && (
+            <Dropdown
+              menu={{
+                items,
+                selectable: true,
+                defaultSelectedKeys: [poolContext.state.chain.id],
+              }}
+              trigger={["click"]}
+              placement="bottomRight"
+            >
+              <NetworkDropdown>
+                <img src={poolContext.state.chain.logoURI} />
+                <span>{poolContext.state.chain.name}</span>
+                <DownOutlined />
+              </NetworkDropdown>
+            </Dropdown>
+          )}
         </HeaderContainer>
         <Br />
 
-        <FavoritePools />
-        <Br />
-        <TopPools />
+        {poolContext.state.chain && (
+          <>
+            <FavoritePools />
+            <Br />
+            <TopPools />
+          </>
+        )}
 
         <Footer />
       </BodyContainer>

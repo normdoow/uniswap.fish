@@ -17,7 +17,11 @@ import {
   getTokensAmountFromDepositAmountUSD,
 } from "../../utils/uniswapv3/math";
 import BigNumber from "bignumber.js";
-import { getCurrentNetwork, setCurrentNetwork } from "../../common/network";
+import {
+  getCurrentNetwork,
+  NETWORKS,
+  setCurrentNetwork,
+} from "../../common/network";
 import { usePoolContext } from "../../context/pool/poolContext";
 import { PoolActionType } from "../../context/pool/poolReducer";
 import TopPoolTable, {
@@ -65,6 +69,7 @@ const TopPools = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [tokens, setTokens] = useState<Token[]>([]);
   const [pools, setPools] = useState<PoolColumnDataType[]>([]);
+  const chainId = poolContext.state.chain?.id || NETWORKS[0].id;
 
   const processTopPools = (allPools: Pool[]): PoolColumnDataType[] => {
     const topPools = allPools.map((pool, index) => {
@@ -166,17 +171,18 @@ const TopPools = () => {
   };
 
   useEffect(() => {
-    if (poolContext.state.poolsCache[poolContext.state.chain.id]) {
-      setPools(poolContext.state.poolsCache[poolContext.state.chain.id]);
-      setTokens(poolContext.state.tokensCache[poolContext.state.chain.id]);
+    if (poolContext.state.poolsCache[chainId]) {
+      setPools(poolContext.state.poolsCache[chainId]);
+      setTokens(poolContext.state.tokensCache[chainId]);
       return;
     }
 
     const tempChain = getCurrentNetwork();
-    setCurrentNetwork(poolContext.state.chain);
+    setCurrentNetwork(poolContext.state.chain || NETWORKS[0]);
     setIsLoading(true);
 
-    const { totalValueLockedUSD_gte, volumeUSD_gte } = poolContext.state.chain;
+    const { totalValueLockedUSD_gte, volumeUSD_gte } =
+      poolContext.state.chain || NETWORKS[0];
 
     getPools(totalValueLockedUSD_gte, volumeUSD_gte).then(
       ({ pools, tokens }) => {
@@ -189,14 +195,14 @@ const TopPools = () => {
         poolContext.dispatch({
           type: PoolActionType.SET_POOLS_CACHE,
           payload: {
-            chainId: poolContext.state.chain.id,
+            chainId: chainId,
             pools: topPools,
           },
         });
         poolContext.dispatch({
           type: PoolActionType.SET_TOKENS_CACHE,
           payload: {
-            chainId: poolContext.state.chain.id,
+            chainId: chainId,
             tokens,
           },
         });
@@ -221,9 +227,9 @@ const TopPools = () => {
       >
         We only display pools that meet the requirements of having a total
         locked value ≥{" "}
-        {formatAmount(poolContext.state.chain.totalValueLockedUSD_gte)} and a
+        {formatAmount(poolContext.state.chain?.totalValueLockedUSD_gte)} and a
         trading volume ≥{" "}
-        {formatDollarAmount(poolContext.state.chain.volumeUSD_gte)}.
+        {formatDollarAmount(poolContext.state.chain?.volumeUSD_gte)}.
       </div>
 
       <TopPoolTable isLoading={isLoading} pools={pools} tokens={tokens} />

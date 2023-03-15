@@ -30,6 +30,7 @@ import { CheckboxValueType } from "antd/es/checkbox/Group";
 import { getCoingeckoToken } from "../../repos/coingecko";
 import { usePoolContext } from "../../context/pool/poolContext";
 import { PoolActionType } from "../../context/pool/poolReducer";
+import { NETWORKS } from "../../common/network";
 
 const PairToken = styled.div`
   display: flex;
@@ -399,7 +400,7 @@ const TopPoolTable = ({ isLoading, pools, tokens }: TopPoolTableProps) => {
       width: 40,
       fixed: "left",
       render: (poolId) => {
-        const chainId = poolContext.state.chain.id;
+        const chainId = poolContext.state.chain?.id || NETWORKS[0].id;
         const favoritePoolIds =
           poolContext.state.favoritePoolIds[chainId] || [];
         const isFavorite = favoritePoolIds?.includes(poolId);
@@ -619,7 +620,9 @@ const TopPoolTable = ({ isLoading, pools, tokens }: TopPoolTableProps) => {
                 </FeePercentage>
                 <a
                   target="_blank"
-                  href={`https://info.uniswap.org/#/${poolContext.state.chain.id}/pools/${poolId}`}
+                  href={`https://info.uniswap.org/#/${
+                    poolContext.state.chain?.id || NETWORKS[0].id
+                  }/pools/${poolId}`}
                 >
                   <FontAwesomeIcon icon={faExternalLinkAlt} />
                 </a>
@@ -981,7 +984,9 @@ const TopPoolTable = ({ isLoading, pools, tokens }: TopPoolTableProps) => {
       render: (_, { token0, token1, feeTier }) => (
         <a
           target="_blank"
-          href={`/?network=${poolContext.state.chain.id}&token0=${token0.id}&token1=${token1.id}&feeTier=${feeTier}`}
+          href={`/?network=${
+            poolContext.state.chain?.id || NETWORKS[0].id
+          }&token0=${token0.id}&token1=${token1.id}&feeTier=${feeTier}`}
         >
           <Button style={{ fontSize: "0.875rem" }}>
             <Tooltip
