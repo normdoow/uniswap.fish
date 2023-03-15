@@ -31,6 +31,7 @@ import { getCoingeckoToken } from "../../repos/coingecko";
 import { usePoolContext } from "../../context/pool/poolContext";
 import { PoolActionType } from "../../context/pool/poolReducer";
 import { NETWORKS } from "../../common/network";
+import { ScreenWidth } from "../../utils/styled";
 
 const PairToken = styled.div`
   display: flex;
@@ -363,6 +364,19 @@ const TopPoolTable = ({ isLoading, pools, tokens }: TopPoolTableProps) => {
     SelectProps<object>["options"]
   >([]);
   const [tokenSearchText, setTokenSearchText] = useState("");
+  // Responsive
+  const [isTablet, setIsTablet] = useState<boolean>(false);
+
+  const handleResize = () => {
+    if (window.innerWidth <= ScreenWidth.TABLET) {
+      setIsTablet(true);
+    } else {
+      setIsTablet(false);
+    }
+  };
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+  });
 
   const isPoolFilterResetDisabled =
     feeCheckedList.length === 0 && !tokenSearchText;
@@ -979,7 +993,7 @@ const TopPoolTable = ({ isLoading, pools, tokens }: TopPoolTableProps) => {
     {
       title: "Action",
       key: "action",
-      fixed: "right",
+      fixed: isTablet ? false : "right",
       width: 100,
       render: (_, { token0, token1, feeTier }) => (
         <a

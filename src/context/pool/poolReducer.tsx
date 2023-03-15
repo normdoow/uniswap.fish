@@ -14,6 +14,7 @@ export enum PoolActionType {
   SET_POOLS_CACHE = "SET_POOLS_CACHE",
   SET_TOKENS_CACHE = "SET_TOKENS_CACHE",
   SET_FAVORITE_POOL_IDS = "SET_FAVORITE_POOL_IDS",
+  INIT_FAVORITE_POOL_IDS = "INIT_FAVORITE_POOL_IDS",
 }
 
 export type PoolContextAction =
@@ -41,6 +42,10 @@ export type PoolContextAction =
         chainId: string;
         poolIds: string[];
       };
+    }
+  | {
+      type: PoolActionType.INIT_FAVORITE_POOL_IDS;
+      payload: any;
     };
 
 export const poolContextReducer = (
@@ -82,6 +87,12 @@ export const poolContextReducer = (
         JSON.stringify(newState.favoritePoolIds)
       );
       return newState;
+    }
+    case PoolActionType.INIT_FAVORITE_POOL_IDS: {
+      return {
+        ...state,
+        favoritePoolIds: action.payload,
+      };
     }
   }
 };

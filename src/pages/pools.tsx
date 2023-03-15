@@ -9,7 +9,10 @@ import FavoritePools from "../containers/pools/FavoritePools";
 import TopPools from "../containers/pools/TopPools";
 import { Dropdown } from "antd";
 import { NETWORKS } from "../common/network";
-import { usePoolContext } from "../context/pool/poolContext";
+import {
+  favoritePoolIdsLocalStorageKey,
+  usePoolContext,
+} from "../context/pool/poolContext";
 import { PoolActionType } from "../context/pool/poolReducer";
 import { getQueryParam, setQueryParam } from "../utils/querystring";
 import { Network } from "../common/interfaces/uniswap.interface";
@@ -96,6 +99,14 @@ function App() {
     poolContext.dispatch({
       type: PoolActionType.SET_CHAIN,
       payload: network,
+    });
+
+    // load favorite pool ids
+    poolContext.dispatch({
+      type: PoolActionType.INIT_FAVORITE_POOL_IDS,
+      payload: JSON.parse(
+        localStorage.getItem(favoritePoolIdsLocalStorageKey) || "{}"
+      ),
     });
   }, []);
 
