@@ -176,6 +176,7 @@ interface PoolColumnDataType {
   fee24h: number;
   priceVolatility24HPercentage: number;
   poolDayDatas: PoolDayData[];
+  dailyFeesPerTVL: number;
 }
 
 const searchTokenResult = (tokens: Token[], query: string) =>
@@ -343,6 +344,7 @@ const TopPools = () => {
       }, 0);
       const dailyVolumePerTVL = volume7d / 7 / totalValueLockedUSD;
       const fee24h = (volume7d / 7) * getFeeTierPercentage(pool.feeTier);
+      const dailyFeesPerTVL = fee24h / totalValueLockedUSD;
 
       // Price Volatility
       const poolDayData14d = pool.poolDayData;
@@ -367,6 +369,7 @@ const TopPools = () => {
         fee24h,
         priceVolatility24HPercentage,
         poolDayDatas,
+        dailyFeesPerTVL,
       } as PoolColumnDataType;
     });
     setPools(topPools);
@@ -696,6 +699,44 @@ const TopPools = () => {
       },
     },
     {
+      title: "24H Fees",
+      dataIndex: "fee24h",
+      key: "fee24h",
+      width: 110,
+      sorter: (a, b) => a.fee24h - b.fee24h,
+      render: (fee24h) => {
+        return (
+          <Tooltip
+            placement="right"
+            color="rgba(0,0,0,0.675)"
+            overlayStyle={{ whiteSpace: "pre-line" }}
+            title={`7D Average 24H Fees\r\n$${round(fee24h, 2)}`}
+          >
+            {formatDollarAmount(fee24h)}
+          </Tooltip>
+        );
+      },
+    },
+    {
+      title: "24H Fees / TVL",
+      dataIndex: "dailyFeesPerTVL",
+      key: "dailyFeesPerTVL",
+      width: 120,
+      sorter: (a, b) => a.dailyFeesPerTVL - b.dailyFeesPerTVL,
+      render: (dailyFeesPerTVL) => {
+        return (
+          <Tooltip
+            placement="right"
+            color="rgba(0,0,0,0.675)"
+            overlayStyle={{ whiteSpace: "pre-line" }}
+            title={`7D Average 24H Volume / TVL`}
+          >
+            {(dailyFeesPerTVL * 100).toFixed(2)}%
+          </Tooltip>
+        );
+      },
+    },
+    {
       title: "Volume 24H",
       dataIndex: "volume24h",
       key: "volume24h",
@@ -748,25 +789,6 @@ const TopPools = () => {
             title={`7D Average 24H Volume / TVL`}
           >
             {(dailyVolumePerTVL * 100).toFixed(2)}%
-          </Tooltip>
-        );
-      },
-    },
-    {
-      title: "24H Fees",
-      dataIndex: "fee24h",
-      key: "fee24h",
-      width: 110,
-      sorter: (a, b) => a.fee24h - b.fee24h,
-      render: (fee24h) => {
-        return (
-          <Tooltip
-            placement="right"
-            color="rgba(0,0,0,0.675)"
-            overlayStyle={{ whiteSpace: "pre-line" }}
-            title={`7D Average 24H Fees\r\n$${round(fee24h, 2)}`}
-          >
-            {formatDollarAmount(fee24h)}
           </Tooltip>
         );
       },
