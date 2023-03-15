@@ -759,7 +759,7 @@ const TopPools = () => {
                 </FeePercentage>
                 <a
                   target="_blank"
-                  href={`https://info.uniswap.org/#/ethereum/pools/${poolId}`}
+                  href={`https://info.uniswap.org/#/${poolContext.state.chain.id}/pools/${poolId}`}
                 >
                   <FontAwesomeIcon icon={faExternalLinkAlt} />
                 </a>
