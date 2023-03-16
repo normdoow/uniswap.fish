@@ -517,6 +517,9 @@ const InstructionSection = ({ amount0, amount1 }: InstructionSectionProps) => {
     if (platform === "polygon" && token.symbol === "MATIC") {
       return true;
     }
+    if (platform === "bnb" && token.symbol === "BNB") {
+      return true;
+    }
     return false;
   };
 

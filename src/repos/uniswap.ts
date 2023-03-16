@@ -71,6 +71,7 @@ export const getPoolTicks = async (poolAddress: string): Promise<Tick[]> => {
 const _processTokenInfo = (token: Token) => {
   token.logoURI = getTokenLogoURL(getCurrentNetwork().id, token.id);
 
+  // TODO: check the network id before replace the token name
   if (token.name === "Wrapped Ether" || token.name === "Wrapped Ethereum") {
     token.name = "Ethereum";
     token.symbol = "ETH";
@@ -80,6 +81,10 @@ const _processTokenInfo = (token: Token) => {
   if (token.name === "Wrapped Matic") {
     token.name = "Polygon Native Token";
     token.symbol = "MATIC";
+  }
+  if (token.name === "Wrapped BNB") {
+    token.name = "BSC Native Token";
+    token.symbol = "BNB";
   }
 
   return token;

@@ -16,6 +16,8 @@ enum SupportedChainId {
 
   CELO = 42220,
   CELO_ALFAJORES = 44787,
+
+  BNB = 56,
 }
 
 // NOTE: also update CreatePositionModal, isNative function.
@@ -69,6 +71,19 @@ export const NETWORKS: Network[] = [
     volumeUSD_gte: 1000,
   },
   {
+    id: "bnb",
+    chainId: SupportedChainId.BNB,
+    name: "BNB Chain",
+    desc: "Binance Smart Chain (BSC) Mainnet",
+    disabled: false,
+    isNew: true,
+    logoURI: "https://info.uniswap.org/static/media/bnb-logo.797868eb.svg",
+    subgraphEndpoint:
+      "https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-bsc",
+    totalValueLockedUSD_gte: 100000,
+    volumeUSD_gte: 50000,
+  },
+  {
     id: "arbitrum",
     chainId: SupportedChainId.ARBITRUM_ONE,
     name: "Arbitrum",
@@ -84,19 +99,6 @@ export const NETWORKS: Network[] = [
     //   "https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-minimal",
     totalValueLockedUSD_gte: 0,
     volumeUSD_gte: 0,
-  },
-  {
-    id: "bnb",
-    chainId: SupportedChainId.ARBITRUM_ONE,
-    name: "Binance Smart Chain",
-    desc: "Binance Smart Chain (BSC) Mainnet",
-    disabled: false,
-    isNew: true,
-    logoURI: "https://info.uniswap.org/static/media/bnb-logo.797868eb.svg",
-    subgraphEndpoint:
-      "https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-bsc",
-    totalValueLockedUSD_gte: 100000,
-    volumeUSD_gte: 50000,
   },
 ];
 
