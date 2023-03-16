@@ -91,7 +91,7 @@ const process = (data) => {
     "polygon-pos": "polygon",
     "optimistic-ethereum": "optimism",
     "arbitrum-one": "arbitrum",
-    "binance-smart-chain": "bsc",
+    "binance-smart-chain": "bnb",
   });
 
   Object.keys(CUSTOM_TOKENS).forEach((platform) => {

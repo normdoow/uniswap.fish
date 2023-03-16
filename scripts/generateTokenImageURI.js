@@ -17,7 +17,7 @@ const CHAINID_MAPPING = {
   42161: "arbitrum",
   42220: "celo",
   44787: "celo",
-  56: "bsc",
+  56: "bnb",
 };
 
 Promise.all(TOKEN_URLS.map((url) => axios.get(url)))
