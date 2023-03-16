@@ -1,5 +1,10 @@
 export const ANNOUNCEMENTS = [
   {
+    message: "bnb chain integration",
+    tweetId: "1636210544524034050",
+    tag: "feature-update",
+  },
+  {
     message: "pool overview",
     tweetId: "1636046547392794624",
     tag: "feature-update",
