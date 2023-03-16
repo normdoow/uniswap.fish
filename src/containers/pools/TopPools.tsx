@@ -171,6 +171,16 @@ const TopPools = () => {
   };
 
   useEffect(() => {
+    const props = {
+      featureId: "Pool Overview",
+      chainId,
+    };
+    if (typeof window.plausible !== "undefined") {
+      window.plausible("FeatureUsage", {
+        props,
+      });
+    }
+
     if (poolContext.state.poolsCache[chainId]) {
       setPools(poolContext.state.poolsCache[chainId]);
       setTokens(poolContext.state.tokensCache[chainId]);

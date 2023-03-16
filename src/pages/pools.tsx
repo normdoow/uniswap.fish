@@ -181,7 +181,7 @@ export default App;
 export const Head = () => {
   const title = "Uniswap V3 Pool Overview - Uniswap.fish";
   const description =
-    "Analyze and get an overview of Uniswap v3 pools on Ethereum, Polygon, Arbitrum, Optimism, Celo, and more.";
+    "Analyze and get an overview of Uniswap v3 pools on Ethereum, Binance (BSC), Polygon, Arbitrum, Optimism, Celo, and more.";
 
   return <SEO title={title} description={description} />;
 };

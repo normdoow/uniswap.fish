@@ -24,7 +24,11 @@ import { useAppContext } from "../../context/app/appContext";
 import { AppActionType } from "../../context/app/appReducer";
 import { getPriceChart } from "../../repos/coingecko";
 import { ModalActionType } from "../../context/modal/modalReducer";
-import { NETWORKS, setCurrentNetwork } from "../../common/network";
+import {
+  getCurrentNetwork,
+  NETWORKS,
+  setCurrentNetwork,
+} from "../../common/network";
 import { sortTokens } from "../../utils/uniswapv3/helper";
 import {
   Network,
@@ -408,6 +412,16 @@ export const SelectPair = ({ fetchFromUrlParams }: SelectPairProps) => {
       type: ModalActionType.SET_SELECT_PAIR_MODAL_STATE,
       payload: false,
     });
+
+    const props = {
+      featureId: "Uniswap Calculator",
+      chainId: getCurrentNetwork().id,
+    };
+    if (typeof window.plausible !== "undefined") {
+      window.plausible("FeatureUsage", {
+        props,
+      });
+    }
   };
 
   const fetchPools = async () => {
