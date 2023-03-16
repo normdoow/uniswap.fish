@@ -1,21 +1,8 @@
 const fs = require("fs");
 const axios = require("axios");
+const { DEFAULT_LIST_OF_LISTS } = require("./tokenLists");
 
-const URLS = [
-  "https://tokens.uniswap.org",
-  "https://extendedtokens.uniswap.org",
-  "https://unsupportedtokens.uniswap.org",
-  "https://raw.githubusercontent.com/The-Blockchain-Association/sec-notice-list/master/ba-sec-list.json",
-  "https://api.coinmarketcap.com/data-api/v3/uniswap/all.json",
-  "https://tokens.coingecko.com/uniswap/all.json",
-  "https://raw.githubusercontent.com/compound-finance/token-list/master/compound.tokenlist.json",
-  "https://www.gemini.com/uniswap/manifest.json",
-  "https://app.tryroll.com/tokens.json",
-  "https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/set.tokenlist.json",
-  "https://static.optimism.io/optimism.tokenlist.json",
-  "https://bridge.arbitrum.io/token-list-42161.json",
-  "https://celo-org.github.io/celo-token-list/celo.tokenlist.json",
-];
+const TOKEN_URLS = DEFAULT_LIST_OF_LISTS;
 
 const CHAINID_MAPPING = {
   1: "ethereum",
@@ -30,9 +17,10 @@ const CHAINID_MAPPING = {
   42161: "arbitrum",
   42220: "celo",
   44787: "celo",
+  56: "bsc",
 };
 
-Promise.all(URLS.map((url) => axios.get(url)))
+Promise.all(TOKEN_URLS.map((url) => axios.get(url)))
   .then((lists) => {
     return lists.map((list) => list.data.tokens).flat();
   })

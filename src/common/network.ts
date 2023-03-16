@@ -85,6 +85,19 @@ export const NETWORKS: Network[] = [
     totalValueLockedUSD_gte: 0,
     volumeUSD_gte: 0,
   },
+  {
+    id: "bnb",
+    chainId: SupportedChainId.ARBITRUM_ONE,
+    name: "Binance Smart Chain",
+    desc: "Binance Smart Chain (BSC) Mainnet",
+    disabled: false,
+    isNew: true,
+    logoURI: "https://info.uniswap.org/static/media/bnb-logo.797868eb.svg",
+    subgraphEndpoint:
+      "https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-bsc",
+    totalValueLockedUSD_gte: 100000,
+    volumeUSD_gte: 50000,
+  },
 ];
 
 let currentNetwork = NETWORKS[0];
