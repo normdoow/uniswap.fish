@@ -116,7 +116,7 @@ const ImportantMessageModal = () => {
                 </a>{" "}
                 and we will keep maintaining and developing the project while{" "}
                 <a
-                  href="https://github.com/chunza2542/uniswap.fish"
+                  href="https://github.com/chunrapeepat/uniswap.fish"
                   target="_blank"
                 >
                   making everything open-source

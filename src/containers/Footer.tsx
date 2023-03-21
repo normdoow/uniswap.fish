@@ -63,14 +63,14 @@ const Footer = () => {
       </div>
       <div>
         <a
-          href="https://github.com/chunza2542/uniswap.fish"
+          href="https://github.com/chunrapeepat/uniswap.fish"
           rel="noreferrer"
           target="_blank"
         >
           How it works?
         </a>
         <a
-          href="https://github.com/chunza2542/uniswap.fish"
+          href="https://github.com/chunrapeepat/uniswap.fish"
           rel="noreferrer"
           target="_blank"
         >

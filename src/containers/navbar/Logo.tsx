@@ -221,7 +221,7 @@ const LINKS = [
   },
   {
     target: "_blank",
-    href: "https://github.com/chunza2542/uniswap.fish",
+    href: "https://github.com/chunrapeepat/uniswap.fish",
     icon: "🧑🏻‍💻",
     text: "Github Repository",
   },

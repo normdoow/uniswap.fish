@@ -4,7 +4,7 @@ Uniswap V3 Fee Calculator, Visit: [uniswap.fish](https://uniswap.fish/), [@unisw
 
 > Disclaimer: please do your own research, this website is intended to be used and must be used for informational purpose only. It is very important to do your own analysis before making any investment based on your personal circumstances.
 
-[Report a bug or request a feature](https://github.com/chunza2542/uniswap.fish/issues)
+[Report a bug or request a feature](https://github.com/chunrapeepat/uniswap.fish/issues)
 
 [Donate this project on Gitcoin Grant](https://gitcoin.co/grants/4203/uniswap-calculator-v3)
 
