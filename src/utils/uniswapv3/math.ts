@@ -186,6 +186,7 @@ export const getPositionTokensDepositRatio = (
 interface TokensAmount {
   amount0: number;
   amount1: number;
+  liquidityDelta: number;
 }
 export const getTokensAmountFromDepositAmountUSD = (
   P: number,
@@ -210,7 +211,7 @@ export const getTokensAmountFromDepositAmountUSD = (
   if (deltaX * priceUSDX > depositAmountUSD)
     deltaX = depositAmountUSD / priceUSDX;
 
-  return { amount0: deltaX, amount1: deltaY };
+  return { amount0: deltaX, amount1: deltaY, liquidityDelta: deltaL };
 };
 
 // for calculation detail, please visit README.md (Section: Calculation Breakdown, No. 2)

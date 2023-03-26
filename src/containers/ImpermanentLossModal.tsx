@@ -242,8 +242,6 @@ const ImpermanentLossModal = () => {
     const P = pricesUSD[1] / pricesUSD[0];
     let Pl = state.priceRangeValue[0];
     let Pu = state.priceRangeValue[1];
-    const priceUSDX = state.token1PriceChart?.currentPriceUSD || 1;
-    const priceUSDY = state.token0PriceChart?.currentPriceUSD || 1;
     const depositAmountUSD = state.depositAmountValue;
 
     if (state.isFullRange && state.poolTicks) {
@@ -253,20 +251,39 @@ const ImpermanentLossModal = () => {
       Pu = Number(lastTick.price0);
     }
 
-    const { amount0, amount1 } = getTokensAmountFromDepositAmountUSD(
-      P,
-      Pl,
-      Pu,
-      priceUSDX,
-      priceUSDY,
-      depositAmountUSD
-    );
+    const { amount0, amount1, liquidityDelta } =
+      getTokensAmountFromDepositAmountUSD(
+        P,
+        Pl,
+        Pu,
+        pricesUSD[1],
+        pricesUSD[0],
+        depositAmountUSD
+      );
 
-    return { price: P, amount0, amount1 };
+    return { price: P, amount0, amount1, liquidityDelta };
   };
 
   const current = calculateTokensAmount(currentPrice);
-  const future = calculateTokensAmount(futurePrice);
+  // Calculate future price based on liquidityDelta
+  const liquidityDelta = current.liquidityDelta;
+  const future = (() => {
+    let P = futurePrice[1] / futurePrice[0];
+    let Pl = state.priceRangeValue[0];
+    let Pu = state.priceRangeValue[1];
+
+    if (P < Pl) P = Pl;
+    if (P > Pu) P = Pu;
+
+    let deltaY = liquidityDelta * (Math.sqrt(P) - Math.sqrt(Pl));
+    if (deltaY * futurePrice[0] < 0) deltaY = 0;
+    if (P < Pl) deltaY = 0;
+
+    let deltaX = liquidityDelta * (1 / Math.sqrt(P) - 1 / Math.sqrt(Pu));
+    if (deltaX * futurePrice[1] < 0) deltaX = 0;
+
+    return { price: P, amount0: deltaX, amount1: deltaY };
+  })();
 
   const futurePrice0Percentage =
     (100 * (futurePrice[0] - currentPrice[0])) / currentPrice[0];
