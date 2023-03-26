@@ -1,5 +1,10 @@
 export const ANNOUNCEMENTS = [
   {
+    message: "arbitrum minimal support",
+    tweetId: "1640004190268428289",
+    tag: "feature-update",
+  },
+  {
     message: "bnb chain integration",
     tweetId: "1636210544524034050",
     tag: "feature-update",
