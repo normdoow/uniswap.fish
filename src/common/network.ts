@@ -71,6 +71,24 @@ export const NETWORKS: Network[] = [
     volumeUSD_gte: 1000,
   },
   {
+    id: "arbitrum",
+    chainId: SupportedChainId.ARBITRUM_ONE,
+    name: "Arbitrum",
+    desc: "Arbitrum Mainnet (L2)",
+    disabled: false,
+    isNew: false,
+    // error: "INDEXING ERROR",
+    disabledTopPositions: true,
+    logoURI:
+      "https://assets.website-files.com/5f973c970bea5548ad4287ef/60a320b472858ace6700df76_arb-icon.svg",
+    // subgraphEndpoint:
+    //   "https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-arbitrum-one",
+    subgraphEndpoint:
+      "https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-minimal",
+    totalValueLockedUSD_gte: 0,
+    volumeUSD_gte: 0,
+  },
+  {
     id: "bnb",
     chainId: SupportedChainId.BNB,
     name: "BNB Chain",
@@ -82,23 +100,6 @@ export const NETWORKS: Network[] = [
       "https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-bsc",
     totalValueLockedUSD_gte: 100000,
     volumeUSD_gte: 50000,
-  },
-  {
-    id: "arbitrum",
-    chainId: SupportedChainId.ARBITRUM_ONE,
-    name: "Arbitrum",
-    desc: "Arbitrum Mainnet (L2)",
-    disabled: true,
-    isNew: false,
-    error: "INDEXING ERROR",
-    logoURI:
-      "https://assets.website-files.com/5f973c970bea5548ad4287ef/60a320b472858ace6700df76_arb-icon.svg",
-    subgraphEndpoint:
-      "https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-arbitrum-one",
-    // subgraphEndpoint:
-    //   "https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-minimal",
-    totalValueLockedUSD_gte: 0,
-    volumeUSD_gte: 0,
   },
 ];
 

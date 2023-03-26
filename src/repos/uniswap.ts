@@ -153,6 +153,11 @@ export const getPoolFromPair = async (
 ): Promise<Pool[]> => {
   const sortedTokens = sortTokens(token0, token1);
 
+  let feeGrowthGlobal = `feeGrowthGlobal0X128\nfeeGrowthGlobal1X128`;
+  if (getCurrentNetwork().disabledTopPositions) {
+    feeGrowthGlobal = "";
+  }
+
   const { pools } = await _queryUniswap(`{
     pools(orderBy: feeTier, where: {
         token0: "${sortedTokens[0].id}",
@@ -164,8 +169,7 @@ export const getPoolFromPair = async (
       liquidity
       token0Price
       token1Price
-      feeGrowthGlobal0X128
-      feeGrowthGlobal1X128
+      ${feeGrowthGlobal}
     }
   }`);
 

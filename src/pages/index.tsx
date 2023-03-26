@@ -252,8 +252,12 @@ function App() {
             </div>
           </ContentContainer>
 
-          <Br />
-          <TopPosition />
+          {!state.network.disabledTopPositions && (
+            <>
+              <Br />
+              <TopPosition />
+            </>
+          )}
         </BodyContainer>
       )}
 

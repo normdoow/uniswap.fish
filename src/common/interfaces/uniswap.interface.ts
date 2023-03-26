@@ -12,6 +12,7 @@ export interface Network {
   // for pool overview
   totalValueLockedUSD_gte: number;
   volumeUSD_gte: number;
+  disabledTopPositions?: boolean;
 }
 
 export interface Tick {
