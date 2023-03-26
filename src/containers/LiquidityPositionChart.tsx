@@ -138,7 +138,11 @@ const LiquidityPositionChart = () => {
       _ticks[0],
       _ticks[1]
     );
-    const ticks = [minTick, maxTick].sort((a, b) => a - b);
+    let ticks = [minTick, maxTick].sort((a, b) => a - b);
+    // Handle case when there is liquidityNet = []; indexing_error
+    if (state.poolTicks.length === 2) {
+      ticks = _ticks;
+    }
 
     let token0Symbol;
     let token1Symbol;
@@ -150,6 +154,16 @@ const LiquidityPositionChart = () => {
       token1Symbol = state.token1?.symbol;
     }
 
+    let token0Decimal;
+    let token1Decimal;
+    if (state.isPairToggled) {
+      token0Decimal = state.token1?.decimals;
+      token1Decimal = state.token0?.decimals;
+    } else {
+      token0Decimal = state.token0?.decimals;
+      token1Decimal = state.token1?.decimals;
+    }
+
     const margin = (ticks[1] - ticks[0]) / 10;
     d3Chart = new D3LiquidityHistogram(refElement.current, {
       width,
@@ -159,8 +173,8 @@ const LiquidityPositionChart = () => {
       currentTick,
       token0Symbol,
       token1Symbol,
-      token0Decimal: state.token0.decimals,
-      token1Decimal: state.token1.decimals,
+      token0Decimal,
+      token1Decimal,
       data: processData(state.poolTicks, ticks[0], ticks[1]),
     });
 

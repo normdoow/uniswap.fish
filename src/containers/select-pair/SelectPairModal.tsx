@@ -40,6 +40,7 @@ import {
   getQueryParam,
   setQueryParam,
 } from "../../utils/querystring";
+import { getTickFromPrice } from "../../utils/uniswapv3/math";
 
 const ModalStyle = {
   overlay: {
@@ -393,12 +394,42 @@ export const SelectPair = ({ fetchFromUrlParams }: SelectPairProps) => {
         getAvgTradingVolume(pool.id),
       ]);
 
+    let _poolTicks = poolTicks;
+    if (poolTicks.length === 0) {
+      const price0 = Number.MAX_SAFE_INTEGER;
+      const price1 = 1 / Number.MAX_SAFE_INTEGER;
+      const minTick = getTickFromPrice(
+        price0,
+        token0.decimals,
+        token1.decimals
+      );
+      const maxTick = getTickFromPrice(
+        price1,
+        token0.decimals,
+        token1.decimals
+      );
+      _poolTicks = [
+        {
+          tickIdx: String(minTick),
+          price0: String(price0),
+          price1: String(price1),
+          liquidityNet: pool.liquidity,
+        },
+        {
+          tickIdx: String(maxTick),
+          price0: String(price1),
+          price1: String(price0),
+          liquidityNet: "-" + pool.liquidity,
+        },
+      ];
+    }
+
     appContext.dispatch({
       type: AppActionType.RESET_PAIR,
       payload: {
         network: selectedNetwork,
         pool,
-        poolTicks,
+        poolTicks: _poolTicks,
         token0,
         token1,
         token0PriceChart,
