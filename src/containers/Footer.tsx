@@ -43,11 +43,11 @@ const Footer = () => {
         </a>
         , Happy Uniswapping 🦄!!
         <br />
-        Sponsored by{" "}
+        Supported by{" "}
         <a
           target="_blank"
           rel="noreferrer"
-          href="https://twitter.com/UniswapFND"
+          href="https://www.uniswapfoundation.org"
         >
           Uniswap Foundation
         </a>

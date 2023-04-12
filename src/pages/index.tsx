@@ -220,7 +220,7 @@ function App() {
             <a
               className="uniswap-foundation"
               target="_blank"
-              href="https://twitter.com/UniswapFND"
+              href="https://www.uniswapfoundation.org"
             >
               <img src="/uniswap-foundation.png" />
               <span>
