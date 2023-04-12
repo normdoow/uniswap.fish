@@ -84,15 +84,21 @@ const Landing = styled.div`
   }
 
   & .uniswap-foundation {
-    display: flex;
-    align-items: center;
+    display: block;
     color: white;
     text-decoration: none;
-    margin-top: 20px;
-    font-size: 0.875rem;
+    font-size: 0.675rem;
+    padding: 8px;
+    margin-top: 8px;
+
+    & span {
+      display: block;
+      color: #bbb;
+      margin-bottom: 7px;
+    }
 
     & img {
-      height: 50px;
+      height: 40px;
       margin-right: 12px;
       transform: translateY(2px);
     }
@@ -222,12 +228,8 @@ function App() {
               target="_blank"
               href="https://www.uniswapfoundation.org"
             >
-              <img src="/uniswap-foundation.png" />
-              <span>
-                Sponsored by
-                <br />
-                Uniswap Foundation
-              </span>
+              <span>Supported by</span>
+              <img src="/uniswap-foundation.svg" />
             </a>
           </Landing>
           <div className="select-pair">
