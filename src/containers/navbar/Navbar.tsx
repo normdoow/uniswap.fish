@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTwitter } from "@fortawesome/free-brands-svg-icons";
 import styled from "styled-components";
 import { ScreenWidth } from "../../utils/styled";
-import Announcement from "./Announcement";
 import Logo from "./Logo";
 import { DangerButton } from "../../common/components/atomic";
 
