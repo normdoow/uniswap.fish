@@ -81,7 +81,7 @@ export const DangerButton = styled(ButtonStyle)`
     border-radius: 8px;
     border: 2px solid #000;
     color: black;
-    padding: 4px 8px;
+    padding: 3px 8px;
     background: white;
   }
 `;
