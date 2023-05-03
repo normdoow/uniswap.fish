@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTwitter } from "@fortawesome/free-brands-svg-icons";
 import styled from "styled-components";
@@ -57,7 +57,38 @@ const GitcoinGrant = styled.div`
   }
 `;
 
-const Navbar = () => {
+const Navbar: React.FC = () => {
+  const [timeLeft, setTimeLeft] = useState<string>("");
+
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      // Set the end time for the countdown
+      const endTime = new Date("2023-05-09T23:59:59");
+      const now = new Date();
+      const distance = endTime.getTime() - now.getTime();
+
+      if (distance > 0) {
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        return `${days} days ${hours} hours ${minutes} minutes ${seconds} seconds`;
+      } else {
+        clearInterval(interval);
+        return "Countdown has ended";
+      }
+    };
+
+    const interval = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <>
       <NavbarContainer>
@@ -73,18 +104,19 @@ const Navbar = () => {
               </DangerButton>
               <span className="countdown">
                 Gitcoin Grants beta round will be ended in
-                <br />3 days 5 minutes 3 seconds.
+                <br />
+                {timeLeft}.
               </span>
             </a>
           </GitcoinGrant>
           {/* <Twitter
-          href="https://twitter.com/uniswapdotfish"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <FontAwesomeIcon icon={faTwitter} />
-        </Twitter>
-        <Announcement /> */}
+            href="https://twitter.com/uniswapdotfish"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <FontAwesomeIcon icon={faTwitter} />
+          </Twitter>
+          <Announcement /> */}
         </Menubar>
       </NavbarContainer>
       <div style={{ marginBottom: 20 }}></div>
