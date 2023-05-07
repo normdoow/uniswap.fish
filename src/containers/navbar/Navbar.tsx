@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { ScreenWidth } from "../../utils/styled";
 import Logo from "./Logo";
-import { DangerButton } from "../../common/components/atomic";
+import Announcement from "./Announcement";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTwitter } from "@fortawesome/free-brands-svg-icons";
+// import { DangerButton } from "../../common/components/atomic";
 
 const NavbarContainer = styled.div`
   display: flex;
@@ -91,7 +94,7 @@ const Navbar: React.FC = () => {
       <NavbarContainer>
         <Logo />
         <Menubar id="menubar-container">
-          <GitcoinGrant>
+          {/* <GitcoinGrant>
             <a
               target="_blank"
               href="https://explorer.gitcoin.co/#/round/1/0x12bb5bbbfe596dbc489d209299b8302c3300fa40/0x12bb5bbbfe596dbc489d209299b8302c3300fa40-78"
@@ -105,15 +108,15 @@ const Navbar: React.FC = () => {
                 {timeLeft}.
               </span>
             </a>
-          </GitcoinGrant>
-          {/* <Twitter
+          </GitcoinGrant> */}
+          <Twitter
             href="https://twitter.com/uniswapdotfish"
             target="_blank"
             rel="noreferrer"
           >
             <FontAwesomeIcon icon={faTwitter} />
           </Twitter>
-          <Announcement /> */}
+          <Announcement />
         </Menubar>
       </NavbarContainer>
       <div style={{ marginBottom: 20 }}></div>
