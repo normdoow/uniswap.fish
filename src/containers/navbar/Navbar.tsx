@@ -119,7 +119,7 @@ const Navbar: React.FC = () => {
           <Announcement />
         </Menubar>
       </NavbarContainer>
-      <div style={{ marginBottom: 20 }}></div>
+      {/* <div style={{ marginBottom: 20 }}></div> */}
     </>
   );
 };
