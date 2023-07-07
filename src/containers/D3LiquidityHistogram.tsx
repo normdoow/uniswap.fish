@@ -199,11 +199,11 @@ class D3LiquidityHistogram {
       if (this.x(x0) > this.props.width * 0.8) {
         focusTextToken0
           .html(
-            `${this.token0Symbol}: ${getPriceFromTick(
+            `${this.token1Symbol}: ${getPriceFromTick(
               x0,
               this.props.token0Decimal,
               this.props.token1Decimal
-            ).toFixed(6)} ${this.token1Symbol}`
+            ).toFixed(6)} ${this.token0Symbol}`
           )
           .attr("x", function (d: any) {
             return self.x(x0) - (this.getComputedTextLength() + 5);
@@ -212,14 +212,14 @@ class D3LiquidityHistogram {
           .attr("y", 5);
         focusTextToken1
           .html(
-            `${this.token1Symbol}: ${(
+            `${this.token0Symbol}: ${(
               1 /
               getPriceFromTick(
                 x0,
                 this.props.token0Decimal,
                 this.props.token1Decimal
               )
-            ).toFixed(6)} ${this.token0Symbol}`
+            ).toFixed(6)} ${this.token1Symbol}`
           )
           .attr("x", function (d: any) {
             return self.x(x0) - (this.getComputedTextLength() + 5);
@@ -229,25 +229,25 @@ class D3LiquidityHistogram {
       } else {
         focusTextToken0
           .html(
-            `${this.token0Symbol}: ${getPriceFromTick(
+            `${this.token1Symbol}: ${getPriceFromTick(
               x0,
               this.props.token0Decimal,
               this.props.token1Decimal
-            )} ${this.token1Symbol}`
+            )} ${this.token0Symbol}`
           )
           .attr("x", this.x(x0) + 5)
           .attr("text-anchor", "left")
           .attr("y", 5);
         focusTextToken1
           .html(
-            `${this.token1Symbol}: ${(
+            `${this.token0Symbol}: ${(
               1 /
               getPriceFromTick(
                 x0,
                 this.props.token0Decimal,
                 this.props.token1Decimal
               )
-            ).toFixed(6)} ${this.token0Symbol}`
+            ).toFixed(6)} ${this.token1Symbol}`
           )
           .attr("x", this.x(x0) + 5)
           .attr("text-anchor", "left")
