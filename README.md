@@ -6,8 +6,6 @@ Uniswap V3 Fee Calculator, Visit: [uniswap.fish](https://uniswap.fish/), [@unisw
 
 [Report a bug or request a feature](https://github.com/chunrapeepat/uniswap.fish/issues)
 
-[Donate this project on Gitcoin Grant](https://gitcoin.co/grants/4203/uniswap-calculator-v3)
-
 ## Features
 
 - Fee calculation: select pair and pool, input deposit amount (USD), and adjust your lower and upper price
@@ -45,4 +43,4 @@ Uniswap V3 Fee Calculator, Visit: [uniswap.fish](https://uniswap.fish/), [@unisw
 
 ---
 
-Crafted with 🧡 by [@chunrapeepat](https://twitter.com/chunrapeepat).
+Crafted with 🧡 by [@noahwbragg](https://twitter.com/noahwbragg). Previously [@chunrapeepat](https://twitter.com/chunrapeepat).
