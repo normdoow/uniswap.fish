@@ -215,13 +215,7 @@ const LINKS = [
   },
   {
     target: "_blank",
-    href: "https://gitcoin.co/grants/4203/uniswap-calculator-v3",
-    icon: "💰",
-    text: "Gitcoin Donation",
-  },
-  {
-    target: "_blank",
-    href: "https://github.com/chunrapeepat/uniswap.fish",
+    href: "https://github.com/normdoow/uniswap.fish",
     icon: "🧑🏻‍💻",
     text: "Github Repository",
   },
@@ -230,12 +224,6 @@ const LINKS = [
     href: "https://twitter.com/uniswapdotfish",
     icon: "🐦",
     text: "@uniswapdotfish",
-  },
-  {
-    target: undefined,
-    href: "mailto:hello@uniswap.fish",
-    icon: "💌",
-    text: "hello@uniswap.fish",
   },
 ];
 

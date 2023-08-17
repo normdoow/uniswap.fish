@@ -36,10 +36,10 @@ const Footer = () => {
         Crafted with <FontAwesomeIcon icon={faHeart} /> by{" "}
         <a
           rel="noreferrer"
-          href="https://twitter.com/chunrapeepat"
+          href="https://twitter.com/noahwbragg"
           target="_blank"
         >
-          @chunrapeepat
+          @noahwbragg
         </a>
         , Happy Uniswapping 🦄!!
         <br />
