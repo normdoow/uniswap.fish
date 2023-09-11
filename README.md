@@ -1,6 +1,6 @@
 # 🦄 UniswapCalculator
 
-Uniswap V3 Fee Calculator, Visit: [Poolfish](https://poolfish.xyz/calculators/uniswap), [@uniswapdotfish](https://twitter.com/uniswapdotfish)
+Uniswap V3 Fee Calculator, Visit: [Poolfish](https://poolfish.xyz/calculators/uniswap), [@poolfish_xyz](https://twitter.com/poolfish_xyz)
 
 > Disclaimer: please do your own research, this website is intended to be used and must be used for informational purpose only. It is very important to do your own analysis before making any investment based on your personal circumstances.
 
@@ -42,5 +42,7 @@ Uniswap V3 Fee Calculator, Visit: [Poolfish](https://poolfish.xyz/calculators/un
       - if `ic >= il && ic <= iu`; `deltaL = min(liquidityAmount0, liquidityAmount1)`
 
 ---
+
+See more on how the [Uniswap Calculator works](https://poolfish.xyz/blog/how-it-works).
 
 Crafted with 🧡 by [@noahwbragg](https://twitter.com/noahwbragg). Previously [@chunrapeepat](https://twitter.com/chunrapeepat).
